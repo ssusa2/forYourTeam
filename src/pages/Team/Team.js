@@ -11,37 +11,51 @@ import { Autoplay, Pagination, Navigation } from 'swiper';
 
 import Members from './Members';
 function Team() {
-	let test = ['철1', '철2', '철3'];
+	let test = ['정수인', '윤명국', '김은지', '전슬기'];
 	return (
 		<>
-			<div className='container px-14 pt-40 xl:pt-60 mx-auto '>
+			<div className='my-container'>
 				<section>
 					<h2 className='big-title'>오늘의집에서 일 한다는 것</h2>
-					<img
-						className='w-full mt-8 mb-8 '
-						src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
-					/>
-					<p className='base-text w-4/5'>
+					<p className='base-text w-full sm:w-4/5 '>
 						오늘의집 팀은 최소한의 규칙으로 최대한의 자유를 보장하는 것을
 						원칙으로 하는 만큼 우리 모두가 스스로의 생각과 행동에 대한 막중한
 						책임감을 가지고 임합니다. 다음의 일곱가지는 이러한 원칙을 기반으로
 						만들어진 오늘의집의 일하는 방식이며 근본적인 가치입니다.
 					</p>
+					<img
+						className='w-full mt-8 mb-8 '
+						src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
+					/>
 				</section>
 				<section className='mt-40'>
 					<span className='small-title'>우리 팀을 소개합니다.</span>
 					<div className='  flex justify-between '>
 						{test.length == 1 ? (
-							<Members el={test} />
+							<Members name={test} />
 						) : (
 							<Swiper
-								slidesPerView={2}
+								slidesPerView={1}
 								spaceBetween={30}
 								// centeredSlides={true}
 								// autoplay={{
 								// 	delay: 2500,
 								// 	disableOnInteraction: false,
 								// }}
+								breakpoints={{
+									640: {
+										slidesPerView: 1,
+										// spaceBetween: 20,
+									},
+									768: {
+										slidesPerView: 1,
+										// spaceBetween: 40,
+									},
+									1024: {
+										slidesPerView: 2,
+										// spaceBetween: 50,
+									},
+								}}
 								pagination={{
 									clickable: true,
 								}}
@@ -50,8 +64,8 @@ function Team() {
 								className='mySwiper'
 							>
 								{test.map((el) => (
-									<SwiperSlide>
-										<Members el={el} />
+									<SwiperSlide className='sm:'>
+										<Members name={el} />
 									</SwiperSlide>
 								))}
 							</Swiper>

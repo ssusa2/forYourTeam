@@ -5,7 +5,7 @@ import React from 'react';
 function Project() {
 	return (
 		<>
-			<div className='container px-14 pt-40 xl:pt-60 mx-auto '>
+			<div className='my-container'>
 				{/* section1 */}
 				<div className='section1'>
 					<div>
@@ -14,7 +14,7 @@ function Project() {
 						</h2>
 						<img
 							className='mt-4  xl:mt-36  mb-8 '
-							src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
+							src='https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/snapshots/160993788224213297.jpg'
 						/>
 					</div>
 					<p className='xl:w-3/4 text-2xl font-bold'>
@@ -41,8 +41,8 @@ function Project() {
 							</p>
 						</div>
 						<img
-							className=' w-full xl:w-3/5'
-							src='https://team.daangn.com/static/ef5b621725b6ecd6d35f063a503bf67a/66698/125e51c5-e9e4-4f0b-a20c-681fb23fcfa6_photo_16.avif'
+							className='object-cover  w-full xl:w-3/5'
+							src='https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/snapshots/160993788224213297.jpg'
 						/>
 					</div>
 				</div>
@@ -50,8 +50,8 @@ function Project() {
 				<div className='section3 mt-44 '>
 					<div className='flex flex-col-reverse xl:flex xl:flex-row	 xl:justify-between xl:rigth'>
 						<img
-							className='w-full xl:w-3/5'
-							src='https://team.daangn.com/static/ef5b621725b6ecd6d35f063a503bf67a/66698/125e51c5-e9e4-4f0b-a20c-681fb23fcfa6_photo_16.avif'
+							className='object-cover w-full xl:w-3/5'
+							src='https://ca.slack-edge.com/TH0U6FBTN-U03EK9NRXNX-25f60beaa3ff-512'
 						/>
 						<div className='text-end'>
 							<span className='small-title'>당근마켓 팀</span>
@@ -71,8 +71,8 @@ function Project() {
 				{/* section4 */}
 				<div className='section4 mt-44 mb-44 '>
 					<img
-						className='mt-14 mb-8 rounded-xl '
-						src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
+						className='object-cover mt-14 mb-8 rounded-xl '
+						src='https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/snapshots/160993788224213297.jpg'
 					/>
 					<h2 className='mt-24 text-center leading-snug text-4xl font-extrabold'>
 						이웃과 더 가까워지는 따뜻한 동네를 만들어요.

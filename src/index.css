@@ -144,6 +144,10 @@ table {
 @tailwind utilities;
 
 @layer components {
+	.my-container {
+		@apply container 
+		px-14 pt-40 xl:pt-60 mx-auto;
+	}
 	.small-title {
 		@apply text-xl font-bold block mb-3;
 	}
@@ -161,8 +165,10 @@ table {
 	}
 	.hover-link {
 		@apply transition duration-300 ease-in-out
-
 		hover:text-gray-400;
+	}
+	.hover-icon {
+		@apply fill-black hover:fill-gray-300 cursor-pointer w-6;
 	}
 }
 
@@ -170,6 +176,13 @@ table {
 	margin-right: 4px;
 }
 
+/* footer start */
+.footer-border {
+	border-top: 1px solid #e2e2e2;
+}
+/* footer end */
+
+/* swiper start*/
 .swiper {
 	overflow-y: visible !important;
 }
@@ -182,15 +195,4 @@ table {
 .swiper-pagination-bullet-active {
 	background-color: black !important;
 }
-
-.swiper-slide-next {
-	padding-left: 10px;
-}
-
-.aaa {
-	color: aqua;
-}
-
-.footer-border {
-	border-top: 1px solid #e2e2e2;
-}
+/* swiper end*/
