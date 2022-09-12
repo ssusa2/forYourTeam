@@ -1,0 +1,211 @@
+/** @format */
+/** @format */
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	box-sizing: border-box;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol,
+ul {
+	list-style: none;
+}
+blockquote,
+q {
+	quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.section {
+		@apply mt-44;
+	}
+	.my-container {
+		@apply container 
+		px-14 pt-40 xl:pt-60 mx-auto;
+	}
+	.small-title {
+		@apply text-xl font-bold block mb-3;
+	}
+	.middle-title {
+		@apply leading-snug text-3xl font-extrabold;
+	}
+	.big-title {
+		@apply xl:leading-snug text-3xl font-extrabold sm:text-5xl;
+	}
+	.base-text {
+		@apply mt-3 mb-3 sm:pr-0  text-xl;
+	}
+	.base-m {
+		@apply mt-3 mb-3;
+	}
+	.hover-link {
+		@apply transition duration-300 ease-in-out cursor-pointer hover:text-gray-400;
+	}
+	.hover-icon {
+		@apply fill-black hover:fill-gray-300 cursor-pointer w-6;
+	}
+	.main-color {
+		@apply text-green-700;
+	}
+}
+
+.team-role > * {
+	margin-right: 4px;
+}
+
+/* footer start */
+.footer-border {
+	border-top: 1px solid #e2e2e2;
+}
+/* footer end */
+
+/* swiper start*/
+.swiper {
+	overflow-y: hidden !important;
+}
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
+	bottom: -4px !important;
+}
+.swiper-pagination-bullet-active {
+	background-color: black !important;
+}
+.mySwiper {
+	overflow-y: hidden;
+}
+/* swiper end*/
+
+.readW :read-write {
+	border: 4px solid green;
+}
