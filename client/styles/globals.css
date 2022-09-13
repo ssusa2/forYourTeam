@@ -153,7 +153,7 @@ table {
 		px-14 pt-40 xl:pt-60 mx-auto;
 	}
 	.small-title {
-		@apply text-xl font-bold block mb-3;
+		@apply text-xl font-bold block mt-3;
 	}
 	.middle-title {
 		@apply leading-snug text-3xl font-extrabold;
@@ -167,14 +167,20 @@ table {
 	.base-m {
 		@apply mt-3 mb-3;
 	}
+	.essential {
+		@apply after:content-['*'] after:ml-0.5 after:text-red-500 block text-xl font-medium text-slate-800;
+	}
 	.hover-link {
 		@apply transition duration-300 ease-in-out cursor-pointer hover:text-gray-400;
 	}
 	.hover-icon {
-		@apply fill-black hover:fill-gray-300 cursor-pointer w-6;
+		@apply fill-black  transition duration-300 ease-in-out cursor-pointer hover:fill-gray-300 cursor-pointer w-6;
 	}
 	.main-color {
 		@apply text-green-700;
+	}
+	.main-button {
+		@apply w-full rounded-full border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:w-auto sm:text-base;
 	}
 }
 

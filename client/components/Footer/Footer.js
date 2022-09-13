@@ -21,7 +21,10 @@ function Footer() {
 						{/* <Github className='	fill-black hover:fill-gray-300		 cursor-pointer	w-8' /> */}
 					</div>
 					<span className='text-gray-400 '>
-						@Made by <a href='/project'>ForMyTeam</a>
+						@ Made by{' '}
+						<a className='font-bold hover:text-green-700' href='/home'>
+							ForMyTeam
+						</a>
 						{/* <Link
 							href='/home'
 							className=' transition duration-300 ease-in-out hover:text-green-800 font-bold	'

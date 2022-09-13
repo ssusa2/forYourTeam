@@ -87,10 +87,7 @@ function Project() {
 						이웃과 더 가까워지는 따뜻한 동네를 만들어요.
 					</h2>
 					<div className='flex justify-center'>
-						<button
-							type='button'
-							className='mt-10 w-full  rounded-full border border-slate-300	  px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-slate-50 hover:text-slate-400		 focus:outline-none focus:ring-2  focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-base	'
-						>
+						<button type='button' className='mt-10 main-button'>
 							프로젝트 보러가기
 						</button>
 					</div>
