@@ -37,39 +37,42 @@ function introduce() {
 			member: [],
 		},
 	});
+	console.log('data', info?.team_page?.member);
 
-	const [memberData, setMemberData] = useState({
+	const [memberData, setMemberData] = useState([]);
+	const [newMemberData, setNewMemberData] = useState({
 		name: '',
 		role: '',
 		description: '',
 		gitub: '',
 		image: '',
 	});
-	console.log('team_page', info);
+	// console.log('memberData', memberData);
+	// console.log('newMemberData', newMemberData);
+	// console.log('team_page', info);
 	const core = [1, 2];
-	let Member = info.project_info.headcount || 1;
 
-	const z = info?.project_info?.headcount;
-	const [head, setHead] = useState(1);
-	console.log('z', z);
+	const person = info?.project_info?.headcount;
+	const [head, setHead] = useState(Number(1));
 	console.log('head', head);
 
 	// const person = [1, 2, 3, 4];
 
 	const check = [1, 2, 3, 4, 5, 6];
-	const [todo, setTodo] = useState([{ name: '' }]);
+
+	const [todo, setTodo] = useState([]);
 	let [inputValue, setInputValue] = useState('');
-	let [newTodo, setNewTodo] = useState({ name: '' });
+	let [newTodo, setNewTodo] = useState({ name: '', age: '' });
 
 	const inputChg = (e) => {
 		setInputValue(e.target.value);
 	};
 
 	//inputValue가 변하면, 그때 newTodo값을 바꿔주자
-	useEffect(() => setNewTodo({ name: inputValue }), [inputValue]);
-	useEffect(() => {
-		setHead(z);
-	}, [z]);
+	// useEffect(() => setNewTodo({ name: inputValue }), [newTodo]);
+	// useEffect(() => {
+	// 	setHead(person);
+	// }, [person]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -79,15 +82,45 @@ function introduce() {
 
 	const todosMap = todo.map((todoItem, i) => <p key={i}>{todoItem.name}</p>);
 
-	console.log(todo);
+	// console.log('head', head);
+	// console.log('todo', todo);
 
+	const [data, setData] = useState({
+		name: '',
+		role: '',
+		description: '',
+		gitub: '',
+		image: '',
+	});
+
+	console.log('memberData', memberData);
 	return (
 		<>
 			<div className='my-container'>
 				<div className='parent'>
 					name: {todosMap}
 					<form onSubmit={onSubmit}>
-						<input value={inputValue} onChange={inputChg}></input>
+						<input
+							onChange={(e) => {
+								setNewTodo((prev) => {
+									return {
+										...prev,
+										name: e.target.value,
+									};
+								});
+							}}
+						/>
+						<input
+							onChange={(e) => {
+								setNewTodo((prev) => {
+									return {
+										...prev,
+										age: e.target.value,
+									};
+								});
+							}}
+						/>
+
 						<button>저장</button>
 					</form>
 				</div>
@@ -278,132 +311,6 @@ hover:file:bg-violet-100'
       focus:invalid:border-pink-500 focus:invalid:ring-pink-500
     '
 						/>
-						<label className='small-title essential'>
-							프로젝트 팀원 수를 선택해주세요.
-						</label>
-
-						<div className='flex justify-between w-1/2'>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='1'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								1
-							</div>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='2'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								2
-							</div>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='3'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								3
-							</div>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='4'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								4
-							</div>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='5'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								5
-							</div>
-							<div>
-								<input
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_info: {
-													...info.project_info,
-													headcount: e.target.value,
-												},
-											};
-										});
-									}}
-									name='number'
-									type='radio'
-									value='6'
-									class='appearance-none rounded-full checked:bg-blue-500 '
-								/>
-								6
-							</div>
-						</div>
 					</section>
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Project 소개 페이지</h3>
@@ -673,9 +580,30 @@ hover:file:bg-violet-100'
 						.fill(1)
 						.map((el, idx) => {
 							return (
-								<MemberAdd el={el} idx={idx} info={info} setInfo={setInfo} />
+								<MemberAdd
+									el={el}
+									idx={idx}
+									info={info}
+									memberData={memberData}
+									setMemberData={setMemberData}
+									newMemberData={newMemberData}
+									setNewMemberData={setNewMemberData}
+									setInfo={setInfo}
+									data={data}
+									setData={setData}
+								/>
 							);
 						})}
+					<button
+						onClick={(e) => {
+							e.preventDefault();
+							setMemberData([...memberData, data]);
+							setHead(Number(head) + 1);
+						}}
+						className='main-button'
+					>
+						팀원 추가하기
+					</button>
 					<div className='flex justify-end'>
 						<button
 							type='button'

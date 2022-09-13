@@ -2,16 +2,21 @@
 
 import React, { useState } from 'react';
 
-function MemberAdd({ el, idx, setInfo, info }) {
+function MemberAdd({
+	el,
+	idx,
+	memberData,
+	newMemberData,
+	setNewMemberData,
+	setInfo,
+	setMemberData,
+	info,
+	data,
+	setData,
+}) {
 	const [imageSrc, setImageSrc] = useState('');
 
-	const [memberData, setMemberData] = useState({
-		name: '',
-		role: '',
-		description: '',
-		gitub: '',
-		image: '',
-	});
+	const [member, setMember] = useState([]);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -21,21 +26,16 @@ function MemberAdd({ el, idx, setInfo, info }) {
 		return new Promise((resolve) => {
 			reader.onload = () => {
 				setImageSrc(reader.result);
-
 				resolve();
 			};
 		});
 	};
-
+	console.log(data);
 	return (
 		<>
 			<label className='small-title essential'>팀원 ({idx + 1})</label>
 			<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100  '>
 				<div className='block xl:flex'>
-					{/* <img
-    className='w-full xl:w-1/2'
-    src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
-  /> */}
 					<div className='w-full xl:w-1/2 group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
 						{
 							<div className='preview'>
@@ -74,17 +74,16 @@ hover:file:bg-violet-100'
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
+									// onChange={(e) => {
+									// 	setData({ name: e.target.value });
+									// }}
 									onChange={(e) => {
-										setInfo((prev) => {
+										setData((prev) => {
 											return {
 												...prev,
-												member: {
-													...info.team_page.member,
-													name: e.target.value,
-												},
+												name: e.target.value,
 											};
 										});
-										console.log('idx', info.team_page.member);
 									}}
 									type='text'
 									multiple='multiple'
@@ -100,13 +99,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
 									onChange={(e) => {
-										setInfo((prev) => {
+										setData((prev) => {
 											return {
 												...prev,
-												member: {
-													...info.team_page.member,
-													role: e.target.value,
-												},
+												role: e.target.value,
 											};
 										});
 									}}
@@ -124,13 +120,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<label className='small-title essential'>소개말</label>{' '}
 						<textarea
 							onChange={(e) => {
-								setInfo((prev) => {
+								setData((prev) => {
 									return {
 										...prev,
-										member: {
-											...info.team_page.member,
-											description: e.target.value,
-										},
+										description: e.target.value,
 									};
 								});
 							}}
@@ -145,13 +138,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<label className='small-title essential'>Github</label>{' '}
 						<input
 							onChange={(e) => {
-								setInfo((prev) => {
+								setData((prev) => {
 									return {
 										...prev,
-										member: {
-											...info.team_page.member,
-											github: e.target.value,
-										},
+										gitub: e.target.value,
 									};
 								});
 							}}
