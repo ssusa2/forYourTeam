@@ -5,6 +5,22 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 function introduce() {
+	const [imageSrc, setImageSrc] = useState('');
+
+	const [member, setMember] = useState([]);
+
+	const encodeFileToBase64 = (fileBlob) => {
+		const reader = new FileReader();
+
+		reader.readAsDataURL(fileBlob);
+
+		return new Promise((resolve) => {
+			reader.onload = () => {
+				setImageSrc(reader.result);
+				resolve();
+			};
+		});
+	};
 	const [info, setInfo] = useState({
 		project_info: {
 			logo: '',
@@ -13,7 +29,6 @@ function introduce() {
 			email: '',
 			color: '',
 			team_github: '',
-			headcount: '',
 		},
 		project_page: {
 			intro: {
@@ -28,16 +43,16 @@ function introduce() {
 				image: '',
 			},
 		},
-		team_page: {
-			intro: {
-				slogun: '',
-				culture: '',
-				image: '',
-			},
-			member: [],
-		},
 	});
-	console.log('data', info?.team_page?.member);
+	const [teamInfo, setTeamInfo] = useState({
+		intro: {
+			slogun: '',
+			culture: '',
+			image: '',
+		},
+		member: [],
+	});
+	// console.log('data', teamInfo);
 
 	const [memberData, setMemberData] = useState([]);
 	const [newMemberData, setNewMemberData] = useState({
@@ -47,43 +62,14 @@ function introduce() {
 		gitub: '',
 		image: '',
 	});
-	// console.log('memberData', memberData);
-	// console.log('newMemberData', newMemberData);
-	// console.log('team_page', info);
-	const core = [1, 2];
+	// const core = [1, 2];
 
-	const person = info?.project_info?.headcount;
 	const [head, setHead] = useState(Number(1));
-	console.log('head', head);
+	// console.log('head', head);
 
 	// const person = [1, 2, 3, 4];
 
 	const check = [1, 2, 3, 4, 5, 6];
-
-	const [todo, setTodo] = useState([]);
-	let [inputValue, setInputValue] = useState('');
-	let [newTodo, setNewTodo] = useState({ name: '', age: '' });
-
-	const inputChg = (e) => {
-		setInputValue(e.target.value);
-	};
-
-	//inputValue가 변하면, 그때 newTodo값을 바꿔주자
-	// useEffect(() => setNewTodo({ name: inputValue }), [newTodo]);
-	// useEffect(() => {
-	// 	setHead(person);
-	// }, [person]);
-
-	const onSubmit = (e) => {
-		e.preventDefault();
-		setTodo([...todo, newTodo]);
-		setInputValue('');
-	};
-
-	const todosMap = todo.map((todoItem, i) => <p key={i}>{todoItem.name}</p>);
-
-	// console.log('head', head);
-	// console.log('todo', todo);
 
 	const [data, setData] = useState({
 		name: '',
@@ -93,38 +79,37 @@ function introduce() {
 		image: '',
 	});
 
-	console.log('memberData', memberData);
+	const [core, setCore] = useState([
+		{
+			subheading: '',
+			title: '',
+			description: '',
+			image: '',
+		},
+	]);
+	const handleFormChange = (index, event) => {
+		let data = [...core];
+		console.log('idx', index);
+		data[index][event.target.name] = event.target.value;
+		setCore(data);
+	};
+	const addFields = (e) => {
+		e.preventDefault();
+		let newCore = {
+			subheading: '',
+			title: '',
+			description: '',
+			image: '',
+		};
+		setCore([...core, newCore]);
+	};
+
+	console.log('core', core);
+	// console.log('info', info);
+	// console.log('teamInfo', teamInfo);
 	return (
 		<>
 			<div className='my-container'>
-				<div className='parent'>
-					name: {todosMap}
-					<form onSubmit={onSubmit}>
-						<input
-							onChange={(e) => {
-								setNewTodo((prev) => {
-									return {
-										...prev,
-										name: e.target.value,
-									};
-								});
-							}}
-						/>
-						<input
-							onChange={(e) => {
-								setNewTodo((prev) => {
-									return {
-										...prev,
-										age: e.target.value,
-									};
-								});
-							}}
-						/>
-
-						<button>저장</button>
-					</form>
-				</div>
-
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<p>
 					프로젝트에 대한 정보를 입력해 여려분의 프로젝트 사이트에서도
@@ -184,6 +169,19 @@ function introduce() {
 							</div>
 							<div className='block w-1/2'>
 								<p>이미지</p>
+								{
+									<div>
+										{imageSrc ? (
+											<img
+												className='preview'
+												src={imageSrc}
+												alt='preview-img'
+											/>
+										) : (
+											<></>
+										)}
+									</div>
+								}
 								<input
 									type='file'
 									className='block w-full text-sm text-slate-500
@@ -192,6 +190,9 @@ file:rounded-full file:border-0
 file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
+									onChange={(e) => {
+										encodeFileToBase64(e.target.files[0]);
+									}}
 								/>
 							</div>
 						</div>
@@ -202,6 +203,7 @@ hover:file:bg-violet-100'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
+										...prev,
 										project_info: { ...info.project_info, url: e.target.value },
 									};
 								});
@@ -325,8 +327,10 @@ hover:file:bg-violet-100'
 									return {
 										...prev,
 										project_page: {
-											...info.project_page,
-											slogun: e.target.value,
+											intro: {
+												...info.project_page.intro,
+												slogun: e.target.value,
+											},
 										},
 									};
 								});
@@ -350,8 +354,10 @@ hover:file:bg-violet-100'
 									return {
 										...prev,
 										project_page: {
-											...info.project_page,
-											image: e.target.value,
+											intro: {
+												...info.project_page.intro,
+												image: e.target.value,
+											},
 										},
 									};
 								});
@@ -375,8 +381,10 @@ hover:file:bg-violet-100'
 									return {
 										...prev,
 										project_page: {
-											...info.project_page,
-											description: e.target.value,
+											intro: {
+												...info.project_page.intro,
+												description: e.target.value,
+											},
 										},
 									};
 								});
@@ -396,20 +404,27 @@ hover:file:bg-violet-100'
 							<>
 								<h3 className='small-title '>프로젝트 주요 기능({idx + 1})</h3>
 								<p>프로젝트의 주요 기능을 설명해주세요.</p>
-								<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
+								<section
+									key={idx}
+									className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '
+								>
 									<label className='small-title mt-0 essential'>소제목</label>
 									<input
-										onChange={(e) => {
-											setInfo((prev) => {
-												return {
-													...prev,
-													service: {
-														...info.project_page.service,
-														subheading: e.target.value,
-													},
-												};
-											});
-										}}
+										name='subheading'
+										onChange={(event) => handleFormChange(idx, event)}
+										// onChange={(e) => {
+										// 	setInfo((prev) => {
+										// 		return {
+										// 			...prev,
+										// 			project_page: {
+										// 				service: {
+										// 					...info.project_page.service.subheading,
+										// 					subheading: e.target.value,
+										// 				},
+										// 			},
+										// 		};
+										// 	});
+										// }}
 										type='text'
 										multiple='multiple'
 										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -422,17 +437,21 @@ hover:file:bg-violet-100'
 
 									<label className='small-title essential'>제목</label>
 									<input
-										onChange={(e) => {
-											setInfo((prev) => {
-												return {
-													...prev,
-													service: {
-														...info.project_page.service,
-														title: e.target.value,
-													},
-												};
-											});
-										}}
+										name='title'
+										onChange={(event) => handleFormChange(idx, event)}
+										// onChange={(e) => {
+										// 	setInfo((prev) => {
+										// 		return {
+										// 			...prev,
+										// 			project_page: {
+										// 				service: {
+										// 					...info.project_page.service.title,
+										// 					title: e.target.value,
+										// 				},
+										// 			},
+										// 		};
+										// 	});
+										// }}
 										type='text'
 										multiple='multiple'
 										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -445,17 +464,21 @@ hover:file:bg-violet-100'
 
 									<label className='small-title essential'>소개</label>
 									<input
-										onChange={(e) => {
-											setInfo((prev) => {
-												return {
-													...prev,
-													service: {
-														...info.project_page.service,
-														description: e.target.value,
-													},
-												};
-											});
-										}}
+										onChange={(event) => handleFormChange(idx, event)}
+										name='description'
+										// onChange={(e) => {
+										// 	setInfo((prev) => {
+										// 		return {
+										// 			...prev,
+										// 			project_page: {
+										// 				service: {
+										// 					...info.project_page.service.description,
+										// 					description: e.target.value,
+										// 				},
+										// 			},
+										// 		};
+										// 	});
+										// }}
 										type='text'
 										multiple='multiple'
 										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -470,17 +493,19 @@ hover:file:bg-violet-100'
 										주요 기능에 맞는 사진을 업로드해주세요.
 									</label>
 									<input
-										onChange={(e) => {
-											setInfo((prev) => {
-												return {
-													...prev,
-													service: {
-														...info.project_page.service,
-														image: e.target.value,
-													},
-												};
-											});
-										}}
+										name='image'
+										onChange={(event) => handleFormChange(idx, event)}
+										// onChange={(e) => {
+										// 	setInfo((prev) => {
+										// 		return {
+										// 			...prev,
+										// 			service: {
+										// 				...info.project_page.service,
+										// 				image: e.target.value,
+										// 			},
+										// 		};
+										// 	});
+										// }}
 										type='text'
 										multiple='multiple'
 										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -494,6 +519,11 @@ hover:file:bg-violet-100'
 							</>
 						);
 					})}
+					<div className='flex justify-end'>
+						<button onClick={addFields} className='main-button'>
+							기능 추가하기
+						</button>
+					</div>
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Team 소개 페이지</h3>
 					<p>프로젝트의 팀 문화와 팀원들을 소개하세요.</p>
@@ -503,11 +533,11 @@ hover:file:bg-violet-100'
 						</label>
 						<input
 							onChange={(e) => {
-								setInfo((prev) => {
+								setTeamInfo((prev) => {
 									return {
 										...prev,
 										intro: {
-											...info.team_page.intro,
+											...teamInfo.intro,
 											slogun: e.target.value,
 										},
 									};
@@ -528,11 +558,11 @@ hover:file:bg-violet-100'
 						</label>
 						<input
 							onChange={(e) => {
-								setInfo((prev) => {
+								setTeamInfo((prev) => {
 									return {
 										...prev,
 										intro: {
-											...info.team_page.intro,
+											...teamInfo.intro,
 											culture: e.target.value,
 										},
 									};
@@ -553,11 +583,11 @@ hover:file:bg-violet-100'
 						</label>
 						<input
 							onChange={(e) => {
-								setInfo((prev) => {
+								setTeamInfo((prev) => {
 									return {
 										...prev,
 										intro: {
-											...info.team_page.intro,
+											...teamInfo.intro,
 											image: e.target.value,
 										},
 									};
@@ -581,6 +611,7 @@ hover:file:bg-violet-100'
 						.map((el, idx) => {
 							return (
 								<MemberAdd
+									key={idx}
 									el={el}
 									idx={idx}
 									info={info}
@@ -594,16 +625,31 @@ hover:file:bg-violet-100'
 								/>
 							);
 						})}
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							setMemberData([...memberData, data]);
-							setHead(Number(head) + 1);
-						}}
-						className='main-button'
-					>
-						팀원 추가하기
-					</button>
+					<div className='flex justify-end'>
+						<button
+							onClick={(e) => {
+								e.preventDefault();
+								setMemberData([...memberData, data]);
+								setTeamInfo((prev) => {
+									return {
+										...prev,
+										member: { ...memberData },
+									};
+								});
+								// setInfo({ ...info, memberData });
+								// setInfo((prev) => {
+								// 	return {
+								// 		...prev,
+								// 		info: { memberData },
+								// 	};
+								// });
+								setHead(Number(head) + 1);
+							}}
+							className='main-button'
+						>
+							팀원 추가하기
+						</button>
+					</div>
 					<div className='flex justify-end'>
 						<button
 							type='button'

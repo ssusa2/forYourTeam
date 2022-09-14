@@ -30,17 +30,18 @@ function MemberAdd({
 			};
 		});
 	};
-	console.log(data);
+	// console.log(data);
+	// console.log(idx);
 	return (
 		<>
 			<label className='small-title essential'>팀원 ({idx + 1})</label>
 			<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100  '>
 				<div className='block xl:flex'>
-					<div className='w-full xl:w-1/2 group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
+					<div className=' w-full  xl:w-1/2 group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
 						{
-							<div className='preview'>
+							<div>
 								{imageSrc ? (
-									<img src={imageSrc} alt='preview-img' />
+									<img className='preview' src={imageSrc} alt='preview-img' />
 								) : (
 									<>
 										<label className='flex items-center space-x-3'>
