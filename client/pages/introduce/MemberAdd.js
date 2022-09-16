@@ -2,21 +2,8 @@
 
 import React, { useState } from 'react';
 
-function MemberAdd({
-	el,
-	idx,
-	memberData,
-	newMemberData,
-	setNewMemberData,
-	setInfo,
-	setMemberData,
-	info,
-	data,
-	setData,
-}) {
+function MemberAdd({ el, idx, handleFormChange, member, setMember }) {
 	const [imageSrc, setImageSrc] = useState('');
-
-	const [member, setMember] = useState([]);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -30,8 +17,7 @@ function MemberAdd({
 			};
 		});
 	};
-	// console.log(data);
-	// console.log(idx);
+
 	return (
 		<>
 			<label className='small-title essential'>팀원 ({idx + 1})</label>
@@ -57,6 +43,7 @@ function MemberAdd({
 							</div>
 						}
 						<input
+							name='image'
 							type='file'
 							className='block w-full text-sm text-slate-500
 file:mr-4 file:py-2 file:px-4
@@ -65,6 +52,7 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
+								handleFormChange(idx, e, member, setMember);
 								encodeFileToBase64(e.target.files[0]);
 							}}
 						/>
@@ -75,16 +63,12 @@ hover:file:bg-violet-100'
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
+									name='name'
 									// onChange={(e) => {
-									// 	setData({ name: e.target.value });
+									// 	setMember({ name: e.target.value });
 									// }}
 									onChange={(e) => {
-										setData((prev) => {
-											return {
-												...prev,
-												name: e.target.value,
-											};
-										});
+										handleFormChange(idx, e, member, setMember);
 									}}
 									type='text'
 									multiple='multiple'
@@ -99,13 +83,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
+									name='role'
 									onChange={(e) => {
-										setData((prev) => {
-											return {
-												...prev,
-												role: e.target.value,
-											};
-										});
+										handleFormChange(idx, e, member, setMember);
 									}}
 									type='text'
 									multiple='multiple'
@@ -120,13 +100,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						</div>
 						<label className='small-title essential'>소개말</label>{' '}
 						<textarea
+							name='description'
 							onChange={(e) => {
-								setData((prev) => {
-									return {
-										...prev,
-										description: e.target.value,
-									};
-								});
+								handleFormChange(idx, e, member, setMember);
 							}}
 							multiple='multiple'
 							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -138,13 +114,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						/>
 						<label className='small-title essential'>Github</label>{' '}
 						<input
+							name='gitub'
 							onChange={(e) => {
-								setData((prev) => {
-									return {
-										...prev,
-										gitub: e.target.value,
-									};
-								});
+								handleFormChange(idx, e, member, setMember);
 							}}
 							type='url'
 							multiple='multiple'

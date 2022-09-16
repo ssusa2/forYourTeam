@@ -16,10 +16,8 @@ function Nav() {
 
 	const router = useRouter();
 	const { query } = router;
-	console.log('router', router);
 
 	const teamNumber = query.Intro;
-	console.log('teamNumber', teamNumber);
 
 	return (
 		<>

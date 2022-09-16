@@ -18,6 +18,8 @@ const MsgList = ({ smsgs }) => {
 	const [hasNext, setHasNext] = useState(true);
 	const fetchMoreEl = useRef(null);
 	const intersecting = useInfiniteScroll(fetchMoreEl);
+
+	console.log(intersecting);
 	// const { userId } = query;
 
 	const onCreate = async (text) => {
@@ -72,6 +74,7 @@ const MsgList = ({ smsgs }) => {
 		}
 	}, [intersecting]);
 
+	console.log('불러온다?');
 	return (
 		<>
 			{userId && <MsgInput mutate={onCreate} />}

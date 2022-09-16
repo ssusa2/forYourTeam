@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import MemberAdd from './MemberAdd';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import CoreAdd from './CoreAdd';
+import ImageHolder from './ImageHolder';
+import useSave from '../../hooks/useSave';
 
 function introduce() {
 	const [imageSrc, setImageSrc] = useState('');
-
-	const [member, setMember] = useState([]);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -21,63 +22,43 @@ function introduce() {
 			};
 		});
 	};
+	const [base, setBase] = useState({});
+
 	const [info, setInfo] = useState({
 		project_info: {
 			logo: '',
+			logo_image: '',
 			url: '',
 			genre: '',
 			email: '',
 			color: '',
 			team_github: '',
+			favicon: '',
 		},
 		project_page: {
-			intro: {
-				slogun: '',
-				image: '',
-				description: '',
-			},
-			service: {
-				subheading: '',
-				title: '',
-				description: '',
-				image: '',
-			},
+			slogun: '',
+			image: '',
+			description: '',
 		},
 	});
+
 	const [teamInfo, setTeamInfo] = useState({
 		intro: {
 			slogun: '',
 			culture: '',
 			image: '',
 		},
-		member: [],
 	});
-	// console.log('data', teamInfo);
 
-	const [memberData, setMemberData] = useState([]);
-	const [newMemberData, setNewMemberData] = useState({
-		name: '',
-		role: '',
-		description: '',
-		gitub: '',
-		image: '',
-	});
-	// const core = [1, 2];
-
-	const [head, setHead] = useState(Number(1));
-	// console.log('head', head);
-
-	// const person = [1, 2, 3, 4];
-
-	const check = [1, 2, 3, 4, 5, 6];
-
-	const [data, setData] = useState({
-		name: '',
-		role: '',
-		description: '',
-		gitub: '',
-		image: '',
-	});
+	const [member, setMember] = useState([
+		{
+			name: '',
+			role: '',
+			description: '',
+			gitub: '',
+			image: '',
+		},
+	]);
 
 	const [core, setCore] = useState([
 		{
@@ -87,13 +68,14 @@ function introduce() {
 			image: '',
 		},
 	]);
-	const handleFormChange = (index, event) => {
-		let data = [...core];
-		console.log('idx', index);
+
+	const handleFormChange = (index, event, state, setState) => {
+		let data = [...state];
 		data[index][event.target.name] = event.target.value;
-		setCore(data);
+		setState(data);
 	};
-	const addFields = (e) => {
+
+	const addCore = (e) => {
 		e.preventDefault();
 		let newCore = {
 			subheading: '',
@@ -104,9 +86,48 @@ function introduce() {
 		setCore([...core, newCore]);
 	};
 
-	console.log('core', core);
+	const addMember = (e) => {
+		e.preventDefault();
+		let newMember = {
+			name: '',
+			role: '',
+			description: '',
+			gitub: '',
+			image: '',
+		};
+		setMember([...member, newMember]);
+	};
+
+	const addProjectIntro = () => {
+		console.log('시작');
+		setInfo((prev) => {
+			return {
+				...prev,
+				project_page: {
+					...info.project_page,
+					core,
+				},
+			};
+		});
+		console.log('core 붙힘');
+		setTeamInfo((prev) => {
+			return {
+				...prev,
+				...teamInfo,
+				member,
+			};
+		});
+	};
+
+	// console.log('teaminfo', teamInfo);
+	// console.log('teaminfo', teamInfo.member?.name);
+	// console.log(teamInfo.member?.map((el) => console.log(el.name)));
 	// console.log('info', info);
-	// console.log('teamInfo', teamInfo);
+
+	useEffect(() => {
+		useSave(info, teamInfo);
+	}, [teamInfo]);
+	// console.log('team', teamInfo);
 	return (
 		<>
 			<div className='my-container'>
@@ -159,44 +180,35 @@ function introduce() {
 									}}
 									type='text'
 									multiple='multiple'
-									className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
+									className=' base-form'
 								/>
 							</div>
 							<div className='block w-1/2'>
 								<p>이미지</p>
-								{
-									<div>
-										{imageSrc ? (
-											<img
-												className='preview'
-												src={imageSrc}
-												alt='preview-img'
-											/>
-										) : (
-											<></>
-										)}
-									</div>
-								}
-								<input
-									type='file'
-									className='block w-full text-sm text-slate-500
-file:mr-4 file:py-2 file:px-4
-file:rounded-full file:border-0
-file:text-sm file:font-semibold
-file:bg-violet-50 file:text-green-700
-hover:file:bg-violet-100'
-									onChange={(e) => {
-										encodeFileToBase64(e.target.files[0]);
-									}}
+								<ImageHolder
+									state={info}
+									setState={setInfo}
+									name={'logo_image'}
+									object={'project_info'}
 								/>
 							</div>
 						</div>
-						<label className='small-title  essential'>
+
+						<label className='small-title mt-0 essential'>
+							프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
+						</label>
+						<div className='flex justify-between'>
+							<div className='block w-1/2'>
+								<p>파비콘</p>
+								<ImageHolder
+									state={info}
+									setState={setInfo}
+									name={'favicon'}
+									object={'project_info'}
+								/>
+							</div>
+						</div>
+						<label className='small-title essential'>
 							프로젝트 웹 사이트의 주소를 입력해주세요.
 						</label>
 						<input
@@ -204,17 +216,16 @@ hover:file:bg-violet-100'
 								setInfo((prev) => {
 									return {
 										...prev,
-										project_info: { ...info.project_info, url: e.target.value },
+										project_info: {
+											...info.project_info,
+											url: e.target.value,
+										},
 									};
 								});
 							}}
-							type='url'
+							type='favicon'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 						<label className='small-title  essential'>
@@ -234,11 +245,7 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 						<label className='small-title  essential'>
@@ -258,11 +265,7 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 						<label className='small-title  essential'>
@@ -282,11 +285,7 @@ hover:file:bg-violet-100'
 							}}
 							type='email'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 						<label className='small-title essential'>
@@ -306,11 +305,7 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 					</section>
@@ -327,49 +322,26 @@ hover:file:bg-violet-100'
 									return {
 										...prev,
 										project_page: {
-											intro: {
-												...info.project_page.intro,
-												slogun: e.target.value,
-											},
+											...info.project_page,
+											slogun: e.target.value,
 										},
 									};
 								});
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 
 						<label className='small-title essential'>
 							프로젝트를 대표하는 사진을 업로드해주세요.
 						</label>
-						<input
-							onChange={(e) => {
-								setInfo((prev) => {
-									return {
-										...prev,
-										project_page: {
-											intro: {
-												...info.project_page.intro,
-												image: e.target.value,
-											},
-										},
-									};
-								});
-							}}
-							type='text'
-							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
+						<ImageHolder
+							state={info}
+							setState={setInfo}
+							name={'image'}
+							object={'project_page'}
 						/>
 
 						<label className='small-title essential'>
@@ -381,146 +353,34 @@ hover:file:bg-violet-100'
 									return {
 										...prev,
 										project_page: {
-											intro: {
-												...info.project_page.intro,
-												description: e.target.value,
-											},
+											...info.project_page,
+											description: e.target.value,
 										},
 									};
 								});
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 					</section>
 					{core.map((el, idx) => {
 						return (
 							<>
-								<h3 className='small-title '>프로젝트 주요 기능({idx + 1})</h3>
-								<p>프로젝트의 주요 기능을 설명해주세요.</p>
-								<section
+								<CoreAdd
+									el={el}
+									idx={idx}
 									key={idx}
-									className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '
-								>
-									<label className='small-title mt-0 essential'>소제목</label>
-									<input
-										name='subheading'
-										onChange={(event) => handleFormChange(idx, event)}
-										// onChange={(e) => {
-										// 	setInfo((prev) => {
-										// 		return {
-										// 			...prev,
-										// 			project_page: {
-										// 				service: {
-										// 					...info.project_page.service.subheading,
-										// 					subheading: e.target.value,
-										// 				},
-										// 			},
-										// 		};
-										// 	});
-										// }}
-										type='text'
-										multiple='multiple'
-										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
-									/>
-
-									<label className='small-title essential'>제목</label>
-									<input
-										name='title'
-										onChange={(event) => handleFormChange(idx, event)}
-										// onChange={(e) => {
-										// 	setInfo((prev) => {
-										// 		return {
-										// 			...prev,
-										// 			project_page: {
-										// 				service: {
-										// 					...info.project_page.service.title,
-										// 					title: e.target.value,
-										// 				},
-										// 			},
-										// 		};
-										// 	});
-										// }}
-										type='text'
-										multiple='multiple'
-										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
-									/>
-
-									<label className='small-title essential'>소개</label>
-									<input
-										onChange={(event) => handleFormChange(idx, event)}
-										name='description'
-										// onChange={(e) => {
-										// 	setInfo((prev) => {
-										// 		return {
-										// 			...prev,
-										// 			project_page: {
-										// 				service: {
-										// 					...info.project_page.service.description,
-										// 					description: e.target.value,
-										// 				},
-										// 			},
-										// 		};
-										// 	});
-										// }}
-										type='text'
-										multiple='multiple'
-										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
-									/>
-
-									<label className='small-title essential'>
-										주요 기능에 맞는 사진을 업로드해주세요.
-									</label>
-									<input
-										name='image'
-										onChange={(event) => handleFormChange(idx, event)}
-										// onChange={(e) => {
-										// 	setInfo((prev) => {
-										// 		return {
-										// 			...prev,
-										// 			service: {
-										// 				...info.project_page.service,
-										// 				image: e.target.value,
-										// 			},
-										// 		};
-										// 	});
-										// }}
-										type='text'
-										multiple='multiple'
-										className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    '
-									/>
-								</section>
+									core={core}
+									setCore={setCore}
+									handleFormChange={handleFormChange}
+								/>
 							</>
 						);
 					})}
 					<div className='flex justify-end'>
-						<button onClick={addFields} className='main-button'>
+						<button onClick={addCore} className='main-button'>
 							기능 추가하기
 						</button>
 					</div>
@@ -545,11 +405,7 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 
@@ -570,11 +426,7 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 
@@ -595,56 +447,46 @@ hover:file:bg-violet-100'
 							}}
 							type='text'
 							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+							className=' base-form
     '
 						/>
 					</section>
 
 					<h3 className='small-title '>팀원 소개</h3>
 					<p>팀원를 소개해보세요.</p>
-					{Array(Number(head || 1))
-						.fill(1)
-						.map((el, idx) => {
-							return (
-								<MemberAdd
-									key={idx}
-									el={el}
-									idx={idx}
-									info={info}
-									memberData={memberData}
-									setMemberData={setMemberData}
-									newMemberData={newMemberData}
-									setNewMemberData={setNewMemberData}
-									setInfo={setInfo}
-									data={data}
-									setData={setData}
-								/>
-							);
-						})}
+					{member.map((el, idx) => {
+						return (
+							<MemberAdd
+								key={idx}
+								el={el}
+								idx={idx}
+								member={member}
+								setMember={setMember}
+								handleFormChange={handleFormChange}
+							/>
+						);
+					})}
 					<div className='flex justify-end'>
 						<button
-							onClick={(e) => {
-								e.preventDefault();
-								setMemberData([...memberData, data]);
-								setTeamInfo((prev) => {
-									return {
-										...prev,
-										member: { ...memberData },
-									};
-								});
-								// setInfo({ ...info, memberData });
-								// setInfo((prev) => {
-								// 	return {
-								// 		...prev,
-								// 		info: { memberData },
-								// 	};
-								// });
-								setHead(Number(head) + 1);
-							}}
+							onClick={addMember}
+							// onClick={(e) => {
+							// 	e.preventDefault();
+							// 	setMemberData([...memberData, data]);
+							// 	setTeamInfo((prev) => {
+							// 		return {
+							// 			...prev,
+							// 			member: { ...memberData },
+							// 		};
+							// 	});
+							// setInfo({ ...info, memberData });
+							// setInfo((prev) => {
+							// 	return {
+							// 		...prev,
+							// 		info: { memberData },
+							// 	};
+							// });
+							// setHead(Number(head) + 1);
+							// }}
 							className='main-button'
 						>
 							팀원 추가하기
@@ -658,10 +500,11 @@ hover:file:bg-violet-100'
 							임시저장
 						</button>
 						<button
+							onClick={addProjectIntro}
 							type='button'
 							className='w-full  mt-14 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'
 						>
-							프로젝트 소개하기
+							저장
 						</button>
 					</div>
 				</form>
