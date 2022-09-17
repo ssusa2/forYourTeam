@@ -3,11 +3,12 @@
 import express from 'express';
 import cors from 'cors';
 import messagesRoute from './routes/messages.js';
+import projectsRoute from './routes/projects.js';
 import usersRoute from './routes/users.js';
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
 	cors({
@@ -16,7 +17,7 @@ app.use(
 	})
 );
 
-const routes = [...messagesRoute, ...usersRoute];
+const routes = [...messagesRoute, ...usersRoute, ...projectsRoute];
 routes.forEach(({ method, route, handler }) => {
 	app[method](route, handler);
 });

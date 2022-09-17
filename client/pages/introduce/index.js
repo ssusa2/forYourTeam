@@ -9,6 +9,7 @@ import useSave from '../../hooks/useSave';
 
 function introduce() {
 	const [imageSrc, setImageSrc] = useState('');
+	const [isSaving, setIsSaving] = useState(false);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -55,7 +56,7 @@ function introduce() {
 			name: '',
 			role: '',
 			description: '',
-			gitub: '',
+			github: '',
 			image: '',
 		},
 	]);
@@ -92,7 +93,7 @@ function introduce() {
 			name: '',
 			role: '',
 			description: '',
-			gitub: '',
+			github: '',
 			image: '',
 		};
 		setMember([...member, newMember]);
@@ -117,17 +118,24 @@ function introduce() {
 				member,
 			};
 		});
+		setIsSaving(true);
 	};
+
+	useEffect(() => {
+		console.log('1');
+		useSave(info, teamInfo);
+		console.log('2');
+	}, [isSaving]);
+
+	console.log('isSaving', isSaving);
 
 	// console.log('teaminfo', teamInfo);
 	// console.log('teaminfo', teamInfo.member?.name);
 	// console.log(teamInfo.member?.map((el) => console.log(el.name)));
 	// console.log('info', info);
 
-	useEffect(() => {
-		useSave(info, teamInfo);
-	}, [teamInfo]);
 	// console.log('team', teamInfo);
+
 	return (
 		<>
 			<div className='my-container'>

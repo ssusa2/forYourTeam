@@ -114,7 +114,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						/>
 						<label className='small-title essential'>Github</label>{' '}
 						<input
-							name='gitub'
+							name='github'
 							onChange={(e) => {
 								handleFormChange(idx, e, member, setMember);
 							}}
