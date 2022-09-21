@@ -1,9 +1,31 @@
 /** @format */
 
-import React, { useState } from 'react';
+/** @format */
 
-function MemberAdd({ el, idx, handleFormChange, member, setMember }) {
+import React, { useEffect, useState } from 'react';
+import { db, storage, storageRef } from '../firebase';
+import { v4 as uuidv4 } from 'uuid';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	ref,
+	uploadBytes,
+	uploadBytesResumable,
+	uploadString,
+	getDownloadURL,
+} from 'firebase/storage';
+
+function MemberAdd({
+	el,
+	idx,
+	// handleFormChange,
+	member,
+	setMember,
+	fileUrl,
+	setFileUrl,
+}) {
+	console.log('fileUrl:::', fileUrl);
 	const [imageSrc, setImageSrc] = useState('');
+	const userID = useSelector(({ user }) => user);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -17,6 +39,47 @@ function MemberAdd({ el, idx, handleFormChange, member, setMember }) {
 			};
 		});
 	};
+	const handleFormChange = async (index, event, state, setState, imageUrl) => {
+		let data = [...state];
+		try {
+			if (event.target.type == 'file') {
+				const metadata = {
+					contentType: 'image/jpeg',
+				};
+
+				if (event.target.value != '') {
+					const fileRef = ref(storage, `${userID.uid}/team/${index}`);
+					const uploadTask = await uploadBytes(
+						fileRef,
+						event.target.value,
+						metadata
+					);
+
+					setFileUrl(await getDownloadURL(fileRef));
+					console.log(fileUrl);
+				}
+				console.log(fileUrl);
+				data[index][event.target.name] = imageUrl;
+			} else {
+				data[index][event.target.name] = event.target.value;
+			}
+			setState(data);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+	// const ConvertUrl = async (fileBlob) => {
+	// 	const metadata = {
+	// 		contentType: 'image/jpeg',
+	// 	};
+
+	// 	if (fileBlob != '') {
+	// 		const fileRef = ref(storage, `${userID.uid}/team/${idx}`);
+	// 		const uploadTask = await uploadBytes(fileRef, fileBlob, metadata);
+	// 		fileUrl = await getDownloadURL(fileRef);
+	// 		console.log(fileUrl);
+	// 	}
+	// };
 
 	return (
 		<>
@@ -52,8 +115,10 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember);
+								handleFormChange(idx, e, member, setMember, fileUrl);
+								console.log('qwe');
 								encodeFileToBase64(e.target.files[0]);
+								// ConvertUrl(e);
 							}}
 						/>
 					</div>

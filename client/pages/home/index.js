@@ -21,6 +21,7 @@ function Home() {
 					</button>
 				</div>
 				<div className='my-16 sm:my-32 h-px bg-slate-300	'></div>
+
 				<section className='section'>
 					<h2 className='small-title'>
 						<span className='main-color'>Project</span> Page
@@ -56,6 +57,15 @@ function Home() {
 						</p>
 					</div>
 				</section>
+				<div className='flex justify-center'>
+					<button
+						onClick={() => router.push('/project')}
+						type='button'
+						className='w-full  mt-14 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
+					>
+						프로젝트 보러가기
+					</button>
+				</div>
 			</div>
 		</>
 	);

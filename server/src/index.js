@@ -17,6 +17,10 @@ app.use(
 	})
 );
 
+app.get('/introduce', function (req, res) {
+	res.json({ name: 'black' });
+});
+
 const routes = [...messagesRoute, ...usersRoute, ...projectsRoute];
 routes.forEach(({ method, route, handler }) => {
 	app[method](route, handler);

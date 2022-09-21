@@ -1,21 +1,56 @@
 /** @format */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import path from 'path';
+import LogOut from './Logout';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserName, setUserId } from '../../src/store/modules/user';
+import { FirebaseAuth } from '../../pages/firebase';
 
 function Nav() {
-	const [projectNumber, setProjectNumber] = useState(null);
 	const { pathname } = useRouter();
 	const { route } = useRouter();
+	const router = useRouter();
+	const { query } = router;
+	const [init, setInit] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [userObj, setUserObj] = useState(null);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		FirebaseAuth.onAuthStateChanged((user) => {
+			if (user) {
+				setIsLoggedIn(true);
+				// router.push('/home');
+				dispatch(setUserName(user.displayName));
+				dispatch(setUserId(user.uid));
+				setUserObj({
+					displayName: user.displayName,
+					uid: user.uid,
+					updateProfile: (args) => user.updateProfile(args),
+				});
+			} else {
+				setIsLoggedIn(false);
+				router.push('/login');
+			}
+			setInit(true);
+		});
+	}, []);
+
+	const refreshUser = () => {
+		const user = authService.currentUser;
+		setUserObj({
+			displayName: user.displayName,
+			uid: user.uid,
+			updateProfile: (args) => user.updateProfile(args),
+		});
+	};
+
 	let activeStyle = {
 		textDecoration: 'underline green',
 		color: 'green',
 	};
 	let activeClassName = 'underline';
-
-	const router = useRouter();
-	const { query } = router;
 
 	const teamNumber = query.Intro;
 
@@ -44,13 +79,11 @@ function Nav() {
 									<h2 className='font-bold hover-link '>Projects</h2>
 								</Link>
 							)}
-
 							{pathname == '/project' && (
 								<Link href='/project'>
 									<h2 className='font-bold hover-link '>Projects</h2>
 								</Link>
 							)}
-
 							{route == '/project/[Intro]' ? (
 								<>
 									<Link href={`/project/${teamNumber}`}>
@@ -91,6 +124,7 @@ function Nav() {
 							) : (
 								''
 							)}
+							{isLoggedIn ? <LogOut /> : ''}
 						</div>
 					</div>
 				</div>

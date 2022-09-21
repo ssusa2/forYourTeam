@@ -3,8 +3,10 @@
 import { useEffect } from 'react';
 import fetcher from '../fetcher';
 import { useRouter } from 'next/router';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { db } from '../pages/firebase';
 
-const useSave = (project, team) => {
+const useSave = async (project, team) => {
 	console.log(project);
 
 	const formData = new FormData();
@@ -80,10 +82,10 @@ const useSave = (project, team) => {
 	// 	console.log(key, ':', formData.get(key));
 	// }
 
-	fetcher('post', '/introduce', {
-		formData,
-	});
-	console.log('발사');
+	// fetcher('post', '/introduce', {
+	// 	formData,
+	// });
+	// console.log('발사');
 };
 
 export default useSave;

@@ -2,31 +2,37 @@
 import React, { useState, useEffect } from 'react';
 import MemberAdd from './MemberAdd';
 import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
 import useSave from '../../hooks/useSave';
+import { db, storage, storageRef } from '../firebase';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	ref,
+	uploadBytes,
+	uploadBytesResumable,
+	uploadString,
+	getDownloadURL,
+} from 'firebase/storage';
+import { async } from '@firebase/util';
 
 function introduce() {
+	const dispatch = useDispatch();
+	const userID = useSelector(({ user }) => user);
+	const userName = useSelector(({ user }) => user);
 	const [imageSrc, setImageSrc] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
+	const [fileUrl, setFileUrl] = useState('');
 
-	const encodeFileToBase64 = (fileBlob) => {
-		const reader = new FileReader();
+	// const user = useSelector((state) => state.name);
 
-		reader.readAsDataURL(fileBlob);
-
-		return new Promise((resolve) => {
-			reader.onload = () => {
-				setImageSrc(reader.result);
-				resolve();
-			};
-		});
-	};
-	const [base, setBase] = useState({});
+	console.log('userName', userName);
 
 	const [info, setInfo] = useState({
 		project_info: {
+			name: '',
 			logo: '',
 			logo_image: '',
 			url: '',
@@ -42,6 +48,8 @@ function introduce() {
 			description: '',
 		},
 	});
+
+	// const [folderName, setFolderName] = useState();
 
 	const [teamInfo, setTeamInfo] = useState({
 		intro: {
@@ -69,11 +77,56 @@ function introduce() {
 			image: '',
 		},
 	]);
+	// const ConvertUrl = async (event, index) => {
+	// 	const metadata = {
+	// 		contentType: 'image/jpeg',
+	// 	};
+	// 	console.log('2');
 
-	const handleFormChange = (index, event, state, setState) => {
+	// 	if (event.target.value != '') {
+	// 		console.log('3');
+	// 		const fileRef = ref(storage, `${userID.uid}/team/${index}`);
+	// 		const uploadTask = await uploadBytes(
+	// 			fileRef,
+	// 			event.target.value,
+	// 			metadata
+	// 		);
+	// 		console.log(fileUrl);
+
+	// 		setFileUrl(await getDownloadURL(fileRef));
+	// 		// data[index]name = fileUrl;
+	// 		console.log(fileUrl);
+	// 	}
+	// };
+
+	const handleFormChange = async (index, event, state, setState, imageUrl) => {
 		let data = [...state];
-		data[index][event.target.name] = event.target.value;
-		setState(data);
+		try {
+			if (event.target.type == 'file') {
+				const metadata = {
+					contentType: 'image/jpeg',
+				};
+
+				if (event.target.value != '') {
+					const fileRef = ref(storage, `${userID.uid}/team/${index}`);
+					const uploadTask = await uploadBytes(
+						fileRef,
+						event.target.value,
+						metadata
+					);
+
+					setFileUrl(await getDownloadURL(fileRef));
+					console.log(fileUrl);
+				}
+				console.log(fileUrl);
+				data[index][event.target.name] = imageUrl;
+			} else {
+				data[index][event.target.name] = event.target.value;
+			}
+			setState(data);
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const addCore = (e) => {
@@ -99,8 +152,7 @@ function introduce() {
 		setMember([...member, newMember]);
 	};
 
-	const addProjectIntro = () => {
-		console.log('시작');
+	const addProjectIntro = async () => {
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -119,15 +171,18 @@ function introduce() {
 			};
 		});
 		setIsSaving(true);
+
+		// await setDoc(doc(db, 'project', `${info.project_info.name}`), {
+		// 	info,
+		// 	teamInfo,
+		// });
 	};
 
 	useEffect(() => {
-		console.log('1');
 		useSave(info, teamInfo);
-		console.log('2');
 	}, [isSaving]);
 
-	console.log('isSaving', isSaving);
+	console.log('teamInfo', teamInfo);
 
 	// console.log('teaminfo', teamInfo);
 	// console.log('teaminfo', teamInfo.member?.name);
@@ -139,6 +194,8 @@ function introduce() {
 	return (
 		<>
 			<div className='my-container'>
+				{/* {userName.displayName}
+				{userName.uid} */}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<p>
 					프로젝트에 대한 정보를 입력해 여려분의 프로젝트 사이트에서도
@@ -168,6 +225,26 @@ function introduce() {
 						해당 정보는 페이지의 헤더와 푸터에서 사용됩니다.
 					</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
+						<label className='small-title essential'>
+							프로젝트의 이름을 입력해주세요.
+						</label>
+						<input
+							onChange={(e) => {
+								setInfo((prev) => {
+									return {
+										...prev,
+										project_info: {
+											...info.project_info,
+											name: e.target.value,
+										},
+									};
+								});
+							}}
+							type='favicon'
+							multiple='multiple'
+							className=' base-form
+    '
+						/>
 						<label className='small-title mt-0 essential'>
 							프로젝트의 로고를 입력하거나 이미지를 첨부해주세요.(120px x 40px)
 						</label>
@@ -471,6 +548,8 @@ function introduce() {
 								member={member}
 								setMember={setMember}
 								handleFormChange={handleFormChange}
+								fileUrl={fileUrl}
+								setFileUrl={setFileUrl}
 							/>
 						);
 					})}

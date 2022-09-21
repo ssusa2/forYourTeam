@@ -1,13 +1,27 @@
 /** @format */
 // import Main from '../Home/Main';
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import SortGenre from './SortGenre';
+import { db } from '../firebase';
+
+import { collection, getDocs } from 'firebase/firestore/lite';
 
 function Projects() {
+	console.log('db', db);
+	const [projects, setProjects] = useState([]);
+	const projectsCollectionRef = collection(db, 'project');
 	const router = useRouter();
 
-	console.log('router', router);
+	useEffect(() => {
+		const getProjects = async () => {
+			const data = await getDocs(projectsCollectionRef);
+			setProjects(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		};
+		getProjects();
+	}, []);
+	console.log('projects', projects);
 	const genre = [
 		{
 			id: 1,
@@ -28,6 +42,13 @@ function Projects() {
 	];
 	return (
 		<div className='my-container'>
+			{/* {projects.map((project) => {
+				return (
+					<>
+						<h1>name: {project.name}</h1>
+					</>
+				);
+			})} */}
 			{/* <div></div> */}
 			<div>
 				<h2 className='middle-title'>Projects</h2>
