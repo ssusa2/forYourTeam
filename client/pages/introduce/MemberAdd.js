@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-function MemberAdd({ el, idx, member, setMember, handleFormChange }) {
+function MemberAdd({ el, idx, member, setMember, handleFormChange, section }) {
 	const [imageSrc, setImageSrc] = useState('');
 
 	const userID = useSelector(({ user }) => user);
@@ -25,48 +25,6 @@ function MemberAdd({ el, idx, member, setMember, handleFormChange }) {
 			};
 		});
 	};
-	// const handleFormChange = async (index, event, state, setState) => {
-	// 	let data = [...state];
-
-	// 	try {
-	// 		let fileUrl = '';
-	// 		if (event.target.type == 'file') {
-	// 			const metadata = {
-	// 				contentType: 'image/jpeg',
-	// 			};
-
-	// 			if (event.target.value != '') {
-	// 				const fileRef = ref(storage, `${userID.uid}/team/${index}`);
-	// 				const uploadTask = await uploadBytes(
-	// 					fileRef,
-	// 					event.target.value,
-	// 					metadata
-	// 				);
-
-	// 				fileUrl = await getDownloadURL(fileRef);
-	// 			}
-
-	// 			data[index][event.target.name] = fileUrl;
-	// 		} else {
-	// 			data[index][event.target.name] = event.target.value;
-	// 		}
-	// 		setState(data);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 	}
-	// };
-	// const ConvertUrl = async (fileBlob) => {
-	// 	const metadata = {
-	// 		contentType: 'image/jpeg',
-	// 	};
-
-	// 	if (fileBlob != '') {
-	// 		const fileRef = ref(storage, `${userID.uid}/team/${idx}`);
-	// 		const uploadTask = await uploadBytes(fileRef, fileBlob, metadata);
-	// 		fileUrl = await getDownloadURL(fileRef);
-	// 		console.log(fileUrl);
-	// 	}
-	// };
 
 	return (
 		<>
@@ -86,7 +44,7 @@ function MemberAdd({ el, idx, member, setMember, handleFormChange }) {
 											</span>
 										</label>
 										<p className='text-slate-500 group-hover:text-white text-sm'>
-											버튼을 눌러 프로젝트에 참여한 팀원을 소개해보세요.
+											{section}
 										</p>
 									</>
 								)}
@@ -109,10 +67,11 @@ hover:file:bg-violet-100'
 					</div>
 
 					<div className='w-full mt-4 xl:ml-4 xl:mt-0'>
-						<div className='flex '>
+						<div className='flex b-divide '>
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
+									placeholder='team-member-1'
 									name='name'
 									// onChange={(e) => {
 									// 	setMember({ name: e.target.value });
@@ -133,6 +92,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
+									placeholder='team-member-2'
 									name='role'
 									onChange={(e) => {
 										handleFormChange(idx, e, member, setMember);
@@ -148,22 +108,26 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 								/>
 							</div>
 						</div>
-						<label className='small-title essential'>소개말</label>{' '}
-						<textarea
-							name='description'
-							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember);
-							}}
-							multiple='multiple'
-							className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+						<div className='b-divide'>
+							<label className='small-title essential'>소개말</label>{' '}
+							<textarea
+								placeholder='team-member-3'
+								name='description'
+								onChange={(e) => {
+									handleFormChange(idx, e, member, setMember);
+								}}
+								multiple='multiple'
+								className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
 focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 '
-						/>
+							/>
+						</div>
 						<label className='small-title essential'>Github</label>{' '}
 						<input
+							placeholder='team-member-4'
 							name='github'
 							onChange={(e) => {
 								handleFormChange(idx, e, member, setMember);

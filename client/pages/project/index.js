@@ -6,21 +6,31 @@ import ProjectList from './ProjectList';
 import SortGenre from './SortGenre';
 import { db } from '../firebase';
 
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Projects() {
-	console.log('db', db);
 	const [projects, setProjects] = useState([]);
-	const projectsCollectionRef = collection(db, 'project');
+
 	const router = useRouter();
 
 	useEffect(() => {
-		const getProjects = async () => {
-			const data = await getDocs(projectsCollectionRef);
-			setProjects(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		const fetchUsers = async () => {
+			const projectRef = await getDocs(collection(db, 'project'));
+			// const userSnap = await getDocs(usersCollectionRef);
+			const newData = projectRef.docs.map((doc) => ({
+				...doc.data(),
+			}));
+			setProjects(newData);
 		};
-		getProjects();
+
+		fetchUsers();
+		// const getProjects = async () => {
+		// 	const data = await getDocs(projectsCollectionRef);
+		// 	setProjects(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		// };
+		// getProjects();
 	}, []);
+	// console.log(data);
 	console.log('projects', projects);
 	const genre = [
 		{
@@ -60,7 +70,7 @@ function Projects() {
 			<div className='mb-8 mt-6 sm:mb-12 h-px bg-slate-300'></div>
 			<p className='small-title'>보고싶은 장르를 선택하세요.</p>
 			<SortGenre genre={genre} />
-			<ProjectList />
+			<ProjectList projects={projects} />
 		</div>
 	);
 }

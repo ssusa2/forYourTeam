@@ -58,7 +58,7 @@ function Nav() {
 		<>
 			<div className='relative z-50	'>
 				<div className=' w-full px-16 py-6 bg-white text-black fixed top-0 left-0 '>
-					<div className='flex justify-between	'>
+					<div className='flex justify-between items-center	'>
 						{pathname == '/home' || '/projects' ? (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/home'>
 								<h1 className='cursor-pointer font-extrabold text-green-700'>
@@ -72,16 +72,16 @@ function Nav() {
 						)}
 
 						{/* Right Menu */}
-						<div className='flex'>
+						<div className='flex items-center'>
 							{/* projects */}
 							{pathname == '/home' && (
 								<Link href='/project'>
-									<h2 className='font-bold hover-link '>Projects</h2>
+									<h2 className='mr-6 font-bold hover-link '>Projects</h2>
 								</Link>
 							)}
 							{pathname == '/project' && (
 								<Link href='/project'>
-									<h2 className='font-bold hover-link '>Projects</h2>
+									<h2 className='mr-6 font-bold hover-link '>Projects</h2>
 								</Link>
 							)}
 							{route == '/project/[Intro]' ? (
@@ -98,7 +98,7 @@ function Nav() {
 										</h2>
 									</Link>
 									<Link href={`/team/${teamNumber}`}>
-										<h2 className=' ml-8 font-bold hover-link '>Team</h2>
+										<h2 className=' ml-8 mr-6 font-bold hover-link '>Team</h2>
 									</Link>
 								</>
 							) : (
@@ -113,7 +113,7 @@ function Nav() {
 										<h2
 											className={
 												route == '/team/[Intro]'
-													? `${activeClassName} + ml-8 font-bold hover-link`
+													? `${activeClassName} + ml-8 mr-6 font-bold hover-link`
 													: 'ml-8 font-bold hover-link'
 											}
 										>

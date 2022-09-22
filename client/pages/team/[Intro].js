@@ -1,6 +1,11 @@
 /** @format */
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { collection, getDoc, doc } from 'firebase/firestore';
+import Members from './Members';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -9,62 +14,53 @@ import 'swiper/css/navigation';
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
-import Members from './Members';
 function teamHome() {
-	let test = [
-		{
-			id: 1,
-			name: '정수인',
-			role: 'Front-End Developer',
-			image:
-				'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-		},
-		{
-			id: 2,
-			name: '윤명국',
-			role: 'Back-End Developer',
-			image:
-				'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-		},
-		{
-			id: 3,
-			name: '김은지',
-			role: 'Back-End Developer',
-			image:
-				'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-		},
-		{
-			id: 4,
-			name: '전슬기',
-			role: 'Front-End Developer',
-			image:
-				'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-		},
-	];
-	const OneMember = test.length;
-	console.log(OneMember);
+	const router = useRouter();
+	const { Intro } = router.query;
+
+	const [teams, setTeams] = useState({});
+	console.log(Intro);
+
+	useEffect(() => {
+		const fetchUsers = async (Intro) => {
+			const projectRef = doc(db, 'project', `${Intro}`);
+			const projectSnap = await getDoc(projectRef);
+			console.log(Intro);
+			// const data = projectSnap.data();
+			if (projectSnap.exists()) {
+				// console.log('Document data:', projectSnap.data());
+				setTeams(projectSnap.data());
+			} else {
+				console.log('No such document!');
+			}
+			// };
+		};
+		fetchUsers(Intro);
+	}, [Intro]);
+
+	const { info, teamInfo } = teams;
+	console.log(teamInfo);
+
+	const OneMember = teamInfo?.member.length;
+	// console.log(OneMember);
 	return (
 		<>
 			<div className='my-container'>
 				<section>
-					<h2 className='big-title'>오늘의집에서 일 한다는 것</h2>
+					<h2 className='big-title'>{teamInfo?.intro.slogun}</h2>
 					<p className='base-text w-full sm:w-4/5 '>
-						오늘의집 팀은 최소한의 규칙으로 최대한의 자유를 보장하는 것을
-						원칙으로 하는 만큼 우리 모두가 스스로의 생각과 행동에 대한 막중한
-						책임감을 가지고 임합니다. 다음의 일곱가지는 이러한 원칙을 기반으로
-						만들어진 오늘의집의 일하는 방식이며 근본적인 가치입니다.
+						{teamInfo?.intro.culture}
 					</p>
-					<img
-						className='w-full mt-8 mb-8 '
-						src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
-					/>
+					<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
 				</section>
 				<section className='mt-40'>
 					<span className='small-title mb-1'>우리 팀을 소개합니다.</span>
 					<div className='  flex justify-between '>
-						{test.length == 1 ? (
-							<Members OneMember={OneMember} test={test[0]} />
+						{teamInfo?.member.length == 1 ? (
+							// 한 명일때
+							<Members OneMember={OneMember} members={teamInfo?.member[0]} />
 						) : (
+							// 여러 명일때
 							<Swiper
 								slidesPerView={1}
 								spaceBetween={30}
@@ -85,9 +81,9 @@ function teamHome() {
 								modules={[Autoplay, Pagination]}
 								className='mySwiper'
 							>
-								{test.map((el) => (
+								{teamInfo?.member.map((el) => (
 									<SwiperSlide className='mb-32'>
-										<Members test={el} OneMember={OneMember} />
+										<Members members={el} OneMember={OneMember} />
 									</SwiperSlide>
 								))}
 							</Swiper>
@@ -97,10 +93,10 @@ function teamHome() {
 				<div className='section4 mt-44 mb-44 '>
 					<img
 						className='mt-14 mb-8 rounded-xl '
-						src='https://team.daangn.com/static/911446d21fd1fb29d6d0ee024c140f54/483a6/2b095359-f3be-4d05-a6a1-31b2db875765_photo_03_%252816.9%2529.avif'
+						src={info?.project_page.image}
 					/>
 					<h2 className='mt-24 text-center leading-snug text-4xl font-extrabold'>
-						이웃과 더 가까워지는 따뜻한 동네를 만들어요.
+						{info?.project_page.slogun}
 					</h2>
 					<div className='flex justify-center'>
 						<button type='button' className='mt-10 main-button'>

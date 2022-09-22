@@ -23,7 +23,7 @@ function SortGenre({ genre }) {
 						onClick={toggleActive}
 						className={
 							idx == btnActive
-								? ' main-color  mr-2 py-1 px-3 rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
+								? 'mt-3 main-color  mr-2 py-1 px-3 rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
 								: 'mr-2 py-1 px-3 rounded-full border border-slate-300 font-semibold	 hover:bg-slate-100 hover:text-slate-600'
 						}
 					>

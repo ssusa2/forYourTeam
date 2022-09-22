@@ -226,11 +226,18 @@ table {
 .preview {
 	width: 100%;
 	object-fit: cover;
-	height: 157px;
+	/* height: 157px; */
 }
 
 .preview-favi {
 	width: 16px;
 	object-fit: cover;
 	height: 16px;
+}
+
+.b-divide {
+	width: 100%;
+	padding-bottom: 2rem;
+	margin: 0 0 2rem 0;
+	border-bottom: 1px solid rgb(203 213 225);
 }
