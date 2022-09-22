@@ -99,9 +99,11 @@ function introduce() {
 	// 	}
 	// };
 
-	const handleFormChange = async (index, event, state, setState, imageUrl) => {
+	const handleFormChange = async (index, event, state, setState) => {
 		let data = [...state];
+
 		try {
+			let fileUrl = '';
 			if (event.target.type == 'file') {
 				const metadata = {
 					contentType: 'image/jpeg',
@@ -115,11 +117,10 @@ function introduce() {
 						metadata
 					);
 
-					setFileUrl(await getDownloadURL(fileRef));
-					console.log(fileUrl);
+					fileUrl = await getDownloadURL(fileRef);
 				}
-				console.log(fileUrl);
-				data[index][event.target.name] = imageUrl;
+
+				data[index][event.target.name] = fileUrl;
 			} else {
 				data[index][event.target.name] = event.target.value;
 			}

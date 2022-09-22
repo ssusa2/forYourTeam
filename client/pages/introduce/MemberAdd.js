@@ -2,29 +2,15 @@
 
 /** @format */
 
-import React, { useEffect, useState } from 'react';
-import { db, storage, storageRef } from '../firebase';
+import React, { useState } from 'react';
+import { storage } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	ref,
-	uploadBytes,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-function MemberAdd({
-	el,
-	idx,
-	// handleFormChange,
-	member,
-	setMember,
-	fileUrl,
-	setFileUrl,
-}) {
-	console.log('fileUrl:::', fileUrl);
+function MemberAdd({ el, idx, member, setMember, handleFormChange }) {
 	const [imageSrc, setImageSrc] = useState('');
+
 	const userID = useSelector(({ user }) => user);
 
 	const encodeFileToBase64 = (fileBlob) => {
@@ -39,35 +25,36 @@ function MemberAdd({
 			};
 		});
 	};
-	const handleFormChange = async (index, event, state, setState, imageUrl) => {
-		let data = [...state];
-		try {
-			if (event.target.type == 'file') {
-				const metadata = {
-					contentType: 'image/jpeg',
-				};
+	// const handleFormChange = async (index, event, state, setState) => {
+	// 	let data = [...state];
 
-				if (event.target.value != '') {
-					const fileRef = ref(storage, `${userID.uid}/team/${index}`);
-					const uploadTask = await uploadBytes(
-						fileRef,
-						event.target.value,
-						metadata
-					);
+	// 	try {
+	// 		let fileUrl = '';
+	// 		if (event.target.type == 'file') {
+	// 			const metadata = {
+	// 				contentType: 'image/jpeg',
+	// 			};
 
-					setFileUrl(await getDownloadURL(fileRef));
-					console.log(fileUrl);
-				}
-				console.log(fileUrl);
-				data[index][event.target.name] = imageUrl;
-			} else {
-				data[index][event.target.name] = event.target.value;
-			}
-			setState(data);
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	// 			if (event.target.value != '') {
+	// 				const fileRef = ref(storage, `${userID.uid}/team/${index}`);
+	// 				const uploadTask = await uploadBytes(
+	// 					fileRef,
+	// 					event.target.value,
+	// 					metadata
+	// 				);
+
+	// 				fileUrl = await getDownloadURL(fileRef);
+	// 			}
+
+	// 			data[index][event.target.name] = fileUrl;
+	// 		} else {
+	// 			data[index][event.target.name] = event.target.value;
+	// 		}
+	// 		setState(data);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// };
 	// const ConvertUrl = async (fileBlob) => {
 	// 	const metadata = {
 	// 		contentType: 'image/jpeg',
@@ -115,10 +102,8 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember, fileUrl);
-								console.log('qwe');
+								handleFormChange(idx, e, member, setMember);
 								encodeFileToBase64(e.target.files[0]);
-								// ConvertUrl(e);
 							}}
 						/>
 					</div>
