@@ -1,7 +1,15 @@
 /** @format */
 import React, { useState } from 'react';
 
-function CoreAdd({ handleFormChange, el, idx, core, setCore, section }) {
+function CoreAdd({
+	handleFormChange,
+	el,
+	idx,
+	core,
+	setCore,
+	section,
+	folder,
+}) {
 	const [imageSrc, setImageSrc] = useState('');
 
 	const encodeFileToBase64 = (fileBlob) => {
@@ -27,9 +35,11 @@ function CoreAdd({ handleFormChange, el, idx, core, setCore, section }) {
 				<div className='b-divide'>
 					<label className='small-title mt-0 essential'>소제목</label>
 					<input
-						placeholder='project-core-1'
+						placeholder='project-core-subtitle'
 						name='subheading'
-						onChange={(event) => handleFormChange(idx, event, core, setCore)}
+						onChange={(event) =>
+							handleFormChange(idx, event, core, setCore, folder)
+						}
 						type='text'
 						multiple='multiple'
 						className='base-form
@@ -39,9 +49,11 @@ function CoreAdd({ handleFormChange, el, idx, core, setCore, section }) {
 				<div className='b-divide'>
 					<label className='small-title essential'>제목</label>
 					<input
-						placeholder='project-core-2'
+						placeholder='project-core-title'
 						name='title'
-						onChange={(event) => handleFormChange(idx, event, core, setCore)}
+						onChange={(event) =>
+							handleFormChange(idx, event, core, setCore, folder)
+						}
 						type='text'
 						multiple='multiple'
 						className='base-form
@@ -51,8 +63,10 @@ function CoreAdd({ handleFormChange, el, idx, core, setCore, section }) {
 				<div className='b-divide'>
 					<label className='small-title essential'>소개</label>
 					<input
-						placeholder='project-core-'
-						onChange={(event) => handleFormChange(idx, event, core, setCore)}
+						placeholder='project-core-description'
+						onChange={(event) =>
+							handleFormChange(idx, event, core, setCore, folder)
+						}
 						name='description'
 						type='text'
 						multiple='multiple'
@@ -87,6 +101,7 @@ function CoreAdd({ handleFormChange, el, idx, core, setCore, section }) {
 					}
 					<input
 						type='file'
+						name='image'
 						accept='image/*'
 						className='block text-sm text-slate-500
 file:mr-4 file:py-2 file:px-4
@@ -96,7 +111,7 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 						onChange={(e) => {
 							encodeFileToBase64(e.target.files[0]);
-							handleFormChange(idx, e, core, setCore);
+							handleFormChange(idx, e, core, setCore, folder);
 						}}
 					/>
 				</div>

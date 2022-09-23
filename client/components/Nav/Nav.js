@@ -17,7 +17,16 @@ function Nav() {
 	const [userObj, setUserObj] = useState(null);
 	const dispatch = useDispatch();
 
-	useEffect(() => {
+	let projectMenu = '';
+	if (route == '/project/[Intro]') {
+		projectMenu = true;
+	} else if (route == '/team/[Intro]') {
+		projectMenu = true;
+	} else {
+		projectMenu = false;
+	}
+
+	let teamRoute = useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
 			if (user) {
 				setIsLoggedIn(true);
@@ -59,7 +68,7 @@ function Nav() {
 			<div className='relative z-50	'>
 				<div className=' w-full px-16 py-6 bg-white text-black fixed top-0 left-0 '>
 					<div className='flex justify-between items-center	'>
-						{pathname == '/home' || '/projects' ? (
+						{!projectMenu ? (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/home'>
 								<h1 className='cursor-pointer font-extrabold text-green-700'>
 									ForMyTeam
@@ -73,18 +82,13 @@ function Nav() {
 
 						{/* Right Menu */}
 						<div className='flex items-center'>
-							{/* projects */}
-							{pathname == '/home' && (
+							{!projectMenu && (
 								<Link href='/project'>
 									<h2 className='mr-6 font-bold hover-link '>Projects</h2>
 								</Link>
 							)}
-							{pathname == '/project' && (
-								<Link href='/project'>
-									<h2 className='mr-6 font-bold hover-link '>Projects</h2>
-								</Link>
-							)}
-							{route == '/project/[Intro]' ? (
+							{/* Project 소개 페이지에 들어왔을때 */}
+							{projectMenu ? (
 								<>
 									<Link href={`/project/${teamNumber}`}>
 										<h2
@@ -98,23 +102,11 @@ function Nav() {
 										</h2>
 									</Link>
 									<Link href={`/team/${teamNumber}`}>
-										<h2 className=' ml-8 mr-6 font-bold hover-link '>Team</h2>
-									</Link>
-								</>
-							) : (
-								''
-							)}
-							{route == '/team/[Intro]' ? (
-								<>
-									<Link href={`/project/${teamNumber}`}>
-										<h2 className='font-bold hover-link '>Project</h2>
-									</Link>
-									<Link href={`/team/${teamNumber}`}>
 										<h2
 											className={
-												route == '/team/[Intro]'
-													? `${activeClassName} + ml-8 mr-6 font-bold hover-link`
-													: 'ml-8 font-bold hover-link'
+												route == '/project/[Intro]'
+													? `${activeClassName} + font-bold hover-link`
+													: 'font-bold hover-link'
 											}
 										>
 											Team

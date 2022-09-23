@@ -8,7 +8,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-function MemberAdd({ el, idx, member, setMember, handleFormChange, section }) {
+function MemberAdd({
+	el,
+	idx,
+	member,
+	setMember,
+	handleFormChange,
+	section,
+	folder,
+}) {
 	const [imageSrc, setImageSrc] = useState('');
 
 	const userID = useSelector(({ user }) => user);
@@ -60,7 +68,7 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember);
+								handleFormChange(idx, e, member, setMember, folder);
 								encodeFileToBase64(e.target.files[0]);
 							}}
 						/>
@@ -71,13 +79,13 @@ hover:file:bg-violet-100'
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
-									placeholder='team-member-1'
+									placeholder='team-member-name'
 									name='name'
 									// onChange={(e) => {
 									// 	setMember({ name: e.target.value });
 									// }}
 									onChange={(e) => {
-										handleFormChange(idx, e, member, setMember);
+										handleFormChange(idx, e, member, setMember, folder);
 									}}
 									type='text'
 									multiple='multiple'
@@ -92,10 +100,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
-									placeholder='team-member-2'
+									placeholder='team-member-role'
 									name='role'
 									onChange={(e) => {
-										handleFormChange(idx, e, member, setMember);
+										handleFormChange(idx, e, member, setMember, folder);
 									}}
 									type='text'
 									multiple='multiple'
@@ -111,10 +119,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
-								placeholder='team-member-3'
+								placeholder='team-member-description'
 								name='description'
 								onChange={(e) => {
-									handleFormChange(idx, e, member, setMember);
+									handleFormChange(idx, e, member, setMember, folder);
 								}}
 								multiple='multiple'
 								className=' mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -127,10 +135,10 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						</div>
 						<label className='small-title essential'>Github</label>{' '}
 						<input
-							placeholder='team-member-4'
+							placeholder='team-member-github'
 							name='github'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember);
+								handleFormChange(idx, e, member, setMember, folder);
 							}}
 							type='url'
 							multiple='multiple'

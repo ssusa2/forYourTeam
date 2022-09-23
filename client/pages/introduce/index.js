@@ -1,7 +1,7 @@
 /** @format */
 import React, { useState, useEffect } from 'react';
 import MemberAdd from './MemberAdd';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
@@ -27,6 +27,7 @@ import {
 console.log(storage);
 
 function introduce() {
+	const route = useRouter();
 	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const userName = useSelector(({ user }) => user);
@@ -87,7 +88,7 @@ function introduce() {
 		},
 	]);
 
-	const handleFormChange = async (index, event, state, setState) => {
+	const handleFormChange = async (index, event, state, setState, folder) => {
 		let data = [...state];
 
 		const metadata = {
@@ -98,7 +99,7 @@ function introduce() {
 			let fileUrl = '';
 			if (event.target.type == 'file') {
 				if (event.target.value != '') {
-					const fileRef = ref(storage, `${userID.uid}/team/${index}`);
+					const fileRef = ref(storage, `${userID.uid}/${folder}/${index}`);
 					const uploadTask = await uploadBytes(
 						fileRef,
 						event.target.files[0]
@@ -166,8 +167,6 @@ function introduce() {
 	console.log('isSaving', isSaving);
 	let projectName = info.project_info.name;
 	useEffect(() => {
-		// useSave(info, teamInfo);
-
 		async function fetchData() {
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
@@ -177,6 +176,8 @@ function introduce() {
 					teamInfo,
 				});
 				setIsSaving(false);
+				alert('저장완료!');
+				route.push(`/project/${projectName}`);
 			} catch (err) {
 				console.log(err);
 			}
@@ -187,6 +188,7 @@ function introduce() {
 		}
 	}, [isSaving]);
 
+	console.log('info', info);
 	return (
 		<>
 			<div className='my-container'>
@@ -227,7 +229,7 @@ function introduce() {
 							가리킵니다.
 						</strong>
 						<input
-							placeholder='project-info-1'
+							placeholder='project-name'
 							className=' base-form font-medium my-2
     '
 						/>
@@ -255,7 +257,7 @@ function introduce() {
 								/project/프로젝트 이름
 							</span>
 							<input
-								placeholder='project-info-1'
+								placeholder='project-name'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -282,7 +284,7 @@ function introduce() {
 								<div className='w-full block xl:w-2/6'>
 									<p className='mt-3'>로고</p>
 									<input
-										placeholder='project-info-2'
+										placeholder='project-logo'
 										onChange={(e) => {
 											setInfo((prev) => {
 												return {
@@ -307,7 +309,7 @@ function introduce() {
 										setState={setInfo}
 										name={'logo_image'}
 										object={'project_info'}
-										section={'project-info-image'}
+										section={'project-logo-image'}
 									/>
 								</div>
 							</div>
@@ -324,7 +326,7 @@ function introduce() {
 									setState={setInfo}
 									name={'favicon'}
 									object={'project_info'}
-									section={'project-info-favicon'}
+									section={'project-favicon'}
 								/>
 							</div>
 						</div>
@@ -333,7 +335,7 @@ function introduce() {
 								프로젝트 웹 사이트의 주소를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-info-3'
+								placeholder='project-url'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -356,7 +358,7 @@ function introduce() {
 								프로젝트의 장르를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-info-4'
+								placeholder='project-genre'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -379,7 +381,7 @@ function introduce() {
 								프로젝트의 메인색상을 입력해주세요.(#)
 							</label>
 							<input
-								placeholder='project-info-5'
+								placeholder='project-color'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -402,7 +404,7 @@ function introduce() {
 								프로젝트의 대표 E-mail를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-info-6'
+								placeholder='project-email'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -424,7 +426,9 @@ function introduce() {
 							프로젝트 팀 레퍼지토리 주소를 입력해주세요.
 						</label>
 						<input
-							placeholder='project-info-7'
+							placeholder='project-git-
+							repository
+							'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
@@ -454,7 +458,7 @@ function introduce() {
 								프로젝트의 슬로건을 1~2줄로 입력하세요.
 							</label>
 							<input
-								placeholder='project-page-1'
+								placeholder='project-slogun'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -481,14 +485,14 @@ function introduce() {
 								setState={setInfo}
 								name={'image'}
 								object={'project_page'}
-								section={'project-page-image'}
+								section={'project-main-image'}
 							/>
 						</div>
 						<label className='small-title essential'>
 							프로젝트를 대표하는 사진에 알맞는 소개를 2~4줄 입력해주세요.
 						</label>
 						<input
-							placeholder='project-page-2'
+							placeholder='project-introduce'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
@@ -515,6 +519,7 @@ function introduce() {
 									key={idx}
 									core={core}
 									setCore={setCore}
+									folder={'core'}
 									handleFormChange={handleFormChange}
 									section={'project-core-image'}
 								/>
@@ -535,7 +540,7 @@ function introduce() {
 								팀 이름을 입력해주세요.
 							</label>
 							<input
-								placeholder='team-intro-1'
+								placeholder='team-name'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {
@@ -558,7 +563,7 @@ function introduce() {
 								프로젝트의 문화를 대표하는 슬로건을 입력하세요.
 							</label>
 							<input
-								placeholder='team-intro-2'
+								placeholder='team-slogun'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {
@@ -581,7 +586,7 @@ function introduce() {
 								프로젝트의 문화를 설명하는 내용을 입력하세요.
 							</label>
 							<input
-								placeholder='team-intro-3'
+								placeholder='team-description'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {
@@ -607,7 +612,7 @@ function introduce() {
 							setState={setTeamInfo}
 							name={'image'}
 							object={'intro'}
-							section={'team-intro-image'}
+							section={'team-image'}
 						/>
 					</section>
 
@@ -621,6 +626,7 @@ function introduce() {
 								idx={idx}
 								member={member}
 								setMember={setMember}
+								folder={'team'}
 								handleFormChange={handleFormChange}
 								fileUrl={fileUrl}
 								setFileUrl={setFileUrl}
