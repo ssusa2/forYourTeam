@@ -9,9 +9,8 @@ import { collection, getDoc, doc } from 'firebase/firestore';
 function Project() {
 	const router = useRouter();
 	const { Intro } = router.query;
-
-	const [projects, setProjects] = useState({});
 	console.log(Intro);
+	const [projects, setProjects] = useState({});
 
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
@@ -111,7 +110,7 @@ function Project() {
 						{info?.project_page.slogun}
 					</h2>
 					<div className='flex justify-center'>
-						<button type='button' className='mt-10 main-button'>
+						<button type='button' className='mt-10 gray-button'>
 							프로젝트 보러가기
 						</button>
 					</div>

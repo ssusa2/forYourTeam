@@ -5,17 +5,23 @@ import Link from 'next/link';
 import LogOut from './Logout';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserName, setUserId } from '../../src/store/modules/user';
+import { setColor } from '../../src/store/modules/projectInfo';
 import { FirebaseAuth } from '../../pages/firebase';
+import { db } from '../../pages/firebase';
+import { collection, getDoc, doc } from 'firebase/firestore';
+import styled from 'styled-components';
 
 function Nav() {
-	const { pathname } = useRouter();
 	const { route } = useRouter();
 	const router = useRouter();
-	const { query } = router;
+	const { Intro } = router.query;
+
 	const [init, setInit] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [userObj, setUserObj] = useState(null);
+	const [projectObj, setProjectObj] = useState();
 	const dispatch = useDispatch();
+	const projectColor = useSelector(({ projectInfo }) => projectInfo);
 
 	let projectMenu = '';
 	if (route == '/project/[Intro]') {
@@ -26,7 +32,30 @@ function Nav() {
 		projectMenu = false;
 	}
 
-	let teamRoute = useEffect(() => {
+	useEffect(() => {
+		const fetchUsers = async (Intro) => {
+			const projectRef = doc(db, 'project', `${Intro}`);
+			const projectSnap = await getDoc(projectRef);
+			console.log(Intro);
+			// const data = projectSnap.data();
+			if (projectSnap.exists()) {
+				// console.log('Document data:', projectSnap.data());
+				setProjectObj(projectSnap.data().info.project_info);
+			} else {
+				console.log('No such document!');
+			}
+			// };
+		};
+		fetchUsers(Intro);
+	}, [Intro]);
+
+	const { color, logo, logo_image } = projectColor;
+
+	useEffect(() => {
+		dispatch(setColor(projectObj?.color));
+	}, [projectObj]);
+
+	useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
 			if (user) {
 				setIsLoggedIn(true);
@@ -55,14 +84,13 @@ function Nav() {
 		});
 	};
 
-	let activeStyle = {
-		textDecoration: 'underline green',
-		color: 'green',
-	};
-	let activeClassName = 'underline';
+	// const activeColor = `text-\[\`${color}\]`;
+	const activeColor = `text-[${color}]`;
 
-	const teamNumber = query.Intro;
+	console.log(activeColor);
+	const teamNumber = Intro;
 
+	console.log('projectColor', color);
 	return (
 		<>
 			<div className='relative z-50	'>
@@ -76,7 +104,7 @@ function Nav() {
 							</Link>
 						) : (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-								<h1 className='cursor-pointer font-extrabold '>My Logo</h1>
+								<Logo color={color}>hi</Logo>
 							</Link>
 						)}
 
@@ -91,26 +119,18 @@ function Nav() {
 							{projectMenu ? (
 								<>
 									<Link href={`/project/${teamNumber}`}>
-										<h2
-											className={
-												route == '/project/[Intro]'
-													? `${activeClassName} + font-bold hover-link`
-													: 'font-bold hover-link'
-											}
-										>
-											Project
-										</h2>
+										{route == '/project/[Intro]' ? (
+											<RightMenu color={color}>Project</RightMenu>
+										) : (
+											<RightMenu>Project</RightMenu>
+										)}
 									</Link>
 									<Link href={`/team/${teamNumber}`}>
-										<h2
-											className={
-												route == '/project/[Intro]'
-													? `${activeClassName} + font-bold hover-link`
-													: 'font-bold hover-link'
-											}
-										>
-											Team
-										</h2>
+										{route == '/team/[Intro]' ? (
+											<RightMenu color={color}>Team</RightMenu>
+										) : (
+											<RightMenu>Team</RightMenu>
+										)}
 									</Link>
 								</>
 							) : (
@@ -126,3 +146,17 @@ function Nav() {
 }
 
 export default Nav;
+
+const Logo = styled.h1`
+	font-weight: 800;
+	color: ${({ color }) => color};
+	cursor: pointer;
+`;
+
+const RightMenu = styled.h2`
+	margin-right: 1.5rem;
+	font-weight: 700;
+	text-align: center;
+	cursor: pointer;
+	color: ${({ color }) => color};
+`;

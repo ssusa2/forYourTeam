@@ -11,11 +11,11 @@ const userInfo = createSlice({
 	initialState,
 	reducers: {
 		setUserName: (state, actions) => {
-			console.log(actions);
+			// console.log(actions);
 			state.displayName = actions.payload;
 		},
 		setUserId: (state, actions) => {
-			console.log(actions);
+			// console.log(actions);
 			state.uid = actions.payload;
 		},
 	},

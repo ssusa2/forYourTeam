@@ -11,5 +11,13 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
+	safelist: [
+		'active',
+		'activeColor',
+		// '${activeColor}',
+		// 'text-[#e52121]',
+		// 'text-[#00ff8c]',
+		//
+	],
 	plugins: [require('@tailwindcss/forms')],
 };

@@ -182,6 +182,9 @@ table {
 	.main-button {
 		@apply w-full rounded-full border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:w-auto sm:text-base;
 	}
+	.gray-button {
+		@apply w-full rounded-full border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-slate-300 transition duration-300 ease-in-out hover:text-stone-600	 hover:border hover:border-slate-300 sm:w-auto sm:text-base;
+	}
 	.base-form {
 		@apply mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
 		focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
@@ -189,7 +192,22 @@ table {
 		invalid:border-pink-500 invalid:text-pink-600
 		focus:invalid:border-pink-500 focus:invalid:ring-pink-500;
 	}
+	.active {
+		@apply font-bold text-center;
+	}
 }
+/* .active {
+	font-weight: 700;
+	text-align: center;
+}
+
+.active::after {
+	content: '';
+	width: 100%;
+	display: block;
+	border-bottom: 4px solid;
+	margin: 0 0 0 0.5px;
+} */
 
 .team-role > * {
 	margin-right: 4px;
