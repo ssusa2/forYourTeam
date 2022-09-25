@@ -5,12 +5,19 @@ import { useState, useEffect } from 'react';
 import Slide from './slide';
 import { db } from '../firebase';
 import { collection, getDoc, doc } from 'firebase/firestore';
+import { useSelector, useDispatch } from 'react-redux';
+import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
 
 function Project() {
 	const router = useRouter();
+	const dispatch = useDispatch();
 	const { Intro } = router.query;
 	// console.log(Intro);
 	const [projects, setProjects] = useState({});
+	const [projectInfo, setProjectInfo] = useState();
+	const projectColor = useSelector(({ projectInfo }) => projectInfo);
+
+	const { info } = projects;
 
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
@@ -21,16 +28,18 @@ function Project() {
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
 				setProjects(projectSnap.data());
+				setProjectInfo(projectSnap.data().info.project_info);
 			} else {
 				console.log('No such document!');
 			}
-			// };
 		};
 		fetchUsers(Intro);
 	}, [Intro]);
-	// console.log(projects);
 
-	const { info } = projects;
+	console.log('project', projectInfo);
+	useEffect(() => {
+		dispatch(setAll(projectInfo));
+	}, [projects]);
 
 	// const { intro } = projects?.teamInfo;
 	// console.log(info?.project_page.imag);

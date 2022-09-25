@@ -42,7 +42,7 @@ function Nav() {
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
 				setProjectObj(projectSnap.data().info.project_info);
-				console.log(projectSnap.data().info.project_info);
+				// console.log(projectSnap.data().info.project_info);
 			} else {
 				console.log('No such document!');
 			}
