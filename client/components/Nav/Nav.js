@@ -110,9 +110,16 @@ function Nav() {
 								</h1>
 							</Link>
 						) : (
-							<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-								<Logo color={color}>{logo}</Logo>
-							</Link>
+							<>
+								<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
+									<Logo color={color}>{logo}</Logo>
+								</Link>
+								<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
+									<h2 className=' opacity-50 hover:opacity-100 text-stone-200 transition duration-300 ease-in-out cursor-pointer hover:text-green-700 font-bold'>
+										다른 프로젝트 보러가기 👆
+									</h2>
+								</Link>
+							</>
 						)}
 
 						{/* Right Menu */}
@@ -148,7 +155,7 @@ function Nav() {
 								<LogOut name={userObj?.displayName} />
 							) : (
 								<Link href='/login'>
-									<a className='hover:bg-green-800 cursor-pointer px-4 py-1 font-bold rounded-lg bg-green-700 text-white'>
+									<a className='hover:bg-green-800 cursor-pointer px-4 py-1 font-bold rounded-lg bg-green-700  text-white'>
 										로그인
 									</a>
 								</Link>

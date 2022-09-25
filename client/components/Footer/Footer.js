@@ -16,12 +16,16 @@ function Footer() {
 	const projectColor = useSelector(({ projectInfo }) => projectInfo);
 
 	console.log(projectColor);
+
+	const logo = projectColor?.logo || 'ForMyTeam';
+	const color = projectColor?.color || '#15803D';
+
 	return (
 		<>
 			<div className='relative '>
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
 					<div className='flex justify-between	'>
-						<Logo color={projectColor?.color}>{projectColor?.logo}</Logo>
+						<Logo color={color}>{logo}</Logo>
 						<a href='#'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
