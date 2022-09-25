@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-import { setColor, setLogo } from '../../src/store/modules/projectInfo';
+import {
+	setColor,
+	setLogo,
+	getState,
+} from '../../src/store/modules/projectInfo';
 import styled from 'styled-components';
 // import { Github } from '../../src/images/github.svg';
 

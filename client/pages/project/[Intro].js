@@ -9,14 +9,14 @@ import { collection, getDoc, doc } from 'firebase/firestore';
 function Project() {
 	const router = useRouter();
 	const { Intro } = router.query;
-	console.log(Intro);
+	// console.log(Intro);
 	const [projects, setProjects] = useState({});
 
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
-			console.log(Intro);
+			// console.log(Intro);
 			// const data = projectSnap.data();
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
@@ -28,7 +28,7 @@ function Project() {
 		};
 		fetchUsers(Intro);
 	}, [Intro]);
-	console.log(projects);
+	// console.log(projects);
 
 	const { info } = projects;
 

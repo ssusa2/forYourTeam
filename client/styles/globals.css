@@ -186,7 +186,7 @@ table {
 		@apply w-full rounded-full border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-slate-300 transition duration-300 ease-in-out hover:text-stone-600	 hover:border hover:border-slate-300 sm:w-auto sm:text-base;
 	}
 	.round-button {
-		@apply w-full rounded-lg border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-slate-300 transition duration-300 ease-in-out hover:text-stone-600	 hover:border hover:border-slate-300 sm:w-auto sm:text-base;
+		@apply block w-full rounded-lg border border-slate-300 px-4 py-2 text-xl font-semibold shadow-sm hover:bg-slate-300 transition duration-300 ease-in-out hover:text-stone-600	 hover:border hover:border-slate-300 sm:w-auto sm:text-base;
 	}
 	.base-form {
 		@apply mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400

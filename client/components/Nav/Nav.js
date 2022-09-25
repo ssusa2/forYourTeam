@@ -32,29 +32,37 @@ function Nav() {
 		projectMenu = false;
 	}
 
+	console.log(route);
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
-			console.log(Intro);
+			// console.log(Intro);
 			// const data = projectSnap.data();
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
 				setProjectObj(projectSnap.data().info.project_info);
+				console.log(projectSnap.data().info.project_info);
 			} else {
 				console.log('No such document!');
 			}
 			// };
 		};
-		fetchUsers(Intro);
-	}, [Intro]);
+		if (route === '/project/[Intro]') {
+			console.log('tq');
+			fetchUsers(Intro);
+		}
+	}, [route]);
 
+	console.log(route);
 	const { color, logo, logo_image } = projectColor;
 
 	useEffect(() => {
-		dispatch(setColor(projectObj?.color));
+		route == '/project/[Intro]' && dispatch(setColor(projectObj?.color));
 		dispatch(setLogo(projectObj?.logo));
-	}, [projectObj]);
+	}, []);
+
+	console.log(projectObj?.logo);
 
 	useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
@@ -67,14 +75,17 @@ function Nav() {
 					displayName: user.displayName,
 					uid: user.uid,
 					updateProfile: (args) => user.updateProfile(args),
+					// router.push('/home');
 				});
+				// router.push('/home');
 			} else {
 				setIsLoggedIn(false);
-				router.push('/login');
+
+				// router.push('/login');
 			}
 			setInit(true);
 		});
-	}, []);
+	}, [isLoggedIn]);
 
 	const refreshUser = () => {
 		const user = authService.currentUser;
@@ -85,13 +96,8 @@ function Nav() {
 		});
 	};
 
-	// const activeColor = `text-\[\`${color}\]`;
-	const activeColor = `text-[${color}]`;
-
-	console.log(activeColor);
 	const teamNumber = Intro;
 
-	console.log('projectColor', projectColor);
 	return (
 		<>
 			<div className='relative z-50	'>
@@ -138,7 +144,15 @@ function Nav() {
 							) : (
 								''
 							)}
-							{isLoggedIn ? <LogOut /> : ''}
+							{isLoggedIn ? (
+								<LogOut name={userObj?.displayName} />
+							) : (
+								<Link href='/login'>
+									<a className='hover:bg-green-800 cursor-pointer px-4 py-1 font-bold rounded-lg bg-green-700 text-white'>
+										로그인
+									</a>
+								</Link>
+							)}
 						</div>
 					</div>
 				</div>

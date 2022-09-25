@@ -2,7 +2,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
-	color: '',
+	color: '#15803D',
 	email: '',
 	favicon: '',
 	logo: 'ForMyTeam',
@@ -16,15 +16,18 @@ const projectInfo = createSlice({
 	initialState,
 	reducers: {
 		setColor: (state, actions) => {
-			console.log(actions);
+			console.log('setColor', actions);
 			state.color = actions.payload;
 		},
 		setLogo: (state, actions) => {
-			console.log(actions);
+			console.log('setLogo', actions);
 			state.logo = actions.payload;
+		},
+		getState: (state) => {
+			console.log('getState', state);
 		},
 	},
 });
 
-export const { setColor, setLogo } = projectInfo.actions; // 액션 생성함수
+export const { setColor, setLogo, getState } = projectInfo.actions; // 액션 생성함수
 export default projectInfo.reducer; // 리듀서
