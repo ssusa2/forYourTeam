@@ -5,7 +5,7 @@ import Link from 'next/link';
 import LogOut from './Logout';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserName, setUserId } from '../../src/store/modules/user';
-import { setColor } from '../../src/store/modules/projectInfo';
+import { setColor, setLogo } from '../../src/store/modules/projectInfo';
 import { FirebaseAuth } from '../../pages/firebase';
 import { db } from '../../pages/firebase';
 import { collection, getDoc, doc } from 'firebase/firestore';
@@ -53,6 +53,7 @@ function Nav() {
 
 	useEffect(() => {
 		dispatch(setColor(projectObj?.color));
+		dispatch(setLogo(projectObj?.logo));
 	}, [projectObj]);
 
 	useEffect(() => {
@@ -90,7 +91,7 @@ function Nav() {
 	console.log(activeColor);
 	const teamNumber = Intro;
 
-	console.log('projectColor', color);
+	console.log('projectColor', projectColor);
 	return (
 		<>
 			<div className='relative z-50	'>
@@ -104,7 +105,7 @@ function Nav() {
 							</Link>
 						) : (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-								<Logo color={color}>hi</Logo>
+								<Logo color={color}>{logo}</Logo>
 							</Link>
 						)}
 
@@ -129,6 +130,7 @@ function Nav() {
 										{route == '/team/[Intro]' ? (
 											<RightMenu color={color}>Team</RightMenu>
 										) : (
+											// <RightMenu color={color}>Team</RightMenu>
 											<RightMenu>Team</RightMenu>
 										)}
 									</Link>
@@ -159,4 +161,11 @@ const RightMenu = styled.h2`
 	text-align: center;
 	cursor: pointer;
 	color: ${({ color }) => color};
+`;
+
+const NonActive = styled.h2`
+	margin-right: 1.5rem;
+	font-weight: 700;
+	text-align: center;
+	cursor: pointer;
 `;

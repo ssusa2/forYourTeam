@@ -68,38 +68,58 @@ function Login() {
 	return (
 		<>
 			<div className='my-container'>
-				<form onSubmit={onSubmit}>
-					<input
-						value={email}
-						name='email'
-						type='text'
-						placeholder='Email'
-						onChange={onChange}
-						required
-					/>
-					<input
-						name='password'
-						value={password}
-						type='password'
-						placeholder='Password'
-						required
-						onChange={onChange}
-					/>
-					<input
-						type='submit'
-						value={newAccount ? 'Create Account' : 'Sign In'}
-					/>
-					<span className='ml-3 bg-green-50' onClick={toggleAccount}>
-						{newAccount ? 'Sign In' : 'Create Account'}
-					</span>
-					{error}
-				</form>
-				<button onClick={onSocialClick} name='google'>
-					Continue with Google
-				</button>
-				<button onClick={onSocialClick} name='github'>
-					Continue with Github
-				</button>
+				<div className='w-1/3'>
+					{' '}
+					<form onSubmit={onSubmit}>
+						<label className='small-title '>아이디</label>
+
+						<input
+							multiple='multiple'
+							className=' base-form'
+							value={email}
+							name='email'
+							type='text'
+							placeholder='Email'
+							onChange={onChange}
+							// required
+						/>
+						<label className='small-title '>비밀번호</label>
+						<input
+							name='password'
+							value={password}
+							type='password'
+							placeholder='Password'
+							className=' base-form'
+							onChange={onChange}
+							// required
+						/>
+						<input
+							className='round-button'
+							type='submit'
+							value={newAccount ? 'Create Account' : 'Sign In'}
+						/>
+						<span className='round-button' onClick={toggleAccount}>
+							{newAccount ? 'Sign In' : 'Create Account'}
+						</span>
+						{error}
+					</form>
+				</div>
+				<div>
+					<button
+						className='round-button'
+						onClick={onSocialClick}
+						name='google'
+					>
+						Continue with Google
+					</button>
+					<button
+						className='round-button'
+						onClick={onSocialClick}
+						name='github'
+					>
+						Continue with Github
+					</button>
+				</div>
 			</div>
 		</>
 	);
