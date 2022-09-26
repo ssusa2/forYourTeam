@@ -28,7 +28,9 @@ import {
 console.log(storage);
 
 function introduce() {
-	const route = useRouter();
+	const { route } = useRouter();
+	const router = useRouter();
+	const { Intro } = router.query;
 	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const userName = useSelector(({ user }) => user);
@@ -40,7 +42,7 @@ function introduce() {
 
 	// const user = useSelector((state) => state.name);
 
-	console.log('userName', userName);
+	// console.log('userName', userName);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -107,7 +109,7 @@ function introduce() {
 						fileRef,
 						event.target.files[0]
 					).then((snapshot) => {
-						console.log('updtae');
+						// console.log('updtae');
 					});
 
 					fileUrl = await getDownloadURL(fileRef);
@@ -167,7 +169,7 @@ function introduce() {
 		setIsSaving(true);
 	};
 
-	console.log('isSaving', isSaving);
+	// console.log('isSaving', isSaving);
 	let projectName = info.project_info.name;
 
 	// const citiesRef = collection(db, 'cities');
@@ -199,22 +201,35 @@ function introduce() {
 		if (isSaving) {
 			fetchData();
 		}
-		// 업데이트 시}
-		// const updateProject = async (Intro) => {
-		// 	const projectRef = doc(db, 'project', `${projectName}`);
-		// 	const projectSnap = await getDoc(projectRef);
-		// 	// console.log(Intro);
-		// 	// const data = projectSnap.data();
-		// 	if (projectSnap.exists()) {
-		// 		// console.log('Document data:', projectSnap.data());
-		// 		setProject(projectSnap.data());
-		// 	}
-		// };
+
+		// 업데이트 시
+		//1. 일단 받아오기
 
 		// updateProject();
 	}, [isSaving]);
 
-	console.log('info', project);
+	console.log(Intro);
+	useEffect(() => {
+		const fetchUsers = async (Intro) => {
+			const projectRef = doc(db, 'project', `${Intro}`);
+			const projectSnap = await getDoc(projectRef);
+			// console.log(Intro);
+			// const data = projectSnap.data();
+			if (projectSnap.exists()) {
+				console.log(projectSnap.data());
+				// console.log('Document data:', projectSnap.data());
+				// setProjects(projectSnap.data());
+				// setProjectInfo(projectSnap.data().info.project_info);
+			} else {
+				console.log('No such document!');
+			}
+		};
+		fetchUsers(Intro);
+	}, [Intro]);
+
+	console.log(project);
+
+	// console.log('info', project);
 	return (
 		<>
 			<div className='my-container'>

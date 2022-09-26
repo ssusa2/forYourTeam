@@ -1,5 +1,6 @@
 /** @format */
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -8,24 +9,39 @@ import {
 	getState,
 } from '../../src/store/modules/projectInfo';
 import styled from 'styled-components';
-// import { Github } from '../../src/images/github.svg';
 
 function Footer() {
+	const { route } = useRouter();
+	const router = useRouter();
 	const dispatch = useDispatch();
 	const [projectObj, setProjectObj] = useState();
 	const projectColor = useSelector(({ projectInfo }) => projectInfo);
+	// const [color, setColor] = useState();
+	// const [logo, setLogo] = useState();
 
-	console.log(projectColor);
+	const { color, logo } = projectColor;
 
-	const logo = projectColor?.logo || 'ForMyTeam';
-	const color = projectColor?.color || '#15803D';
+	console.log(logo);
+
+	let projectMenu = '';
+	if (route == '/project/[Intro]') {
+		projectMenu = true;
+	} else if (route == '/team/[Intro]') {
+		projectMenu = true;
+	} else {
+		projectMenu = false;
+	}
 
 	return (
 		<>
 			<div className='relative '>
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
 					<div className='flex justify-between	'>
-						<Logo color={color}>{logo}</Logo>
+						{!projectMenu ? (
+							<Logo>ForMyTeam</Logo>
+						) : (
+							<Logo color={color}>{logo}</Logo>
+						)}
 						<a href='#'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -55,6 +71,6 @@ export default Footer;
 
 const Logo = styled.h1`
 	font-weight: 800;
-	color: ${({ color }) => color};
+	color: ${({ color }) => color || '#15803D'};
 	cursor: pointer;
 `;

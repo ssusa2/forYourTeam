@@ -41,6 +41,7 @@ function Project() {
 		dispatch(setAll(projectInfo));
 	}, [projects]);
 
+	console.log(Intro);
 	// const { intro } = projects?.teamInfo;
 	// console.log(info?.project_page.imag);
 	return (
