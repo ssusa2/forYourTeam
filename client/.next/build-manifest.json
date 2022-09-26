@@ -30,10 +30,25 @@
       "static/chunks/main.js",
       "static/chunks/pages/home.js"
     ],
+    "/introduce/[Intro]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/introduce/[Intro].js"
+    ],
     "/mypage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/mypage.js"
+    ],
+    "/project": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/project.js"
+    ],
+    "/project/[Intro]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/project/[Intro].js"
     ]
   },
   "ampFirstPages": []

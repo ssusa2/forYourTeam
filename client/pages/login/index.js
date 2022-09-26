@@ -83,10 +83,10 @@ function Login() {
 	return (
 		<>
 			<div className='my-container mx-auto'>
-				<div className=' flex'>
+				<div className=' flex '>
 					{/* 왼쪽 */}
-					<div className=' w-1/2'>
-						<div className='w-2/3'>
+					<div className='sm:w-1/2 w-full'>
+						<div className='sm:w-2/3 w-full'>
 							{newAccount ? (
 								<h1 className='main-color middle-title text-start'>회원가입</h1>
 							) : (
@@ -123,7 +123,7 @@ function Login() {
 							</form>
 						</div>
 
-						<div className='w-2/3 text-center'>
+						<div className='sm:w-2/3 w-full text-center'>
 							<SNS>or Sign in with Social Login</SNS>
 							<button
 								className='round-button w-full  mt-3'
@@ -142,7 +142,7 @@ function Login() {
 						</div>
 					</div>
 
-					<div className='w-1/2  rounded-2xl py-4 px-4 text-center '>
+					<div className='hidden sm:block w-1/2  rounded-2xl py-4 px-4 text-center '>
 						<h3 className='font-extrabold  text-3xl mb-3'>
 							{newAccount ? '재방문하시나요? 🖐' : '처음 방문하시나요? 🖐'}
 						</h3>
