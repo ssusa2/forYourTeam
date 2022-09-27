@@ -2,10 +2,15 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { Edit } from '../../components/Icon/Icon';
 
 function ProjectList({ projects }) {
+	const userInfo = useSelector(({ user }) => user.uid);
 	const router = useRouter();
-	console.log('projects', projects);
+
+	console.log(projects);
 	return (
 		<>
 			<div className='bg-white'>
@@ -14,6 +19,7 @@ function ProjectList({ projects }) {
 					<div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
 						{projects.map((project) => {
 							const {
+								uid,
 								id,
 								info: {
 									project_info: { name, genre, logo_image },
@@ -22,26 +28,15 @@ function ProjectList({ projects }) {
 							} = project;
 							// console.log(project_info);
 							return (
-								<div key={id} className='group relative'>
-									<button
-										onClick={() => router.push(`/introduce/${name}`)}
-										className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-50'
-									>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											fill='none'
-											viewBox='0 0 24 24'
-											strokeWidth={2}
-											stroke='currentColor'
-											className='w-4 h-4'
+								<div key={id} uid={uid} className='group relative'>
+									{userInfo == uid && (
+										<button
+											onClick={() => router.push(`/introduce/${name}`)}
+											className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-50'
 										>
-											<path
-												strokeLinecap='round'
-												strokeLinejoin='round'
-												d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
-											/>
-										</svg>
-									</button>
+											<Edit />
+										</button>
+									)}
 									<Link href='/project/[intro]' as={`/project/${name}`}>
 										<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
 											{logo_image ? (
@@ -51,9 +46,11 @@ function ProjectList({ projects }) {
 													className='w-full aspect-video object-cover object-center group-hover:opacity-75'
 												/>
 											) : (
-												<p className=' font-extrabold  w-full aspect-video group-hover:opacity-75'>
-													{name}
-												</p>
+												<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
+													<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
+														{name}
+													</p>
+												</div>
 											)}
 										</div>
 									</Link>

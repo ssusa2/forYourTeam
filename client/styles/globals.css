@@ -249,7 +249,8 @@ table {
 
 .preview {
 	width: 100%;
-	object-fit: cover;
+	height: 200px;
+	object-fit: contain;
 	/* height: 157px; */
 }
 
@@ -264,4 +265,9 @@ table {
 	padding-bottom: 2rem;
 	margin: 0 0 2rem 0;
 	border-bottom: 1px solid rgb(203 213 225);
+}
+
+.pre {
+	font-size: 1.25rem;
+	font-weight: 600;
 }

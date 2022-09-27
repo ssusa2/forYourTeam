@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function CoreAdd({
 	handleFormChange,
@@ -9,8 +9,14 @@ function CoreAdd({
 	setCore,
 	section,
 	folder,
+	defaultImg,
+	projectName,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
+
+	useEffect(() => {
+		setImageSrc(el.image);
+	}, [el]);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -35,6 +41,7 @@ function CoreAdd({
 				<div className='b-divide'>
 					<label className='small-title mt-0 essential'>소제목</label>
 					<input
+						value={el.subheading}
 						placeholder='project-core-subtitle'
 						name='subheading'
 						onChange={(event) =>
@@ -49,6 +56,7 @@ function CoreAdd({
 				<div className='b-divide'>
 					<label className='small-title essential'>제목</label>
 					<input
+						value={el.title}
 						placeholder='project-core-title'
 						name='title'
 						onChange={(event) =>
@@ -63,6 +71,7 @@ function CoreAdd({
 				<div className='b-divide'>
 					<label className='small-title essential'>소개</label>
 					<input
+						value={el.description}
 						placeholder='project-core-description'
 						onChange={(event) =>
 							handleFormChange(idx, event, core, setCore, folder)

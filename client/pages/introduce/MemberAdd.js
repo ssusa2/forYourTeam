@@ -2,7 +2,7 @@
 
 /** @format */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { storage } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,8 +16,14 @@ function MemberAdd({
 	handleFormChange,
 	section,
 	folder,
+	defaultImg,
+	projectName,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
+	// console.log(el);
+	useEffect(() => {
+		setImageSrc(el.image);
+	}, [el]);
 
 	const userID = useSelector(({ user }) => user);
 
@@ -79,6 +85,7 @@ hover:file:bg-violet-100'
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
+									value={el.name}
 									placeholder='team-member-name'
 									name='name'
 									// onChange={(e) => {
@@ -100,6 +107,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
+									value={el.role}
 									placeholder='team-member-role'
 									name='role'
 									onChange={(e) => {
@@ -119,6 +127,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
+								value={el.description}
 								placeholder='team-member-description'
 								name='description'
 								onChange={(e) => {
@@ -135,6 +144,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						</div>
 						<label className='small-title essential'>Github</label>{' '}
 						<input
+							value={el.github}
 							placeholder='team-member-github'
 							name='github'
 							onChange={(e) => {

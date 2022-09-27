@@ -19,8 +19,6 @@ const projectInfo = createSlice({
 			// console.log('getState', state);
 		},
 		setAll: (state, actions) => {
-			console.log(actions.payload);
-			console.log('statestatestate', state);
 			return actions.payload;
 			// state = { ...state, ...actions.payload };
 		},

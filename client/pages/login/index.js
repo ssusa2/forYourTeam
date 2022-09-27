@@ -147,11 +147,19 @@ function Login() {
 							{newAccount ? '재방문하시나요? 🖐' : '처음 방문하시나요? 🖐'}
 						</h3>
 
-						<p className='font-bold  text-xl  '>
-							{newAccount
-								? '다시 만나서 반갑습니다! ForMyTeam과 함께 여려분의 프로젝트를 소개해보세요.'
-								: '새로운 계정을 만들고 여러분의 소중한 프로젝트를 소개해보세요! ForMyTeam과 함께하면 간단하게 프로젝트 소개를 할 수 있어요'}
-						</p>
+						{newAccount ? (
+							<pre className='pre'>
+								다시 만나서 반갑습니다! <br />
+								ForMyTeam과 함께 여려분의 프로젝트를 소개해보세요.
+							</pre>
+						) : (
+							<pre className='pre'>
+								새로운 계정을 만들고 여러분의 소중한 프로젝트를 소개해보세요!
+								<br />
+								ForMyTeam과 함께하면 간단하게 프로젝트 소개를 할 수 있어요
+							</pre>
+						)}
+
 						<div className='mt-3 flex justify-center'>
 							<button
 								className=' w-1/2 border-2 border-green-700 mt-3 rounded-lg  px-4 py-2 text-2xl font-extrabold shadow-sm transition duration-300 ease-in-out text-green-700 hover:bg-green-700 hover:text-white sm:text-base '

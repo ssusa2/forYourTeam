@@ -28,21 +28,11 @@ import {
 console.log(storage);
 
 function introduce() {
-	const { route } = useRouter();
 	const router = useRouter();
-	const { Intro } = router.query;
-	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
-	const userName = useSelector(({ user }) => user);
-	const [imageSrc, setImageSrc] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
 	const [fileUrl, setFileUrl] = useState('');
 	const userInfo = useSelector(({ user }) => user.uid);
-	const [project, setProject] = useState();
-
-	// const user = useSelector((state) => state.name);
-
-	// console.log('userName', userName);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -62,8 +52,6 @@ function introduce() {
 			description: '',
 		},
 	});
-
-	// const [folderName, setFolderName] = useState();
 
 	const [teamInfo, setTeamInfo] = useState({
 		intro: {
@@ -96,22 +84,15 @@ function introduce() {
 	const handleFormChange = async (index, event, state, setState, folder) => {
 		let data = [...state];
 
-		const metadata = {
-			contentType: 'image/jpeg',
-		};
-
 		try {
 			let fileUrl = '';
 			if (event.target.type == 'file') {
 				if (event.target.value != '') {
-					const fileRef = ref(storage, `${userID.uid}/${folder}/${index}`);
-					const uploadTask = await uploadBytes(
-						fileRef,
-						event.target.files[0]
-					).then((snapshot) => {
-						// console.log('updtae');
-					});
-
+					const fileRef = ref(
+						storage,
+						`${userID.uid}/${projectName}/${folder}/${index}`
+					);
+					const uploadTask = await uploadBytes(fileRef, event.target.files[0]);
 					fileUrl = await getDownloadURL(fileRef);
 				}
 
@@ -158,7 +139,6 @@ function introduce() {
 				},
 			};
 		});
-
 		setTeamInfo((prev) => {
 			return {
 				...prev,
@@ -169,7 +149,6 @@ function introduce() {
 		setIsSaving(true);
 	};
 
-	// console.log('isSaving', isSaving);
 	let projectName = info?.project_info?.name;
 
 	useEffect(() => {
@@ -186,7 +165,7 @@ function introduce() {
 				});
 				setIsSaving(false);
 				alert('저장완료!');
-				route.push(`/project/${projectName}`);
+				router.push(`/project/${projectName}`);
 			} catch (err) {
 				console.log(err);
 			}
@@ -197,35 +176,11 @@ function introduce() {
 		}
 	}, [isSaving]);
 
-	// useEffect(() => {
-	// 	const fetchUsers = async (Intro) => {
-	// 		const projectRef = doc(db, 'project', `${Intro}`);
-	// 		const projectSnap = await getDoc(projectRef);
-	// 		let hasData = '';
-	// 		if (projectSnap.exists()) {
-	// 			hasData = projectSnap.data().id;
-	// 			hasData && setInfo(projectSnap.data().info.project_info);
-	// 		} else {
-	// 			console.log('No such document!');
-	// 		}
-	// 	};
-	// 	fetchUsers(Intro);
-	// }, [Intro]);
-
-	console.log('원래값', info);
-	console.log('바꾼값', info);
-	// console.log('info', project);
 	return (
 		<>
 			<div className='my-container'>
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
-				<div
-					// flex justify-between items-end
-					className='
-				block lg:flex lg:justify-between
-
-				'
-				>
+				<div className='block lg:flex lg:justify-between'>
 					<div>
 						<p>
 							프로젝트에 대한 정보를 입력해 여려분의 프로젝트 사이트에서도
@@ -235,10 +190,7 @@ function introduce() {
 						<p className='my-3'>
 							해당 프로젝트 정보는 아래 페이지 양식에 맞춰 보여집니다.
 						</p>
-						<Link
-							href='/project/project-info-1
-'
-						>
+						<Link href='/project/project-info-1'>
 							<a target='_blank'>
 								<button
 									type='button'
@@ -256,8 +208,7 @@ function introduce() {
 						</strong>
 						<input
 							placeholder='project-name'
-							className=' base-form font-medium my-2
-    '
+							className=' base-form font-medium my-2'
 						/>
 						<p className=''>
 							소개페이지 양식과 대조하여 알맞는 project 정보를 작성해보세요.
@@ -266,7 +217,6 @@ function introduce() {
 				</div>
 				<form>
 					<div className='mt-8 mb-16 h-px bg-slate-300'></div>
-
 					<h3 className='middle-title'>Project 기본 정보</h3>
 					<p>
 						프로젝트의 이름과 기본 정보를 입력해주세요.
@@ -297,8 +247,7 @@ function introduce() {
 								}}
 								type='favicon'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -327,10 +276,10 @@ function introduce() {
 										className=' base-form'
 									/>
 								</div>
-
 								<div className='block xl:w-1/2'>
 									<p className='mt-3'>이미지</p>
 									<ImageHolder
+										projectName={info.project_info.name}
 										state={info}
 										setState={setInfo}
 										name={'logo_image'}
@@ -344,10 +293,10 @@ function introduce() {
 							<label className='small-title  essential'>
 								프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
 							</label>
-
 							<div className='block xl:w-1/2'>
 								<p>파비콘</p>
 								<ImageHolder
+									projectName={info.project_info.name}
 									state={info}
 									setState={setInfo}
 									name={'favicon'}
@@ -375,8 +324,7 @@ function introduce() {
 								}}
 								type='favicon'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -398,8 +346,7 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -421,8 +368,7 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -444,17 +390,14 @@ function introduce() {
 								}}
 								type='email'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<label className='small-title essential'>
 							프로젝트 팀 레퍼지토리 주소를 입력해주세요.
 						</label>
 						<input
-							placeholder='project-git-
-							repository
-							'
+							placeholder='project-git-repository'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
@@ -468,13 +411,10 @@ function introduce() {
 							}}
 							type='text'
 							multiple='multiple'
-							className=' base-form
-    '
+							className=' base-form'
 						/>
 					</section>
-
 					{/*  */}
-
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Project 소개 페이지</h3>
 					<p>여러분의 프로젝트를 소개하는 페이지입니다.</p>
@@ -498,8 +438,7 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -507,6 +446,7 @@ function introduce() {
 								프로젝트를 대표하는 사진을 업로드해주세요.
 							</label>
 							<ImageHolder
+								projectName={info.project_info.name}
 								state={info}
 								setState={setInfo}
 								name={'image'}
@@ -532,8 +472,7 @@ function introduce() {
 							}}
 							type='text'
 							multiple='multiple'
-							className=' base-form
-    '
+							className=' base-form'
 						/>
 					</section>
 					{core.map((el, idx) => {
@@ -580,8 +519,7 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -603,8 +541,7 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -626,14 +563,14 @@ function introduce() {
 								}}
 								type='text'
 								multiple='multiple'
-								className=' base-form
-    '
+								className=' base-form'
 							/>
 						</div>
 						<label className='small-title essential'>
 							팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
 						</label>
 						<ImageHolder
+							projectName={info.project_info.name}
 							state={teamInfo}
 							setState={setTeamInfo}
 							name={'image'}
@@ -641,7 +578,7 @@ function introduce() {
 							section={'team-image'}
 						/>
 					</section>
-
+					{/*  */}
 					<h3 className='small-title '>팀원 소개</h3>
 					<p>팀원를 소개해보세요.</p>
 					{member.map((el, idx) => {
@@ -661,28 +598,7 @@ function introduce() {
 						);
 					})}
 					<div className='flex justify-end'>
-						<button
-							onClick={addMember}
-							// onClick={(e) => {
-							// 	e.preventDefault();
-							// 	setMemberData([...memberData, data]);
-							// 	setTeamInfo((prev) => {
-							// 		return {
-							// 			...prev,
-							// 			member: { ...memberData },
-							// 		};
-							// 	});
-							// setInfo({ ...info, memberData });
-							// setInfo((prev) => {
-							// 	return {
-							// 		...prev,
-							// 		info: { memberData },
-							// 	};
-							// });
-							// setHead(Number(head) + 1);
-							// }}
-							className='main-button'
-						>
+						<button onClick={addMember} className='main-button'>
 							팀원 추가하기
 						</button>
 					</div>

@@ -19,11 +19,24 @@ import {
 	getDownloadURL,
 } from 'firebase/storage';
 
-function ImageHolder({ state, setState, name, object, section }) {
+function ImageHolder({
+	state,
+	setState,
+	name,
+	object,
+	section,
+	projectName,
+	defaultImg,
+}) {
 	const userID = useSelector(({ user }) => user);
-	const [imageSrc, setImageSrc] = useState('');
+	const [imageSrc, setImageSrc] = useState();
 	const [fileUrl, setFileUrl] = useState('');
 
+	useEffect(() => {
+		setImageSrc(defaultImg);
+	}, [defaultImg]);
+
+	console.log(imageSrc);
 	const encodeFileToBase64 = async (fileBlob) => {
 		const reader = new FileReader();
 		reader.readAsDataURL(fileBlob);
@@ -40,10 +53,14 @@ function ImageHolder({ state, setState, name, object, section }) {
 		const metadata = {
 			contentType: 'image/jpeg',
 		};
+		console.log('실행됨');
 
 		if (fileBlob != '') {
 			try {
-				const fileRef = ref(storage, `${userID.uid}/${uuidv4()}`);
+				const fileRef = ref(
+					storage,
+					`${userID.uid}/${projectName}/${uuidv4()}`
+				);
 				const uploadTask = await uploadBytes(fileRef, fileBlob).then(
 					(snapshot) => {
 						console.log('updtae');
@@ -91,6 +108,7 @@ function ImageHolder({ state, setState, name, object, section }) {
 					</div>
 				}
 				<input
+					// value={de}
 					type='file'
 					accept='image/*'
 					className='block text-sm text-slate-500
@@ -101,7 +119,7 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 					onChange={(e) => {
 						encodeFileToBase64(e.target.files[0]);
-						ConvertUrl(e.target.files[0]);
+						projectName && ConvertUrl(e.target.files[0]);
 					}}
 				/>
 			</div>
