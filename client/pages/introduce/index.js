@@ -190,7 +190,7 @@ function introduce() {
 						<p className='my-3'>
 							해당 프로젝트 정보는 아래 페이지 양식에 맞춰 보여집니다.
 						</p>
-						<Link href='/project/project-info-1'>
+						<Link href='/project/project-name'>
 							<a target='_blank'>
 								<button
 									type='button'
@@ -207,6 +207,7 @@ function introduce() {
 							가리킵니다.
 						</strong>
 						<input
+							disabled
 							placeholder='project-name'
 							className=' base-form font-medium my-2'
 						/>
@@ -247,7 +248,7 @@ function introduce() {
 								}}
 								type='favicon'
 								multiple='multiple'
-								className=' base-form'
+								className=' base-form  border-2'
 							/>
 						</div>
 						<div className='b-divide'>
@@ -610,7 +611,13 @@ function introduce() {
 							임시저장
 						</button>
 						<button
-							onClick={addProjectIntro}
+							onClick={() => {
+								if (info.project_info.name) {
+									addProjectIntro();
+								} else {
+									alert('프로젝트의 이름은 필수 작성해야 합니다.');
+								}
+							}}
 							type='button'
 							className='w-full  mt-14 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'
 						>

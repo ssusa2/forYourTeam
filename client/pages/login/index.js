@@ -13,12 +13,14 @@ import { useRouter } from 'next/router';
 
 function Login() {
 	const route = useRouter();
+	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [newAccount, setNewAccount] = useState(true);
 	const [error, setError] = useState('');
 
 	const onChange = (event) => {
+		console.log(event.target.value);
 		const {
 			target: { name, value },
 		} = event;
@@ -46,7 +48,9 @@ function Login() {
 					password
 				);
 			}
-			console.log(data);
+			console.log('성공');
+			alert('환영합니다.😀');
+			router.push('/home');
 		} catch (error) {
 			console.log(error.message);
 
@@ -116,6 +120,7 @@ function Login() {
 								<p className='text-red-600'>{error}</p>
 
 								<input
+									onClick={(e) => onSubmit(e)}
 									className=' rounded-lg  px-4 py-2 text-xl font-semibold shadow-sm bg-green-700 transition duration-300 ease-in-out text-white border-green-700 hover:bg-green-800  sm:text-base w-full mt-3'
 									type='submit'
 									value={newAccount ? '계정 만들기' : '로그인 하기'}

@@ -219,65 +219,52 @@ function introduce() {
 
 	let lastTouch = moment(prevInfo?.joined.toDate()).format('llll');
 
-	const deleteProject = async () => {
-		if (!localStorage.access_token) {
-			if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
-				alert('삭제가 완료되었습니다.');
-				const projectRef = doc(db, 'project', `${projectName}`);
-				await deleteDoc(projectRef);
-				deleteStorageFolder();
-				// await projectRef.refFromURL(info.project_info.logo_image);
-				router.push('/project');
-			}
+	const deleteProject = async (path) => {
+		console.log(path);
+		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
+			alert('삭제가 완료되었습니다.');
+			const projectRef = doc(db, 'project', `${projectName}`);
+			await deleteDoc(projectRef);
+			deleteStorageFolder(path);
+			// await projectRef.refFromURL(info.project_info.logo_image);
+			router.push('/project');
 		} else {
 			('');
 		}
 
 		// console.log(projectsnap.data());
 	};
-	const deleteStorageFolder = () => {
-		// const fileRef = ref(
-		// 	storage,
-		// 	`${userID.uid}/${projectName}/59e9145a-fc38-405c-a3a5-38878da6c992`
-		// );
-
-		const fileRef = ref(storage, `${userID.uid}/${projectName}`);
-
-		// deleteObject(fileRef)
-		// 	.then(() => {
-		// 		console.log('성공');
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log('실패');
-		// 	});
-
+	const deleteStorageFolder = (path) => {
+		const fileRef = ref(storage, path);
+		console.log(fileRef);
 		listAll(fileRef)
 			.then((res) => {
-				// console.log('res', res);
 				res.items.forEach((itemRef) => {
-					console.log('res', itemRef);
-					deleteObject(
-						ref(storage, `${userID.uid}/${projectName}/${itemRef.name}`)
-					);
-					// console.log('247', fileRef.fullPath + itemRef.name);
-					console.log('이미지패스', itemRef._location);
-					res.prefixes.forEach((folderRef) => {});
+					deleteFile(fileRef.fullPath, itemRef.name);
 				});
-
-				// 	deleteObject(itemRef.name)
-				// 		.then(() => {
-				// 			console.log('삭제 됨');
-				// 		})
-				// 		.catch((error) => {
-				// 			console.log('삭제 안됨');
-				// 		});
-				// });
+				res.prefixes.forEach((folderRef) => {
+					deleteStorageFolder(`gs://${folderRef.bucket}/${folderRef.fullPath}`);
+					console.log('folderRef', folderRef);
+				});
 			})
 			.catch((error) => {
 				console.log('에러', error);
 				// Uh-oh, an error occurred!
 			});
 	};
+
+	const deleteFile = (pathToFile, fileName) => {
+		const itemRef = ref(storage, `${pathToFile}/${fileName}`);
+		deleteObject(itemRef)
+			.then((res) => {
+				console.log('삭제', res);
+			})
+			.catch((error) => {
+				console.log('안됨', error);
+			});
+	};
+
+	console.log(teamInfo);
 
 	return (
 		<>
@@ -739,18 +726,14 @@ function introduce() {
 					</div>
 					<div className=' flex justify-end  '>
 						<button
-							onClick={deleteProject}
+							onClick={() => {
+								console.log('click');
+								deleteProject(`${userID.uid}/${projectName}`);
+							}}
 							type='button'
 							className='w-full  mt-14 rounded-lg border border-red-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-red-700 transition duration-300 ease-in-out hover:text-white text-red-700 sm:ml-3 sm:w-auto sm:text-base	'
 						>
 							삭제
-						</button>
-						<button
-							onClick={deleteStorageFolder}
-							type='button'
-							className='w-full  mt-14 rounded-lg border border-red-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-red-700 transition duration-300 ease-in-out hover:text-white text-red-700 sm:ml-3 sm:w-auto sm:text-base	'
-						>
-							이미지삭제
 						</button>
 						<button
 							onClick={addProjectIntro}
