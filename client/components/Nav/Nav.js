@@ -105,7 +105,7 @@ function Nav() {
 					<div className='flex justify-between items-center	'>
 						{!projectMenu ? (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/home'>
-								<h1 className='cursor-pointer font-extrabold text-green-700'>
+								<h1 className='cursor-pointer font-extrabold text-xl text-green-700'>
 									ForMyTeam
 								</h1>
 							</Link>
@@ -113,11 +113,6 @@ function Nav() {
 							<>
 								<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
 									<Logo color={color}>{logo}</Logo>
-								</Link>
-								<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-									<h2 className=' opacity-50 hover:opacity-100 text-stone-200 transition duration-300 ease-in-out cursor-pointer hover:text-green-700 font-bold'>
-										다른 프로젝트 보러가기 👆
-									</h2>
 								</Link>
 							</>
 						)}
@@ -172,6 +167,8 @@ export default Nav;
 
 const Logo = styled.h1`
 	font-weight: 800;
+	font-size: 1.25rem;
+	line-height: 1.75rem;
 	color: ${({ color }) => color};
 	cursor: pointer;
 `;
@@ -182,6 +179,7 @@ const RightMenu = styled.h2`
 	text-align: center;
 	cursor: pointer;
 	color: ${({ color }) => color};
+	/* text-decoration: ${({ color }) => color} underline; */
 `;
 
 const NonActive = styled.h2`
