@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
-import useSave from '../../hooks/useSave';
+import PreviewModal from '../../components/Modal/PreviewModal';
 import { db, storage, storageRef } from '../firebase';
 import {
 	setDoc,
@@ -25,14 +25,17 @@ import {
 	uploadString,
 	getDownloadURL,
 } from 'firebase/storage';
+import { setAll } from '../../src/store/modules/projectInfo';
 console.log(storage);
 
 function introduce() {
 	const router = useRouter();
+	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const [isSaving, setIsSaving] = useState(false);
 	const [fileUrl, setFileUrl] = useState('');
 	const userInfo = useSelector(({ user }) => user.uid);
+	const [previewOpen, setPreviewOpen] = useState(false);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -129,7 +132,7 @@ function introduce() {
 		setMember([...member, newMember]);
 	};
 
-	const addProjectIntro = () => {
+	const addProjectIntro = (e) => {
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -146,14 +149,18 @@ function introduce() {
 				member,
 			};
 		});
-		setIsSaving(true);
+		console.log('1--여기는?', info);
+		if (e.target.name == '저장') setIsSaving(true);
+		// console.log(e.target.name);
 	};
+	// console.log('index', info, teamInfo);
 
 	let projectName = info?.project_info?.name;
 
 	useEffect(() => {
 		// 생성 시
 		async function fetchData() {
+			console.log('3--여기는?', info);
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
 					// user_id:
@@ -176,9 +183,20 @@ function introduce() {
 		}
 	}, [isSaving]);
 
+	const previewSetInfo = (e) => {
+		addProjectIntro(e);
+		console.log(info, teamInfo);
+		dispatch(setAll({ info, teamInfo }));
+	};
+
+	useEffect(() => {
+		previewSetInfo(event);
+	}, [previewOpen]);
+
 	return (
 		<>
-			<div className='my-container'>
+			<div className='my-container relative'>
+				{previewOpen && <PreviewModal setPreviewOpen={setPreviewOpen} />}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<div className='block lg:flex lg:justify-between'>
 					<div>
@@ -216,7 +234,7 @@ function introduce() {
 						</p>
 					</div>
 				</div>
-				<form>
+				<form className='relative'>
 					<div className='mt-8 mb-16 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Project 기본 정보</h3>
 					<p>
@@ -598,34 +616,37 @@ function introduce() {
 							/>
 						);
 					})}
-					<div className='flex justify-end'>
+					<div className='flex justify-end '>
 						<button onClick={addMember} className='main-button'>
 							팀원 추가하기
 						</button>
 					</div>
-					<div className=' flex justify-end  '>
+					<div className='bg-white shadow-inner w-full flex justify-end fixed z-50 right-0 bottom-0'>
 						<button
 							type='button'
-							className=' w-full  mt-14 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700  sm:w-auto sm:text-base	'
+							className=' w-full my-6  rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700  sm:w-auto sm:text-base	'
 						>
 							임시저장
 						</button>
 						<button
+							onClick={() => setPreviewOpen(true)}
 							type='button'
-							className=' w-full  mt-14 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
+							className=' w-full my-6 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
 						>
 							미리보기
 						</button>
 						<button
-							onClick={() => {
+							name='저장'
+							onClick={(e) => {
 								if (info.project_info.name) {
-									addProjectIntro();
+									addProjectIntro(e);
+									console.log('2--여기는?', info);
 								} else {
 									alert('프로젝트의 이름은 필수 작성해야 합니다.');
 								}
 							}}
 							type='button'
-							className='w-full  mt-14 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'
+							className='w-full my-6 mr-16 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'
 						>
 							저장
 						</button>

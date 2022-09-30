@@ -57,9 +57,30 @@ function Mypage() {
 	return (
 		<>
 			<div className='my-container mx-auto'>
-				<div className='flex'>
-					<h2 className='middle-title '>프로젝트</h2>{' '}
-					<span className='font-bold text-lg pt-2 '>({projects.length})</span>
+				<div className='flex justify-between'>
+					<div className='flex'>
+						<h2 className='middle-title '>프로젝트</h2>{' '}
+						<span className='font-bold text-lg pt-2 '>({projects.length})</span>
+					</div>
+					<button
+						onClick={() => {
+							if (userInfo?.uid) {
+								router.push('/introduce');
+							} else {
+								if (
+									confirm('로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?')
+								) {
+									router.push('/login');
+								}
+								{
+									('');
+								}
+							}
+						}}
+						className='px-4 main-hover main-color font-bold rounded-full border-green-700 border-2'
+					>
+						+ 프로젝트 추가하기
+					</button>
 				</div>
 				<ProjectList projects={projects} />
 			</div>

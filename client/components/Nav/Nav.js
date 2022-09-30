@@ -12,8 +12,9 @@ import { collection, getDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
 
 function Nav() {
-	const { route } = useRouter();
 	const router = useRouter();
+	const { route } = router;
+	const { pathname } = router;
 	const { Intro } = router.query;
 
 	const [init, setInit] = useState(false);
@@ -32,7 +33,6 @@ function Nav() {
 		projectMenu = false;
 	}
 
-	console.log(route);
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
@@ -54,15 +54,12 @@ function Nav() {
 		}
 	}, [route]);
 
-	console.log(route);
 	const { color, logo, logo_image } = projectColor;
 
 	useEffect(() => {
 		route == '/project/[Intro]' && dispatch(setColor(projectObj?.color));
 		dispatch(setLogo(projectObj?.logo));
 	}, []);
-
-	console.log(projectObj?.logo);
 
 	useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
@@ -98,10 +95,13 @@ function Nav() {
 
 	const teamNumber = Intro;
 
+	let isProjectPage = pathname == '/project/[Intro]';
+	let isTeamPage = pathname == '/team/[Intro]';
+
 	return (
 		<>
-			<div className='relative z-50	'>
-				<div className=' w-full px-16 py-6 bg-white text-black fixed top-0 left-0 '>
+			<div className='relative z-50 '>
+				<div className=' w-full shadow  px-16 py-6 bg-white text-black fixed top-0 left-0 '>
 					<div className='flex justify-between items-center	'>
 						{!projectMenu ? (
 							<Link onClick={() => window.scrollTo(0, 0)} href='/home'>
@@ -146,14 +146,19 @@ function Nav() {
 							) : (
 								''
 							)}
-							{isLoggedIn ? (
-								<LogOut name={userObj?.displayName} />
+							{/* 지금은 항상 로그인 되어있으면! 근데 프로젝트 페이지 내부에서는 안보이게 */}
+							{isProjectPage == isTeamPage ? (
+								isLoggedIn ? (
+									<LogOut name={userObj?.displayName} />
+								) : (
+									<Link href='/login'>
+										<a className='hover:bg-green-800 cursor-pointer px-4 py-1 font-bold rounded-lg bg-green-700  text-white'>
+											로그인
+										</a>
+									</Link>
+								)
 							) : (
-								<Link href='/login'>
-									<a className='hover:bg-green-800 cursor-pointer px-4 py-1 font-bold rounded-lg bg-green-700  text-white'>
-										로그인
-									</a>
-								</Link>
+								''
 							)}
 						</div>
 					</div>
@@ -174,7 +179,9 @@ const Logo = styled.h1`
 `;
 
 const RightMenu = styled.h2`
-	margin-right: 1.5rem;
+	:first-child {
+		margin-right: 1.5rem;
+	}
 	font-weight: 700;
 	text-align: center;
 	cursor: pointer;

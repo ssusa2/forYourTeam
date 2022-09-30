@@ -74,7 +74,7 @@ function Login() {
 		}
 		const data = await signInWithPopup(FirebaseAuth, provider);
 		console.log(data);
-		data.user.displayName && route.push('/home');
+		data.user.displayName && route.push('/project');
 	};
 
 	if (error == 'Firebase: Error (auth/email-already-in-use).') {

@@ -327,7 +327,7 @@ function introduce() {
 							</span>
 							<input
 								disabled
-								placeholder='project-name'
+								placeholder='프로젝트 이름'
 								value={info.project_info.name || ''}
 								onChange={(e) => {
 									setInfo((prev) => {
@@ -357,7 +357,7 @@ function introduce() {
 								<div className='w-full block xl:w-2/6'>
 									<p className='mt-3'>로고</p>
 									<input
-										placeholder='project-logo'
+										placeholder='프로젝트 로고'
 										value={info.project_info.logo || ''}
 										onChange={(e) => {
 											setInfo((prev) => {

@@ -36,7 +36,6 @@ function ImageHolder({
 		setImageSrc(defaultImg);
 	}, [defaultImg]);
 
-	console.log(imageSrc);
 	const encodeFileToBase64 = async (fileBlob) => {
 		const reader = new FileReader();
 		reader.readAsDataURL(fileBlob);
@@ -53,7 +52,6 @@ function ImageHolder({
 		const metadata = {
 			contentType: 'image/jpeg',
 		};
-		console.log('실행됨');
 
 		if (fileBlob != '') {
 			try {
@@ -63,11 +61,10 @@ function ImageHolder({
 				);
 				const uploadTask = await uploadBytes(fileRef, fileBlob).then(
 					(snapshot) => {
-						console.log('updtae');
+						console.log('updata');
 					}
 				);
 				fileUrl = await getDownloadURL(fileRef);
-				console.log(fileUrl);
 			} catch (err) {
 				console.log(err);
 			}

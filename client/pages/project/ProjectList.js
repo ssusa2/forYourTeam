@@ -36,21 +36,23 @@ function ProjectList({ projects }) {
 										href='/project/[intro]'
 										as={`/project/${info?.project_info.name}`}
 									>
-										<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
-											{info?.project_info.logo_image ? (
-												<img
-													src={info?.project_info.logo_image}
-													alt={info?.project_info.logo_image}
-													className='w-full aspect-video object-cover object-center group-hover:opacity-75'
-												/>
-											) : (
-												<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
-													<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
-														{info?.project_info.name}
-													</p>
-												</div>
-											)}
-										</div>
+										<a target={`/project/${info?.project_info.name}`}>
+											<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
+												{info?.project_info.logo_image ? (
+													<img
+														src={info?.project_info.logo_image}
+														alt={info?.project_info.logo_image}
+														className='w-full aspect-video object-cover object-center group-hover:opacity-75'
+													/>
+												) : (
+													<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
+														<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
+															{info?.project_info.name}
+														</p>
+													</div>
+												)}
+											</div>
+										</a>
 									</Link>
 
 									<div className=' mt-4 flex justify-between items-center	'>
