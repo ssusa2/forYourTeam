@@ -29,6 +29,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/introduce.js"
+    ],
+    "/project/[Intro]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/project/[Intro].js"
     ]
   },
   "ampFirstPages": []

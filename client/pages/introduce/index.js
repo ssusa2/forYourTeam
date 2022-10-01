@@ -119,8 +119,10 @@ function introduce() {
 			title: '',
 			description: '',
 			image: '',
+			writable: true,
 		};
-		setCore([...core, newCore]);
+
+		setCore([...core, { ...newCore }]);
 	};
 
 	const addMember = (e) => {
@@ -163,7 +165,6 @@ function introduce() {
 	useEffect(() => {
 		// 생성 시
 		async function fetchData() {
-			console.log('3--여기는?', info);
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
 					// user_id:
@@ -188,14 +189,11 @@ function introduce() {
 
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
-		console.log(info, teamInfo);
 		dispatch(setAll({ info, teamInfo }));
 	};
 
 	const handleColorChange = useCallback(
-		// 온체인지 이벤트를 담당할 함수다.
 		(color) => {
-			// 바뀌는 컬러값을 매개변수로 받아서
 			setInfo((prev) => {
 				return {
 					...prev,
@@ -204,18 +202,12 @@ function introduce() {
 						color: color,
 					},
 				};
-			}); // setColor 안에 넣어줘서 color 를 변경해줄거다.
+			});
 		},
 		[info]
 	);
 
-	const cover = {
-		width: '100%',
-	};
-	const popover = {
-		width: '100%',
-	};
-	console.log('color', info.project_info);
+	console.log('color', info);
 
 	useEffect(() => {
 		previewSetInfo(event);
@@ -224,10 +216,7 @@ function introduce() {
 	return (
 		<>
 			<div className='my-container relative'>
-				{previewOpen && (
-					//  <PreviewModal setPreviewOpen={setPreviewOpen} />
-					<TestModal setPreviewOpen={setPreviewOpen} />
-				)}
+				{previewOpen && <TestModal setPreviewOpen={setPreviewOpen} />}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<div className='block lg:flex lg:justify-between'>
 					<div>
@@ -283,7 +272,7 @@ function introduce() {
 								/project/프로젝트 이름
 							</span>
 							<input
-								placeholder='project-name'
+								placeholder='프로젝트의 이름을 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -302,14 +291,14 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title essential'>
-								프로젝트의 로고를 입력하거나 이미지를 첨부해주세요.(120px x
-								40px)
+								프로젝트의 로고 혹은 이미지를 첨부해주세요.(택 1 / 권장 사이즈
+								120px x 40px)
 							</label>
 							<div className='block xl:flex xl:justify-between'>
 								<div className='w-full block xl:w-2/6'>
 									<p className='mt-3'>로고</p>
 									<input
-										placeholder='project-logo'
+										placeholder='로고'
 										onChange={(e) => {
 											setInfo((prev) => {
 												return {
@@ -360,7 +349,7 @@ function introduce() {
 								프로젝트 웹 사이트의 주소를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-url'
+								placeholder='프로젝트 웹 사이트의 주소를 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -382,7 +371,7 @@ function introduce() {
 								프로젝트의 장르를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-genre'
+								placeholder='프로젝트의 장르를 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -429,7 +418,7 @@ function introduce() {
 								프로젝트의 대표 E-mail를 입력해주세요.
 							</label>
 							<input
-								placeholder='project-email'
+								placeholder='프로젝트의 대표 E-mail를 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -450,7 +439,7 @@ function introduce() {
 							프로젝트 팀 레퍼지토리 주소를 입력해주세요.
 						</label>
 						<input
-							placeholder='project-git-repository'
+							placeholder='ex)https://github.com/ForMyTeam'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
@@ -477,7 +466,7 @@ function introduce() {
 								프로젝트의 슬로건을 1~2줄로 입력하세요.
 							</label>
 							<input
-								placeholder='project-slogun'
+								placeholder='프로젝트의 슬로건을 1~2줄로 입력하세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
 										return {
@@ -508,10 +497,10 @@ function introduce() {
 							/>
 						</div>
 						<label className='small-title essential'>
-							프로젝트를 대표하는 사진에 알맞는 소개를 2~4줄 입력해주세요.
+							프로젝트를 소개하는 글을 2~4줄 입력해주세요.
 						</label>
 						<input
-							placeholder='project-introduce'
+							placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
 							onChange={(e) => {
 								setInfo((prev) => {
 									return {
@@ -532,6 +521,7 @@ function introduce() {
 						return (
 							<>
 								<CoreAdd
+									onChange={handleFormChange}
 									el={el}
 									idx={idx}
 									key={idx}
@@ -558,7 +548,7 @@ function introduce() {
 								팀 이름을 입력해주세요.
 							</label>
 							<input
-								placeholder='team-name'
+								placeholder='팀 이름을 입력해주세요.'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {
@@ -577,10 +567,10 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title mt-0 essential'>
-								프로젝트의 문화를 대표하는 슬로건을 입력하세요.
+								팀의 문화를 나타내는 슬로건를 입력하세요.
 							</label>
 							<input
-								placeholder='team-slogun'
+								placeholder='팀의 문화를 나타내는 슬로건를 입력하세요.'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {
@@ -599,10 +589,10 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title essential'>
-								프로젝트의 문화를 설명하는 내용을 입력하세요.
+								팀의 문화를 설명하는 내용을 입력하세요.
 							</label>
 							<input
-								placeholder='team-description'
+								placeholder='팀의 문화를 설명하는 내용을 입력하세요.'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
 										return {

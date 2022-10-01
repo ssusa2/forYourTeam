@@ -42,6 +42,7 @@ function teamHome() {
 
 	const OneMember = teamInfo?.member.length;
 
+	console.log(teams);
 	return (
 		<>
 			<div className='my-container'>
@@ -99,9 +100,14 @@ function teamHome() {
 						{info?.project_page.slogun}
 					</h2>
 					<div className='flex justify-center'>
-						<button type='button' className='mt-10 main-button'>
-							프로젝트 보러가기
-						</button>
+						<a
+							href={`${info?.project_info.url}`}
+							target={`${info?.project_info.url}`}
+						>
+							<button type='button' className='mt-10 main-button'>
+								프로젝트 보러가기
+							</button>
+						</a>
 					</div>
 				</div>
 			</div>

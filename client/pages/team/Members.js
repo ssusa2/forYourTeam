@@ -37,7 +37,7 @@ function Members({ members, OneMember }) {
 							</div>
 
 							<div className='flex items-center'>
-								<a href={github}>
+								<a href={github} target={github}>
 									<svg
 										xmlns='http://www.w3.org/2000/svg'
 										viewBox='0 0 496 512'

@@ -48,7 +48,6 @@ function CoreAdd({
 							handleFormChange(idx, event, core, setCore, folder)
 						}
 						type='text'
-						multiple='multiple'
 						className='base-form
 '
 					/>
@@ -63,7 +62,6 @@ function CoreAdd({
 							handleFormChange(idx, event, core, setCore, folder)
 						}
 						type='text'
-						multiple='multiple'
 						className='base-form
 '
 					/>
@@ -78,7 +76,6 @@ function CoreAdd({
 						}
 						name='description'
 						type='text'
-						multiple='multiple'
 						className='base-form
 '
 					/>

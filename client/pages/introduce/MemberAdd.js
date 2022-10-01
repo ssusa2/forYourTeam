@@ -86,7 +86,7 @@ hover:file:bg-violet-100'
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
 									value={el.name}
-									placeholder='team-member-name'
+									placeholder='이름'
 									name='name'
 									// onChange={(e) => {
 									// 	setMember({ name: e.target.value });
@@ -108,7 +108,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
 									value={el.role}
-									placeholder='team-member-role'
+									placeholder='직책'
 									name='role'
 									onChange={(e) => {
 										handleFormChange(idx, e, member, setMember, folder);
@@ -128,7 +128,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
 								value={el.description}
-								placeholder='team-member-description'
+								placeholder='소개말'
 								name='description'
 								onChange={(e) => {
 									handleFormChange(idx, e, member, setMember, folder);
@@ -145,7 +145,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<label className='small-title essential'>Github</label>{' '}
 						<input
 							value={el.github}
-							placeholder='team-member-github'
+							placeholder='Github'
 							name='github'
 							onChange={(e) => {
 								handleFormChange(idx, e, member, setMember, folder);

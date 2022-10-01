@@ -33,16 +33,16 @@ function Footer({ Preview }) {
 		projectMenu = false;
 	}
 
-	console.log(Preview);
+	console.log(projectColor?.team_github);
 	return (
 		<>
 			<div className='relative '>
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
 					<div className='flex justify-between	'>
 						{!projectMenu ? (
-							Preview?.info.project_info.logo ? (
-								<Logo color={Preview?.info.project_info.color}>
-									{Preview?.info.project_info.logo}
+							Preview?.info?.project_info.color ? (
+								<Logo color={Preview?.info?.project_info.color}>
+									{Preview?.info?.project_info.logo}
 								</Logo>
 							) : (
 								<Logo>ForMyTeam</Logo>
@@ -50,9 +50,27 @@ function Footer({ Preview }) {
 						) : (
 							<Logo color={color}>{logo}</Logo>
 						)}
-						<a href='#'>
-							<Github />
-						</a>
+						{!projectColor?.team_github ? (
+							<a
+								target={`${projectColor?.team_github}`}
+								href={`${projectColor?.team_github}`}
+							>
+								<Github />
+							</a>
+						) : (
+							<a
+								target='https://github.com/ssusa2'
+								href='https://github.com/ssusa2'
+							>
+								<Github />
+							</a>
+						)}
+						{/* <a
+							target={` ${projectColor?.team_github}`}
+							// href={projectColor?.team_github}
+						> */}
+
+						{/* </a> */}
 					</div>
 				</div>
 				<div className='flex justify-center pb-8'>

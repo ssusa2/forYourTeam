@@ -27,7 +27,7 @@ function ProjectList({ projects }) {
 											onClick={() =>
 												router.push(`/introduce/${info?.project_info.name}`)
 											}
-											className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-50'
+											className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-20'
 										>
 											<Edit />
 										</button>

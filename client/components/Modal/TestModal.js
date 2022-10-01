@@ -6,6 +6,7 @@ import Project from '../../pages/project/[Intro]';
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import { useSelector } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export default function TestModal({ setPreviewOpen }) {
@@ -39,7 +40,7 @@ export default function TestModal({ setPreviewOpen }) {
 				</Transition.Child>
 
 				<div className='fixed inset-0 z-10 overflow-y-auto'>
-					<div className='flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
+					<div className='-translate-y-[7%] flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
 						<Transition.Child
 							as={Fragment}
 							enter='ease-out duration-300'

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Slide from './slide';
 import { db } from '../firebase';
 import { collection, getDoc, doc } from 'firebase/firestore';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, createSelector } from 'react-redux';
 import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
 
 function Project({ Preview }) {
@@ -15,6 +15,7 @@ function Project({ Preview }) {
 	// console.log('[Intro]', Preview);
 	const [projects, setProjects] = useState({});
 	const [projectInfo, setProjectInfo] = useState();
+
 	const projectColor = useSelector(({ projectInfo }) => projectInfo);
 	let { info } = projects;
 
@@ -131,9 +132,14 @@ function Project({ Preview }) {
 						{info?.project_page.slogun}
 					</h2>
 					<div className='flex justify-center'>
-						<button type='button' className='mt-10 gray-button'>
-							프로젝트 보러가기
-						</button>
+						<a
+							href={`${info?.project_info.url}`}
+							target={`${info?.project_info.url}`}
+						>
+							<button type='button' className='mt-10 gray-button'>
+								프로젝트 보러가기
+							</button>
+						</a>
 					</div>
 				</div>
 				{/* section4 */}
@@ -148,7 +154,7 @@ function Project({ Preview }) {
 						type='button'
 						className='mt-8 gray-button'
 					>
-						팀원 소개 보러가기 ->
+						팀원 소개 보러가기
 					</button>
 				</div>
 				{/* <Slide /> */}

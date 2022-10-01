@@ -55,7 +55,6 @@ function Nav({ Preview }) {
 	}, [route]);
 
 	const { color, logo, logo_image } = projectColor;
-	console.log('project_info', Preview?.info.project_info);
 
 	useEffect(() => {
 		route == '/project/[Intro]' && dispatch(setColor(projectObj?.color));
@@ -101,7 +100,7 @@ function Nav({ Preview }) {
 
 	return (
 		<>
-			{Preview?.info.project_info ? (
+			{Preview?.info?.project_info ? (
 				//  Preview mode
 				<div className='relative z-50 '>
 					<div className=' w-full shadow  px-16 py-6 bg-white text-black fixed top-0 left-0 '>
