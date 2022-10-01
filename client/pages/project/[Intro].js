@@ -53,7 +53,13 @@ function Project({ Preview }) {
 		<>
 			{/* <h1>Post: {id}</h1>
 			<h1>Comment: {comment}</h1> */}
-			<div className={router.route == '/introduce' ? '' : 'my-container'}>
+			<div
+				className={
+					router.route == '/introduce'
+						? 'mt-16 px-14 pt-40 xl:pt-60 mx-auto'
+						: 'my-container'
+				}
+			>
 				{/* section1 */}
 				<div className='section1'>
 					<div>
@@ -130,8 +136,21 @@ function Project({ Preview }) {
 						</button>
 					</div>
 				</div>
-
 				{/* section4 */}
+				<div className='flex justify-end'>
+					<h3 className='middle-title text-end	'>
+						프로젝트를 만든 사람들이 궁금하다면?
+					</h3>
+				</div>
+				<div className='flex justify-end'>
+					<button
+						onClick={() => router.push(`/team/${Intro}`)}
+						type='button'
+						className='mt-8 gray-button'
+					>
+						팀원 소개 보러가기 ->
+					</button>
+				</div>
 				{/* <Slide /> */}
 			</div>
 		</>

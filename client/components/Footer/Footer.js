@@ -11,7 +11,7 @@ import {
 import styled from 'styled-components';
 import { Github } from '../Icon/Icon';
 
-function Footer() {
+function Footer({ Preview }) {
 	const { route } = useRouter();
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -33,13 +33,20 @@ function Footer() {
 		projectMenu = false;
 	}
 
+	console.log(Preview);
 	return (
 		<>
 			<div className='relative '>
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
 					<div className='flex justify-between	'>
 						{!projectMenu ? (
-							<Logo>ForMyTeam</Logo>
+							Preview?.info.project_info.logo ? (
+								<Logo color={Preview?.info.project_info.color}>
+									{Preview?.info.project_info.logo}
+								</Logo>
+							) : (
+								<Logo>ForMyTeam</Logo>
+							)
 						) : (
 							<Logo color={color}>{logo}</Logo>
 						)}

@@ -39,19 +39,19 @@ function teamHome() {
 	}, [Intro]);
 
 	const { info, teamInfo } = teams;
-	console.log(teamInfo);
 
 	const OneMember = teamInfo?.member.length;
-	// console.log(OneMember);
+
 	return (
 		<>
 			<div className='my-container'>
 				<section>
+					<h2 className='big-title'>{teamInfo?.intro.name}</h2>
+					<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
 					<h2 className='big-title'>{teamInfo?.intro.slogun}</h2>
 					<p className='base-text w-full sm:w-4/5 '>
 						{teamInfo?.intro.culture}
 					</p>
-					<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
 				</section>
 				<section className='mt-40'>
 					<span className='small-title mb-1'>우리 팀을 소개합니다.</span>

@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MemberAdd from './MemberAdd';
 import Router, { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +7,7 @@ import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
 import PreviewModal from '../../components/Modal/PreviewModal';
+import { ChromePicker } from 'react-color';
 import { db, storage, storageRef } from '../firebase';
 import {
 	setDoc,
@@ -26,7 +27,9 @@ import {
 	getDownloadURL,
 } from 'firebase/storage';
 import { setAll } from '../../src/store/modules/projectInfo';
-console.log(storage);
+import { setColor, setLogo } from '../../src/store/modules/projectInfo';
+
+import TestModal from '../../components/Modal/TestModal';
 
 function introduce() {
 	const router = useRouter();
@@ -149,8 +152,8 @@ function introduce() {
 				member,
 			};
 		});
-		console.log('1--여기는?', info);
-		if (e.target.name == '저장') setIsSaving(true);
+
+		if (e?.target.name == '저장') setIsSaving(true);
 		// console.log(e.target.name);
 	};
 	// console.log('index', info, teamInfo);
@@ -189,6 +192,31 @@ function introduce() {
 		dispatch(setAll({ info, teamInfo }));
 	};
 
+	const handleColorChange = useCallback(
+		// 온체인지 이벤트를 담당할 함수다.
+		(color) => {
+			// 바뀌는 컬러값을 매개변수로 받아서
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						color: color,
+					},
+				};
+			}); // setColor 안에 넣어줘서 color 를 변경해줄거다.
+		},
+		[info]
+	);
+
+	const cover = {
+		width: '100%',
+	};
+	const popover = {
+		width: '100%',
+	};
+	console.log('color', info.project_info);
+
 	useEffect(() => {
 		previewSetInfo(event);
 	}, [previewOpen]);
@@ -196,7 +224,10 @@ function introduce() {
 	return (
 		<>
 			<div className='my-container relative'>
-				{previewOpen && <PreviewModal setPreviewOpen={setPreviewOpen} />}
+				{previewOpen && (
+					//  <PreviewModal setPreviewOpen={setPreviewOpen} />
+					<TestModal setPreviewOpen={setPreviewOpen} />
+				)}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<div className='block lg:flex lg:justify-between'>
 					<div>
@@ -370,21 +401,24 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title  essential'>
-								프로젝트의 메인색상을 입력해주세요.(#)
+								프로젝트의 메인색상을 선택하세요.(#)
 							</label>
+							<div>
+								<ChromePicker
+									defaultView={'hex'}
+									style={{ width: '100%' }}
+									color={info.project_info.color}
+									onChange={(color) => handleColorChange(color.hex)}
+								/>
+							</div>
+							{/* <input
+								value={color}
+								onChange={(e) => handleColorChange(e.target.value)}
+							/> */}
 							<input
 								placeholder='project-color'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_info: {
-												...info.project_info,
-												color: e.target.value,
-											},
-										};
-									});
-								}}
+								value={info.project_info.color}
+								onChange={(e) => handleColorChange}
 								type='text'
 								multiple='multiple'
 								className=' base-form'
