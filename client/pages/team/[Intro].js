@@ -4,8 +4,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
+import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import Members from './Members';
+
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -49,10 +51,14 @@ function teamHome() {
 				<section>
 					<h2 className='big-title'>{teamInfo?.intro.name}</h2>
 					<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
-					<h2 className='big-title'>{teamInfo?.intro.slogun}</h2>
-					<p className='base-text w-full sm:w-4/5 '>
-						{teamInfo?.intro.culture}
-					</p>
+					<h2
+						className='big-title'
+						dangerouslySetInnerHTML={replaceBrTag(teamInfo?.intro.slogun)}
+					/>
+					<p
+						className='base-text w-full sm:w-4/5 '
+						dangerouslySetInnerHTML={replaceBrTag(teamInfo?.intro.culture)}
+					/>
 				</section>
 				<section className='mt-40'>
 					<span className='small-title mb-1'>우리 팀을 소개합니다.</span>

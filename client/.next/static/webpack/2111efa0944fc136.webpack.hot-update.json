@@ -1,0 +1,1 @@
+{"c":["pages/project/[Intro]","pages/introduce","webpack"],"r":["pages/home"],"m":["./util/replacebr.js","../node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2FUsers%2Fjeongsuin%2FDesktop%2FProject-intro%2Fmy-project%2Fclient%2Fpages%2Fhome%2Findex.js&page=%2Fhome!","./pages/home/Main.js","./pages/home/index.js"]}

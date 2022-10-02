@@ -7,6 +7,7 @@ import { storage } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { checkLines } from '../../util/utils';
 
 function MemberAdd({
 	el,
@@ -127,6 +128,8 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
+								rows={4}
+								onKeyUp={(e) => checkLines(e, 4)}
 								value={el.description}
 								placeholder='소개말'
 								name='description'

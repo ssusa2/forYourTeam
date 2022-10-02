@@ -8,6 +8,7 @@ import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
 import PreviewModal from '../../components/Modal/PreviewModal';
 import { ChromePicker } from 'react-color';
+import { checkLines } from '../../util/utils';
 import { db, storage, storageRef } from '../firebase';
 import {
 	setDoc,
@@ -272,6 +273,7 @@ function introduce() {
 								/project/프로젝트 이름
 							</span>
 							<input
+								maxLength={30}
 								placeholder='프로젝트의 이름을 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
@@ -465,7 +467,10 @@ function introduce() {
 							<label className='small-title mt-0 essential'>
 								프로젝트의 슬로건을 1~2줄로 입력하세요.
 							</label>
-							<input
+							<textarea
+								maxLength={30}
+								rows={2}
+								onKeyUp={(e) => checkLines(e, 2)}
 								placeholder='프로젝트의 슬로건을 1~2줄로 입력하세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
@@ -499,7 +504,9 @@ function introduce() {
 						<label className='small-title essential'>
 							프로젝트를 소개하는 글을 2~4줄 입력해주세요.
 						</label>
-						<input
+						<textarea
+							rows={4}
+							onKeyUp={(e) => checkLines(e, 4)}
 							placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
 							onChange={(e) => {
 								setInfo((prev) => {
@@ -569,7 +576,9 @@ function introduce() {
 							<label className='small-title mt-0 essential'>
 								팀의 문화를 나타내는 슬로건를 입력하세요.
 							</label>
-							<input
+							<textarea
+								rows={2}
+								onKeyUp={(e) => checkLines(e, 2)}
 								placeholder='팀의 문화를 나타내는 슬로건를 입력하세요.'
 								onChange={(e) => {
 									setTeamInfo((prev) => {
@@ -591,7 +600,9 @@ function introduce() {
 							<label className='small-title essential'>
 								팀의 문화를 설명하는 내용을 입력하세요.
 							</label>
-							<input
+							<textarea
+								rows={4}
+								onKeyUp={(e) => checkLines(e, 4)}
 								placeholder='팀의 문화를 설명하는 내용을 입력하세요.'
 								onChange={(e) => {
 									setTeamInfo((prev) => {

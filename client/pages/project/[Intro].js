@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Slide from './slide';
 import { db } from '../firebase';
+import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import { useSelector, useDispatch, createSelector } from 'react-redux';
 import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
@@ -49,7 +50,8 @@ function Project({ Preview }) {
 	}, [projects]);
 
 	// const { intro } = projects?.teamInfo;
-	// console.log(info?.project_page.imag);
+	console.log(info?.project_page);
+	console.log(replaceBrTag(info?.project_page?.slogun));
 	return (
 		<>
 			{/* <h1>Post: {id}</h1>
@@ -64,15 +66,18 @@ function Project({ Preview }) {
 				{/* section1 */}
 				<div className='section1'>
 					<div>
-						<h2 className='big-title readW '>{info?.project_page.slogun}</h2>
+						<h2 className='big-title readW'>{info?.project_page.slogun}</h2>
 						<img
 							className='mt-4  xl:mt-36  mb-8 '
 							src={info?.project_page.image}
 						/>
 					</div>
-					<p className='xl:w-3/4 text-2xl font-bold'>
-						{info?.project_page.description}
-					</p>
+					<p
+						className='xl:w-3/4 text-2xl font-bold'
+						dangerouslySetInnerHTML={replaceBrTag(
+							info?.project_page.description
+						)}
+					/>
 				</div>
 				{/* section2 */}
 				{info?.project_page.core?.[0] && (

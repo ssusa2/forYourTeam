@@ -25,15 +25,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/introduce": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/introduce.js"
-    ],
     "/project/[Intro]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/project/[Intro].js"
+    ],
+    "/team/[Intro]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/team/[Intro].js"
     ]
   },
   "ampFirstPages": []

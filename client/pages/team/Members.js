@@ -5,7 +5,7 @@ import Link from 'next/router';
 // import Github from '../../src/images/github.svg';
 // import Blog from '../../src/images/house-solid.svg';
 // import Image from 'next/image';
-
+import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
 	// console.log(members);
 	const { github, name, image, description, role } = members;
@@ -23,7 +23,10 @@ function Members({ members, OneMember }) {
 						src={image}
 					/>
 					<div className={OneMember == 1 ? 'xl:pl-10 pt-2' : 'base-m'}>
-						<p className='w-full'>{description}</p>
+						<p
+							className='w-full'
+							dangerouslySetInnerHTML={replaceBrTag(description)}
+						/>
 						<div
 							className={
 								OneMember

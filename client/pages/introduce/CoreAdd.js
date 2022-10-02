@@ -1,5 +1,6 @@
 /** @format */
 import React, { useState, useEffect } from 'react';
+import { checkLines } from '../../util/utils';
 
 function CoreAdd({
 	handleFormChange,
@@ -68,7 +69,9 @@ function CoreAdd({
 				</div>
 				<div className='b-divide'>
 					<label className='small-title essential'>소개</label>
-					<input
+					<textarea
+						rows={5}
+						onKeyUp={(e) => checkLines(e, 5)}
 						value={el.description}
 						placeholder='project-core-description'
 						onChange={(event) =>
