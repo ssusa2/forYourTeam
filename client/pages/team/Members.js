@@ -5,6 +5,9 @@ import Link from 'next/router';
 // import Github from '../../src/images/github.svg';
 // import Blog from '../../src/images/house-solid.svg';
 // import Image from 'next/image';
+import Image from 'next/image';
+// import composition from '../../image/composition 1.png';
+import composition from '../../image/composition 5.png';
 import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
 	// console.log(members);
@@ -14,14 +17,15 @@ function Members({ members, OneMember }) {
 		<>
 			<div>
 				<div className={OneMember == 1 ? 'xl:flex xl:relative' : ''}>
-					<img
+					<Image
 						className={
 							OneMember == 1
-								? ' w-full xl:w-1/2 '
+								? ' w-full xl:w-1/2'
 								: 'object-cover w-full max-h-72	'
 						}
-						src={image}
+						src={image || composition}
 					/>
+					{/* <Image src={composition} alt='Picture of the author' /> */}
 					<div className={OneMember == 1 ? 'xl:pl-10 pt-2' : 'base-m'}>
 						<p
 							className='w-full'

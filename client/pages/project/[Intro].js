@@ -2,12 +2,18 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import project1 from '../../image/project1.png';
+import project2 from '../../image/project2.png';
+import project3 from '../../image/project3.png';
 import Slide from './slide';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import { useSelector, useDispatch, createSelector } from 'react-redux';
 import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
+import Core from './Core';
+import { map } from '@firebase/util';
 
 function Project({ Preview }) {
 	const router = useRouter();
@@ -50,8 +56,7 @@ function Project({ Preview }) {
 	}, [projects]);
 
 	// const { intro } = projects?.teamInfo;
-	console.log(info?.project_page);
-	console.log(replaceBrTag(info?.project_page?.slogun));
+
 	return (
 		<>
 			{/* <h1>Post: {id}</h1>
@@ -67,9 +72,9 @@ function Project({ Preview }) {
 				<div className='section1'>
 					<div>
 						<h2 className='big-title readW'>{info?.project_page.slogun}</h2>
-						<img
+						<Image
 							className='mt-4  xl:mt-36  mb-8 '
-							src={info?.project_page.image}
+							src={info?.project_page.image || project1}
 						/>
 					</div>
 					<p
@@ -79,53 +84,60 @@ function Project({ Preview }) {
 						)}
 					/>
 				</div>
+				{/* <Core core={info?.project_page.core} /> */}
 				{/* section2 */}
-				{info?.project_page.core?.[0] && (
-					<div className=' section2 mt-44 '>
-						<div className=' xl:flex justify-between left'>
-							<div className='w-full	'>
-								<span className='small-title'>
-									{' '}
-									{info?.project_page.core?.[0].title}
-								</span>
-								<h3 className='middle-title'>
-									{info?.project_page.core?.[0].subheading}
-								</h3>
-								<p className=' mt-3 mb-3 sm:pr-0  text-xl xl:pr-20'>
-									{info?.project_page.core?.[0].description}
-								</p>
-							</div>
-							<img
-								className='object-cover  w-full xl:w-3/5'
-								src={info?.project_page.core?.[0].image}
-							/>
-						</div>
-					</div>
-				)}
-				{/* section3 */}
-				{info?.project_page.core?.[1] && (
-					<div className='section3 mt-44 '>
-						<div className='flex flex-col-reverse xl:flex xl:flex-row	 xl:justify-between xl:rigth'>
-							<img
-								className='object-cover w-full xl:w-3/5'
-								src={info?.project_page.core?.[1].image}
-							/>
-							<div className='text-end'>
-								<span className='small-title'>
-									{' '}
-									{info?.project_page.core?.[1].title}
-								</span>
-								<h3 className='middle-title'>
-									{info?.project_page.core?.[1].subheading}
-									{/* <br /> 따뜻한 동네를 만들어요. */}
-								</h3>
-								<p className='mt-3 mb-3 sm:pl-0  text-xl xl:pl-20 '>
-									{info?.project_page.core?.[1].description}
-								</p>
-							</div>
-						</div>
-					</div>
-				)}
+				{info?.project_page.core?.map((el, idx) => {
+					if (idx % 2 == 0) {
+						return (
+							el && (
+								<div className=' section2 mt-44 '>
+									<div className=' xl:flex justify-between left'>
+										<div className='w-full	'>
+											<span className='small-title'> {el.title}</span>
+											<h3 className='middle-title'>{el.subheading}</h3>
+											<p className=' mt-3 mb-3 sm:pr-0  text-xl xl:pr-20'>
+												{el.description}
+											</p>
+										</div>
+										{el.title !== '' && (
+											<Image
+												placeholder='blur'
+												className='object-cover  w-full xl:w-3/5'
+												src={el.image || project2}
+											/>
+										)}
+									</div>
+								</div>
+							)
+						);
+					} else if (idx % 2 == 1) {
+						return (
+							el && (
+								<div className='section3 mt-44 '>
+									<div className='flex flex-col-reverse xl:flex xl:flex-row	 xl:justify-between xl:rigth'>
+										<Image
+											placeholder='blur'
+											className='object-cover w-full xl:w-3/5'
+											src={el.image || project3}
+										/>
+										<div className='w-full'>
+											<div className='text-end'>
+												<span className='small-title'> {el.title}</span>
+												<h3 className='middle-title'>
+													{el.subheading}
+													{/* <br /> 따뜻한 동네를 만들어요. */}
+												</h3>
+												<p className='mt-3 mb-3 sm:pl-0  text-xl xl:pl-20 '>
+													{el.description}
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							)
+						);
+					}
+				})}
 
 				{/* section4 */}
 				<div className='section4 mt-44 mb-44 '>

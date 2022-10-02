@@ -82,7 +82,7 @@ function ImageHolder({
 
 	return (
 		<>
-			<div className=' flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
+			<div className='mt-1 flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
 				{
 					<div
 						className='w-4/5

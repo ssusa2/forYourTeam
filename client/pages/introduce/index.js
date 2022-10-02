@@ -10,6 +10,7 @@ import PreviewModal from '../../components/Modal/PreviewModal';
 import { ChromePicker } from 'react-color';
 import { checkLines } from '../../util/utils';
 import { db, storage, storageRef } from '../firebase';
+import SelectGenre from './SeletGenre';
 import {
 	setDoc,
 	addDoc,
@@ -372,21 +373,9 @@ function introduce() {
 							<label className='small-title  essential'>
 								프로젝트의 장르를 입력해주세요.
 							</label>
-							<input
-								placeholder='프로젝트의 장르를 입력해주세요.'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_info: {
-												...info.project_info,
-												genre: e.target.value,
-											},
-										};
-									});
-								}}
-								type='text'
-								multiple='multiple'
+							<SelectGenre
+								setInfo={setInfo}
+								info={info}
 								className=' base-form'
 							/>
 						</div>
@@ -406,14 +395,14 @@ function introduce() {
 								value={color}
 								onChange={(e) => handleColorChange(e.target.value)}
 							/> */}
-							<input
+							{/* <input
 								placeholder='project-color'
 								value={info.project_info.color}
 								onChange={(e) => handleColorChange}
 								type='text'
 								multiple='multiple'
 								className=' base-form'
-							/>
+							/> */}
 						</div>
 						<div className='b-divide'>
 							<label className='small-title  essential'>

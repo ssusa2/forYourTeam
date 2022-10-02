@@ -86,7 +86,7 @@ function CoreAdd({
 				<label className='small-title essential'>
 					주요 기능에 맞는 사진을 업로드해주세요.
 				</label>
-				<div className=' flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
+				<div className='mt-1 flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
 					{
 						<div
 							className='w-4/5
