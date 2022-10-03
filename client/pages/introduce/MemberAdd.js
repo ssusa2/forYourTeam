@@ -128,6 +128,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
+								maxLength={30}
 								rows={4}
 								onKeyUp={(e) => checkLines(e, 4)}
 								value={el.description}
@@ -148,7 +149,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<label className='small-title essential'>Github</label>{' '}
 						<input
 							value={el.github}
-							placeholder='Github'
+							placeholder='ex)https://github.com/ForMyTeam'
 							name='github'
 							onChange={(e) => {
 								handleFormChange(idx, e, member, setMember, folder);

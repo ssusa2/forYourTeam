@@ -59,9 +59,9 @@ function ProjectList({ projects }) {
 										<h3 className=' text-lg font-bold text-gray-700'>
 											{info?.project_info.name}
 										</h3>
-										<p className=' text-sm  text-gray-900'>
+										<div className=' text-sm  text-gray-900 font-medium border-2 border-green-700'>
 											{info?.project_info.genre}
-										</p>
+										</div>
 									</div>
 									<p>{teamInfo?.intro.name}</p>
 								</div>

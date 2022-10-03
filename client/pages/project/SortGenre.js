@@ -1,34 +1,32 @@
 /** @format */
 import { useState } from 'react';
 
-import Genre from './Genre';
-
-function SortGenre({ genre }) {
-	const [btnActive, setBtnActive] = useState('');
-
+function SortGenre({ genre, queryGerne, btnActive, setBtnActive }) {
 	const toggleActive = (e) => {
-		setBtnActive((prev) => {
-			return e?.target.value;
-		});
+		setBtnActive(e.target.value);
 	};
 
-	let data = [1, 2, 3, 4, 5];
+	let regex = / /gi;
+
 	return (
 		<>
 			{genre.map((item, idx) => {
-				const { genre, id } = item;
+				const { value } = item;
 				return (
 					<button
-						key={id}
-						value={idx}
-						onClick={toggleActive}
+						key={item.id}
+						value={value}
+						onClick={(e) => {
+							toggleActive(e);
+							queryGerne(e.target.value);
+						}}
 						className={
-							idx == btnActive
-								? 'main-color  mr-2 py-1 px-3 rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
-								: 'mr-2 py-1 px-3 rounded-full border border-slate-300 font-semibold	 hover:bg-slate-100 hover:text-slate-600'
+							value == btnActive
+								? 'main-color  block mb-2 h-fit	 mr-2 py-1 px-3 rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
+								: 'mr-2 py-1 mb-2  px-3 h-fit	 rounded-full border border-slate-300 font-semibold	 hover:bg-slate-100 hover:text-slate-600'
 						}
 					>
-						{genre}
+						{item.value.replace(regex, '')}
 					</button>
 				);
 			})}

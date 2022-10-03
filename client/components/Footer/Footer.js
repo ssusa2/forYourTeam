@@ -22,7 +22,7 @@ function Footer({ Preview }) {
 
 	const { color, logo } = projectColor;
 
-	console.log(logo);
+	console.log('color', color);
 
 	let projectMenu = '';
 	if (route == '/project/[Intro]') {

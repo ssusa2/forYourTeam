@@ -1,36 +1,20 @@
 /** @format */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MemberAdd from './MemberAdd';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
-import PreviewModal from '../../components/Modal/PreviewModal';
 import { ChromePicker } from 'react-color';
 import { checkLines } from '../../util/utils';
-import { db, storage, storageRef } from '../firebase';
+import { db, storage } from '../firebase';
 import SelectGenre from './SeletGenre';
-import {
-	setDoc,
-	addDoc,
-	getDoc,
-	doc,
-	serverTimestamp,
-	CollectionReference,
-	collection,
-} from 'firebase/firestore';
+import { handleClick } from './validForm';
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	ref,
-	uploadBytes,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { setAll } from '../../src/store/modules/projectInfo';
-import { setColor, setLogo } from '../../src/store/modules/projectInfo';
-
 import TestModal from '../../components/Modal/TestModal';
 
 function introduce() {
@@ -91,7 +75,6 @@ function introduce() {
 
 	const handleFormChange = async (index, event, state, setState, folder) => {
 		let data = [...state];
-
 		try {
 			let fileUrl = '';
 			if (event.target.type == 'file') {
@@ -123,7 +106,6 @@ function introduce() {
 			image: '',
 			writable: true,
 		};
-
 		setCore([...core, { ...newCore }]);
 	};
 
@@ -158,9 +140,7 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') setIsSaving(true);
-		// console.log(e.target.name);
 	};
-	// console.log('index', info, teamInfo);
 
 	let projectName = info?.project_info?.name;
 
@@ -169,12 +149,13 @@ function introduce() {
 		async function fetchData() {
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
-					// user_id:
 					uid: userInfo,
 					id: uuidv4(),
 					joined: serverTimestamp(), // 현재 날짜,시간
 					info,
 					teamInfo,
+					genre: info.project_info.genre,
+					isSaving,
 				});
 				setIsSaving(false);
 				alert('저장완료!');
@@ -183,7 +164,6 @@ function introduce() {
 				console.log(err);
 			}
 		}
-
 		if (isSaving) {
 			fetchData();
 		}
@@ -194,30 +174,101 @@ function introduce() {
 		dispatch(setAll({ info, teamInfo }));
 	};
 
-	const handleColorChange = useCallback(
-		(color) => {
+	useEffect(() => {
+		previewSetInfo(event);
+	}, [previewOpen]);
+
+	const inutRef = useRef([]);
+	const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
+	const validEmail = info.project_info.email.match(regexp);
+	const validColor = info.project_info.color;
+	const validGenre = info.project_info.genre;
+	const validName = info.project_info.name;
+	const validLogo = info.project_info.logo;
+	const handleClick = () => {
+		if (!validName) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 이름을 입력해주세요.');
+			}
+			// alert('프로젝트 이름을 입력해주세요.');
+			inutRef.current?.[0]?.focus();
 			setInfo((prev) => {
 				return {
 					...prev,
 					project_info: {
 						...info.project_info,
-						color: color,
+						name: '',
 					},
 				};
 			});
-		},
-		[info]
-	);
+		} else if (!validLogo) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 로고를 입력해주세요.');
+			}
+			inutRef.current?.[1]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						logo: '',
+					},
+				};
+			});
+		} else if (!validGenre) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 장르를 입력해주세요.');
+			}
+			inutRef.current?.[2]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						genre: '',
+					},
+				};
+			});
+		} else if (!validColor) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 색상을 선택해주세요.');
+			}
+			inutRef.current?.[3].focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						color: '',
+					},
+				};
+			});
+		} else if (!validEmail) {
+			if (info.project_info.email == '') {
+				if (typeof window !== 'undefined') {
+					alert('E-mail은 필수 입력값입니다.');
+				}
+			} else if (typeof window !== 'undefined') {
+				alert('유효하지 않은 email 입니다.');
+			}
+			inutRef.current?.[4]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						email: '',
+					},
+				};
+			});
+		}
+	};
 
-	console.log('color', info);
-
-	useEffect(() => {
-		previewSetInfo(event);
-	}, [previewOpen]);
+	console.log(info.project_info.color);
 
 	return (
 		<>
-			<div className='my-container relative'>
+			<div className='my-container relative max-w-6xl			'>
 				{previewOpen && <TestModal setPreviewOpen={setPreviewOpen} />}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<div className='block lg:flex lg:justify-between'>
@@ -274,6 +325,7 @@ function introduce() {
 								/project/프로젝트 이름
 							</span>
 							<input
+								ref={(el) => (inutRef.current[0] = el)}
 								maxLength={30}
 								placeholder='프로젝트의 이름을 입력해주세요.'
 								onChange={(e) => {
@@ -294,13 +346,13 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title essential'>
-								프로젝트의 로고 혹은 이미지를 첨부해주세요.(택 1 / 권장 사이즈
-								120px x 40px)
+								프로젝트의 로고 혹은 이미지를 첨부해주세요.(택 1 )
 							</label>
 							<div className='block xl:flex xl:justify-between'>
 								<div className='w-full block xl:w-2/6'>
 									<p className='mt-3'>로고</p>
 									<input
+										ref={(el) => (inutRef.current[1] = el)}
 										placeholder='로고'
 										onChange={(e) => {
 											setInfo((prev) => {
@@ -314,8 +366,8 @@ function introduce() {
 											});
 										}}
 										type='text'
-										multiple='multiple'
-										className=' base-form'
+										// required
+										className=' base-form '
 									/>
 								</div>
 								<div className='block xl:w-1/2'>
@@ -371,9 +423,10 @@ function introduce() {
 						</div>
 						<div className='b-divide'>
 							<label className='small-title  essential'>
-								프로젝트의 장르를 입력해주세요.
+								프로젝트의 장르를 선택하세요.
 							</label>
 							<SelectGenre
+								genreRef={inutRef}
 								setInfo={setInfo}
 								info={info}
 								className=' base-form'
@@ -383,13 +436,41 @@ function introduce() {
 							<label className='small-title  essential'>
 								프로젝트의 메인색상을 선택하세요.(#)
 							</label>
-							<div>
-								<ChromePicker
+							<div className='flex'>
+								<input
+									className='h-[40px]'
+									type='color'
+									value={info.project_info.color}
+									// className=' base-form'
+									onChange={(e) => {
+										setInfo((prev) => {
+											return {
+												...prev,
+												project_info: {
+													...info.project_info,
+													color: e.target.value,
+												},
+											};
+										});
+									}}
+								/>
+								<input
+									value={info.project_info.color}
+									className='base-form'
+									ref={(el) => (inutRef.current[3] = el)}
+									placeholder={
+										info.project_info.color
+											? `선택한 색상: ${info.project_info.color}`
+											: '왼쪽에 색상 칩을 클릭해 색상을 선택하세요.'
+									}
+								/>
+
+								{/* <ChromePicker
 									defaultView={'hex'}
 									style={{ width: '100%' }}
 									color={info.project_info.color}
 									onChange={(color) => handleColorChange(color.hex)}
-								/>
+								/> */}
 							</div>
 							{/* <input
 								value={color}
@@ -409,6 +490,7 @@ function introduce() {
 								프로젝트의 대표 E-mail를 입력해주세요.
 							</label>
 							<input
+								ref={(el) => (inutRef.current[4] = el)}
 								placeholder='프로젝트의 대표 E-mail를 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
@@ -426,7 +508,7 @@ function introduce() {
 								className=' base-form'
 							/>
 						</div>
-						<label className='small-title essential'>
+						<label className='small-title font-medium'>
 							프로젝트 팀 레퍼지토리 주소를 입력해주세요.
 						</label>
 						<input
@@ -453,7 +535,7 @@ function introduce() {
 					<p>여러분의 프로젝트를 소개하는 페이지입니다.</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
 						<div className='b-divide'>
-							<label className='small-title mt-0 essential'>
+							<label className='small-title mt-0 font-medium'>
 								프로젝트의 슬로건을 1~2줄로 입력하세요.
 							</label>
 							<textarea
@@ -478,7 +560,7 @@ function introduce() {
 							/>
 						</div>
 						<div className='b-divide'>
-							<label className='small-title essential'>
+							<label className='small-title font-medium'>
 								프로젝트를 대표하는 사진을 업로드해주세요.
 							</label>
 							<ImageHolder
@@ -490,7 +572,7 @@ function introduce() {
 								section={'project-main-image'}
 							/>
 						</div>
-						<label className='small-title essential'>
+						<label className='small-title font-medium'>
 							프로젝트를 소개하는 글을 2~4줄 입력해주세요.
 						</label>
 						<textarea
@@ -532,7 +614,7 @@ function introduce() {
 					})}
 					<div className='flex justify-end'>
 						<button onClick={addCore} className='main-button'>
-							기능 추가하기
+							기능 추가하기 +
 						</button>
 					</div>
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
@@ -540,7 +622,7 @@ function introduce() {
 					<p>프로젝트의 팀 문화와 팀원들을 소개하세요.</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
 						<div className='b-divide'>
-							<label className='small-title mt-0 essential'>
+							<label className='small-title mt-0 font-medium'>
 								팀 이름을 입력해주세요.
 							</label>
 							<input
@@ -562,7 +644,7 @@ function introduce() {
 							/>
 						</div>
 						<div className='b-divide'>
-							<label className='small-title mt-0 essential'>
+							<label className='small-title mt-0 font-medium'>
 								팀의 문화를 나타내는 슬로건를 입력하세요.
 							</label>
 							<textarea
@@ -586,7 +668,7 @@ function introduce() {
 							/>
 						</div>
 						<div className='b-divide'>
-							<label className='small-title essential'>
+							<label className='small-title font-medium'>
 								팀의 문화를 설명하는 내용을 입력하세요.
 							</label>
 							<textarea
@@ -609,7 +691,7 @@ function introduce() {
 								className=' base-form'
 							/>
 						</div>
-						<label className='small-title essential'>
+						<label className='small-title font-medium'>
 							팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
 						</label>
 						<ImageHolder
@@ -642,7 +724,7 @@ function introduce() {
 					})}
 					<div className='flex justify-end '>
 						<button onClick={addMember} className='main-button'>
-							팀원 추가하기
+							팀원 추가하기 +
 						</button>
 					</div>
 					<div className='bg-white shadow-inner w-full flex justify-end fixed z-50 right-0 bottom-0'>
@@ -662,12 +744,8 @@ function introduce() {
 						<button
 							name='저장'
 							onClick={(e) => {
-								if (info.project_info.name) {
-									addProjectIntro(e);
-									console.log('2--여기는?', info);
-								} else {
-									alert('프로젝트의 이름은 필수 작성해야 합니다.');
-								}
+								handleClick;
+								addProjectIntro(e);
 							}}
 							type='button'
 							className='w-full my-6 mr-16 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'

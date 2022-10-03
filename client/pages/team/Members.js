@@ -17,14 +17,26 @@ function Members({ members, OneMember }) {
 		<>
 			<div>
 				<div className={OneMember == 1 ? 'xl:flex xl:relative' : ''}>
-					<Image
-						className={
-							OneMember == 1
-								? ' w-full xl:w-1/2'
-								: 'object-cover w-full max-h-72	'
-						}
-						src={image || composition}
-					/>
+					{image ? (
+						<img
+							src={image}
+							className={
+								OneMember == 1
+									? ' w-full xl:w-1/2'
+									: 'object-cover w-full max-h-72	'
+							}
+						/>
+					) : (
+						<Image
+							className={
+								OneMember == 1
+									? ' w-full xl:w-1/2'
+									: 'object-cover w-full max-h-72	'
+							}
+							src={composition}
+						/>
+					)}
+
 					{/* <Image src={composition} alt='Picture of the author' /> */}
 					<div className={OneMember == 1 ? 'xl:pl-10 pt-2' : 'base-m'}>
 						<p

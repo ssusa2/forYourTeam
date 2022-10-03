@@ -65,17 +65,26 @@ function Project({ Preview }) {
 				className={
 					router.route == '/introduce'
 						? 'mt-16 px-14 pt-40 xl:pt-60 mx-auto'
-						: 'my-container'
+						: 'my-container max-w-6xl'
 				}
 			>
 				{/* section1 */}
 				<div className='section1'>
 					<div>
 						<h2 className='big-title readW'>{info?.project_page.slogun}</h2>
-						<Image
-							className='mt-4  xl:mt-36  mb-8 '
-							src={info?.project_page.image || project1}
-						/>
+						{info?.project_page.image ? (
+							<img
+								className='mt-4  xl:mt-36  mb-8'
+								src={info?.project_page.image}
+							/>
+						) : (
+							info?.project_page.slogun && (
+								<Image
+									className='mt-4  xl:mt-36  mb-8 w-full object-fill'
+									src={project1}
+								/>
+							)
+						)}
 					</div>
 					<p
 						className='xl:w-3/4 text-2xl font-bold'
@@ -99,13 +108,25 @@ function Project({ Preview }) {
 												{el.description}
 											</p>
 										</div>
-										{el.title !== '' && (
+										{el.image ? (
+											<img
+												className='object-cover  w-full xl:w-3/5'
+												src={el.image}
+											/>
+										) : (
+											el.title && (
+												<Image
+													className='object-cover  w-full xl:w-3/5'
+													src={project2}
+												/>
+											)
+										)}
+										{/* {el.title !== '' && (
 											<Image
-												placeholder='blur'
 												className='object-cover  w-full xl:w-3/5'
 												src={el.image || project2}
 											/>
-										)}
+										)} */}
 									</div>
 								</div>
 							)
@@ -115,11 +136,17 @@ function Project({ Preview }) {
 							el && (
 								<div className='section3 mt-44 '>
 									<div className='flex flex-col-reverse xl:flex xl:flex-row	 xl:justify-between xl:rigth'>
-										<Image
-											placeholder='blur'
-											className='object-cover w-full xl:w-3/5'
-											src={el.image || project3}
-										/>
+										{el.image ? (
+											<img
+												className='object-cover  w-full xl:w-3/5'
+												src={el.image}
+											/>
+										) : (
+											<Image
+												className='object-cover  w-full xl:w-3/5'
+												src={project3}
+											/>
+										)}
 										<div className='w-full'>
 											<div className='text-end'>
 												<span className='small-title'> {el.title}</span>
@@ -141,10 +168,16 @@ function Project({ Preview }) {
 
 				{/* section4 */}
 				<div className='section4 mt-44 mb-44 '>
-					<img
-						className='object-cover w-full mt-14 mb-8 rounded-xl '
-						src={info?.project_page.image}
-					/>
+					{info?.project_page.image ? (
+						<img
+							className='mt-4  xl:mt-36  mb-8 '
+							src={info?.project_page.image}
+						/>
+					) : (
+						info?.project_page.slogun && (
+							<Image className='mt-4  xl:mt-36  mb-8 ' src={project1} />
+						)
+					)}
 					<h2 className='mt-24 text-center leading-snug text-4xl font-extrabold'>
 						{info?.project_page.slogun}
 					</h2>

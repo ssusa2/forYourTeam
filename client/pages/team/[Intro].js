@@ -1,7 +1,8 @@
 /** @format */
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import Image from 'next/image';
+import team from '../../image/team.png';
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
@@ -21,13 +22,11 @@ function teamHome() {
 	const { Intro } = router.query;
 
 	const [teams, setTeams] = useState({});
-	console.log(Intro);
 
 	useEffect(() => {
 		const fetchUsers = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
-			console.log(Intro);
 			// const data = projectSnap.data();
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
@@ -44,13 +43,17 @@ function teamHome() {
 
 	const OneMember = teamInfo?.member.length;
 
-	console.log(teams);
 	return (
 		<>
-			<div className='my-container'>
+			<div className='my-container max-w-6xl'>
 				<section>
 					<h2 className='big-title'>{teamInfo?.intro.name}</h2>
-					<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
+					{teamInfo?.intro.image ? (
+						<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
+					) : (
+						teamInfo?.intro.name && <Image src={team} />
+					)}
+
 					<h2
 						className='big-title'
 						dangerouslySetInnerHTML={replaceBrTag(teamInfo?.intro.slogun)}

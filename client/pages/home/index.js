@@ -1,6 +1,8 @@
 /** @format */
 import Main from './Main';
-
+import Image from 'next/image';
+import homeProject from '../../image/homeProject.png';
+import homeTeam from '../../image/homeTeam.png';
 import { useRouter } from 'next/router';
 
 function Home() {
@@ -8,7 +10,7 @@ function Home() {
 	console.log('router', router);
 	return (
 		<>
-			<div className='my-container'>
+			<div className='my-container max-w-6xl'>
 				{/* Home */}
 				<Main />
 				<div className='flex justify-center'>
@@ -34,11 +36,11 @@ function Home() {
 								<br />
 								노션으로 작성하지말고{' '}
 								<span className='main-color font-bold'>
-									내 웹사이트에서 바로 소개해보세요
+									내 웹사이트에서 바로 소개해보세요 .
 								</span>
-								.
 							</p>
 						</div>
+						<Image placeholder='blur' src={homeProject} />
 					</div>
 				</section>
 				<section className='section'>
@@ -46,15 +48,17 @@ function Home() {
 						<span className='main-color'>Team</span> Page
 					</h2>
 					<div>
-						<p>
-							고생한 프로젝트{' '}
-							<span className='main-color font-bold'>팀원 소개</span>,
-							<br /> 리드미,노션에서 작성하지 말고{' '}
-							<span className='main-color font-bold'>
-								내 웹사이트에서 바로 소개해보세요
-							</span>
-							.
-						</p>
+						<div>
+							<p>
+								고생한 프로젝트{' '}
+								<span className='main-color font-bold'>팀원 소개</span>,
+								<br /> 리드미,노션에서 작성하지 말고{' '}
+								<span className='main-color font-bold'>
+									내 웹사이트에서 바로 소개해보세요 .
+								</span>
+							</p>
+						</div>
+						<Image src={homeTeam} />
 					</div>
 				</section>
 				<div className='flex justify-center'>

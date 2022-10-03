@@ -1,10 +1,10 @@
 /** @format */
 import Select from 'react-select';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { db } from '../firebase';
 import { getDoc, doc } from 'firebase/firestore';
 
-function SelectGenre({ setInfo, info }) {
+function SelectGenre({ setInfo, info, genreRef }) {
 	const [genre, setGenre] = useState([]);
 
 	const fetchGenre = async (Intro) => {
@@ -39,6 +39,7 @@ function SelectGenre({ setInfo, info }) {
 	return (
 		<>
 			<Select
+				ref={(el) => (genreRef.current[2] = el)}
 				className='mt-1'
 				placeholder='장르를 선택하세요'
 				onChange={(e) => {

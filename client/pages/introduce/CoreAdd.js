@@ -10,8 +10,6 @@ function CoreAdd({
 	setCore,
 	section,
 	folder,
-	defaultImg,
-	projectName,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
 
@@ -33,14 +31,14 @@ function CoreAdd({
 	};
 	return (
 		<>
-			<h3 className='small-title '>프로젝트 주요 기능({idx + 1})</h3>
+			<h3 className='small-title essential '>프로젝트 주요 기능({idx + 1})</h3>
 			<p>프로젝트의 주요 기능을 설명해주세요.</p>
 			<section
 				key={idx}
 				className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '
 			>
 				<div className='b-divide'>
-					<label className='small-title mt-0 essential'>소제목</label>
+					<label className='small-title essential mt-0 '>소제목</label>
 					<input
 						value={el.subheading}
 						placeholder='project-core-subtitle'
@@ -54,7 +52,7 @@ function CoreAdd({
 					/>
 				</div>
 				<div className='b-divide'>
-					<label className='small-title essential'>제목</label>
+					<label className='small-title essential essential'>제목</label>
 					<input
 						value={el.title}
 						placeholder='project-core-title'
@@ -68,7 +66,7 @@ function CoreAdd({
 					/>
 				</div>
 				<div className='b-divide'>
-					<label className='small-title essential'>소개</label>
+					<label className='small-title essential '>소개</label>
 					<textarea
 						rows={5}
 						onKeyUp={(e) => checkLines(e, 5)}
@@ -83,7 +81,7 @@ function CoreAdd({
 '
 					/>
 				</div>
-				<label className='small-title essential'>
+				<label className='small-title essential '>
 					주요 기능에 맞는 사진을 업로드해주세요.
 				</label>
 				<div className='mt-1 flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>

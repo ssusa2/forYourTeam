@@ -9819,6 +9819,11 @@
   "resolved" "https://registry.npmjs.org/tailwind-merge/-/tailwind-merge-1.6.0.tgz"
   "version" "1.6.0"
 
+"tailwind-scrollbar-hide@^1.1.7":
+  "integrity" "sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA=="
+  "resolved" "https://registry.npmjs.org/tailwind-scrollbar-hide/-/tailwind-scrollbar-hide-1.1.7.tgz"
+  "version" "1.1.7"
+
 "tailwind-styled-components@^2.2.0":
   "integrity" "sha512-Ogemwk0p69aU8WE/ooJZHjqstdJgT5R6HGU6TFz2uSnveSEtvW+C6aWOjGCvCr5H/bREv0IbbQ4yODknRrLBRQ=="
   "resolved" "https://registry.npmjs.org/tailwind-styled-components/-/tailwind-styled-components-2.2.0.tgz"
