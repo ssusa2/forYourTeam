@@ -25,6 +25,7 @@ function introduce() {
 	const [fileUrl, setFileUrl] = useState('');
 	const userInfo = useSelector(({ user }) => user.uid);
 	const [previewOpen, setPreviewOpen] = useState(false);
+	const [isShallowSave, setIsShallowSave] = useState(false);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -122,6 +123,7 @@ function introduce() {
 	};
 
 	const addProjectIntro = (e) => {
+		console.log('이제됨');
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -141,11 +143,11 @@ function introduce() {
 
 		if (e?.target.name == '저장') setIsSaving(true);
 	};
+	console.log('isSaving', isSaving);
 
 	let projectName = info?.project_info?.name;
 
 	useEffect(() => {
-		// 생성 시
 		async function fetchData() {
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
@@ -155,19 +157,25 @@ function introduce() {
 					info,
 					teamInfo,
 					genre: info.project_info.genre,
-					isSaving,
+					isShallowSave,
 				});
 				setIsSaving(false);
-				alert('저장완료!');
+				if (isShallowSave) {
+					alert('임시저장 완료!');
+				} else {
+					alert('저장완료!');
+				}
 				router.push(`/project/${projectName}`);
 			} catch (err) {
 				console.log(err);
 			}
 		}
-		if (isSaving) {
+		if (isSaving || isShallowSave) {
 			fetchData();
+			console.log('실행');
 		}
-	}, [isSaving]);
+	}, [isSaving, isShallowSave]);
+	console.log('isShallowSave', isShallowSave);
 
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
@@ -185,6 +193,8 @@ function introduce() {
 	const validGenre = info.project_info.genre;
 	const validName = info.project_info.name;
 	const validLogo = info.project_info.logo;
+
+	const [isValid, setIsValid] = useState(false);
 	const handleClick = () => {
 		if (!validName) {
 			if (typeof window !== 'undefined') {
@@ -262,9 +272,15 @@ function introduce() {
 				};
 			});
 		}
+		validName &&
+			validLogo &&
+			validGenre &&
+			validColor &&
+			validEmail &&
+			setIsValid(true);
 	};
 
-	console.log(info.project_info.color);
+	console.log('isValid', isValid);
 
 	return (
 		<>
@@ -729,13 +745,19 @@ function introduce() {
 					</div>
 					<div className='bg-white shadow-inner w-full flex justify-end fixed z-50 right-0 bottom-0'>
 						<button
+							onClick={() => {
+								addProjectIntro();
+								setIsShallowSave(true);
+							}}
 							type='button'
 							className=' w-full my-6  rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700  sm:w-auto sm:text-base	'
 						>
 							임시저장
 						</button>
 						<button
-							onClick={() => setPreviewOpen(true)}
+							onClick={() => {
+								setPreviewOpen(true);
+							}}
 							type='button'
 							className=' w-full my-6 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
 						>
@@ -744,8 +766,8 @@ function introduce() {
 						<button
 							name='저장'
 							onClick={(e) => {
-								handleClick;
-								addProjectIntro(e);
+								handleClick();
+								isValid && addProjectIntro(e);
 							}}
 							type='button'
 							className='w-full my-6 mr-16 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'

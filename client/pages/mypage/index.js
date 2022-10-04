@@ -9,6 +9,7 @@ import ProjectList from '../project/ProjectList';
 function Mypage() {
 	const userInfo = useSelector(({ user }) => user.uid);
 	const [projects, setProjects] = useState([]);
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -35,15 +36,15 @@ function Mypage() {
 	console.log('asdadasdada', projects);
 	return (
 		<>
-			<div className='my-container mx-auto'>
+			<div className='my-container mx-auto max-w-6xl '>
 				<div className='flex justify-between'>
 					<div className='flex'>
-						<h2 className='middle-title '>프로젝트</h2>{' '}
+						<h2 className='middle-title '>My Project</h2>{' '}
 						<span className='font-bold text-lg pt-2 '>({projects.length})</span>
 					</div>
 					<button
 						onClick={() => {
-							if (userInfo?.uid) {
+							if (!userInfo?.uid) {
 								router.push('/introduce');
 							} else {
 								if (
@@ -61,6 +62,7 @@ function Mypage() {
 						+ 프로젝트 추가하기
 					</button>
 				</div>
+				<div className='mb-8 mt-8 sm:mb-12 h-px bg-slate-300'></div>
 				<ProjectList projects={projects} />
 			</div>
 		</>
