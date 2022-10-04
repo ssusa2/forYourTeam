@@ -396,6 +396,8 @@ function Form({
 									core={core}
 									setCore={setCore}
 									folder={'core'}
+									projectName={projectName}
+									userID={userID}
 									handleFormChange={handleFormChange}
 									section={'project-core-image'}
 								/>
@@ -553,8 +555,7 @@ function Form({
 						<button
 							name='저장'
 							onClick={(e) => {
-								handleClick();
-								isValid && addProjectIntro(e);
+								handleClick(e);
 							}}
 							type='button'
 							className='w-full my-6 mr-16 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'

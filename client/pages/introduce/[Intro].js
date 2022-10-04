@@ -163,7 +163,7 @@ function introduce() {
 	const validLogo = info.project_info.logo;
 
 	const [isValid, setIsValid] = useState(false);
-	const handleClick = () => {
+	const handleClick = (e) => {
 		if (!validName) {
 			if (typeof window !== 'undefined') {
 				alert('프로젝트 이름을 입력해주세요.');
@@ -245,7 +245,7 @@ function introduce() {
 			validGenre &&
 			validColor &&
 			validEmail &&
-			setIsValid(true);
+			addProjectIntro(e);
 	};
 
 	// 여기서 부터는 업데이트에서만 있는 기능
@@ -328,6 +328,7 @@ function introduce() {
 	useEffect(() => {
 		previewSetInfo();
 	}, [previewOpen]);
+	console.log('info', core);
 
 	return (
 		<>

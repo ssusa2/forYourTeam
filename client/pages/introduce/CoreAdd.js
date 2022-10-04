@@ -1,15 +1,17 @@
 /** @format */
 import React, { useState, useEffect } from 'react';
 import { checkLines } from '../../util/utils';
+import handleFormChange from '../../util/handle';
 
 function CoreAdd({
-	handleFormChange,
 	el,
 	idx,
 	core,
 	setCore,
 	section,
 	folder,
+	projectName,
+	userID,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
 
@@ -118,7 +120,15 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 						onChange={(e) => {
 							encodeFileToBase64(e.target.files[0]);
-							handleFormChange(idx, e, core, setCore, folder);
+							handleFormChange(
+								idx,
+								e,
+								core,
+								setCore,
+								folder,
+								projectName,
+								userID
+							);
 						}}
 					/>
 				</div>

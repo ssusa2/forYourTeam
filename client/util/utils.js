@@ -24,35 +24,3 @@ export const checkLines = (e, line) => {
 };
 
 // 폼 입력
-export const handleFormChange = async (
-	index,
-	event,
-	state,
-	setState,
-	folder
-) => {
-	let data = [...state];
-	try {
-		let fileUrl = '';
-		if (event.target.type == 'file') {
-			if (event.target.value != '') {
-				const fileRef = ref(
-					storage,
-					`${userID.uid}/${projectName}/${folder}/${index}`
-				);
-				const uploadTask = await uploadBytes(
-					fileRef,
-					event.target.files[0]
-				).then((snapshot) => {});
-
-				fileUrl = await getDownloadURL(fileRef);
-			}
-			data[index][event.target.name] = fileUrl;
-		} else {
-			data[index][event.target.name] = event.target.value;
-		}
-		setState(data);
-	} catch (err) {
-		console.error(err);
-	}
-};

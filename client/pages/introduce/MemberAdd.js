@@ -8,13 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { checkLines } from '../../util/utils';
+import handleFormChange from '../../util/handle';
 
 function MemberAdd({
 	el,
 	idx,
 	member,
 	setMember,
-	handleFormChange,
 	section,
 	folder,
 	defaultImg,
