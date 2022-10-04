@@ -278,6 +278,7 @@ function introduce() {
 			validColor &&
 			validEmail &&
 			setIsValid(true);
+		setIsSaving(true);
 	};
 
 	console.log('isValid', isValid);
