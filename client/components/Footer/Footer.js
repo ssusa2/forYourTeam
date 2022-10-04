@@ -1,28 +1,15 @@
 /** @format */
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	setColor,
-	setLogo,
-	getState,
-} from '../../src/store/modules/projectInfo';
 import styled from 'styled-components';
 import { Github } from '../Icon/Icon';
 
 function Footer({ Preview }) {
 	const { route } = useRouter();
-	const router = useRouter();
-	const dispatch = useDispatch();
-	const [projectObj, setProjectObj] = useState();
 	const projectColor = useSelector(({ projectInfo }) => projectInfo);
-	// const [color, setColor] = useState();
-	// const [logo, setLogo] = useState();
 
 	const { color, logo } = projectColor;
-
-	console.log('color', color);
 
 	let projectMenu = '';
 	if (route == '/project/[Intro]') {
@@ -33,12 +20,11 @@ function Footer({ Preview }) {
 		projectMenu = false;
 	}
 
-	console.log(projectColor?.team_github);
 	return (
 		<>
 			<div className='relative '>
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
-					<div className='flex justify-between	'>
+					<div className='flex justify-between	max-w-6xl mx-auto'>
 						{!projectMenu ? (
 							Preview?.info?.project_info.color ? (
 								<Logo color={Preview?.info?.project_info.color}>
@@ -65,12 +51,6 @@ function Footer({ Preview }) {
 								<Github />
 							</a>
 						)}
-						{/* <a
-							target={` ${projectColor?.team_github}`}
-							// href={projectColor?.team_github}
-						> */}
-
-						{/* </a> */}
 					</div>
 				</div>
 				<div className='flex justify-center pb-8'>

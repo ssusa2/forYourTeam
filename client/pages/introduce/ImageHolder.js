@@ -52,6 +52,9 @@ function ImageHolder({
 		const metadata = {
 			contentType: 'image/jpeg',
 		};
+		if (fileBlob.size > 2097152) {
+			alert('파일 크기가 너무 큽니다.');
+		}
 
 		if (fileBlob != '') {
 			try {

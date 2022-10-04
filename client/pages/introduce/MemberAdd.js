@@ -128,7 +128,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
-								maxLength={30}
+								maxLength={120}
 								rows={4}
 								onKeyUp={(e) => checkLines(e, 4)}
 								value={el.description}

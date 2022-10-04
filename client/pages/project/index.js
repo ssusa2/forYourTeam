@@ -44,7 +44,8 @@ function Projects() {
 	const queryGerne = async (value) => {
 		const genreQuery = query(
 			collectionGroup(db, 'project'),
-			where('genre', '==', value)
+			where('genre', '==', value),
+			where('isShallowSave', '==', false)
 		);
 		console.log('genreQuery', genreQuery);
 		const querySnapshot = await getDocs(genreQuery);
@@ -67,8 +68,13 @@ function Projects() {
 		genre_options.push(op);
 	}
 	const fetchProject = async () => {
-		const projectRef = await getDocs(collection(db, 'project'));
-		const newData = projectRef.docs.map((doc) => ({
+		const project = query(
+			collectionGroup(db, 'project'),
+			where('isShallowSave', '==', false)
+		);
+		const querySnapshot = await getDocs(project);
+		console.log('querySnapshot', querySnapshot);
+		const newData = querySnapshot.docs.map((doc) => ({
 			...doc.data(),
 		}));
 		setHasProjects(false);

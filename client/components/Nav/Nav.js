@@ -121,9 +121,9 @@ function Nav({ Preview }) {
 				</div>
 			) : (
 				// Nav mode
-				<div className='relative z-50'>
-					<div className=' w-full shadow  px-16 py-6 bg-white text-black fixed top-0 left-0'>
-						<div className='flex justify-between items-center'>
+				<div className='relative z-50 '>
+					<div className='w-full  shadow  px-16 py-6 bg-white text-black fixed top-0 left-0'>
+						<div className='flex justify-between items-center max-w-6xl mx-auto'>
 							{!projectMenu ? (
 								<Link onClick={() => window.scrollTo(0, 0)} href='/home'>
 									<h1 className='cursor-pointer font-extrabold text-xl text-green-700'>

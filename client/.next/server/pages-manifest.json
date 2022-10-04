@@ -1,8 +1,6 @@
 {
+  "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/_app": "pages/_app.js",
-  "/project/[Intro]": "pages/project/[Intro].js",
-  "/project": "pages/project.js",
-  "/team/[Intro]": "pages/team/[Intro].js"
+  "/introduce": "pages/introduce.js"
 }
