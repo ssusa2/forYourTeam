@@ -512,6 +512,8 @@ function Form({
 								fileUrl={fileUrl}
 								setFileUrl={setFileUrl}
 								section={'team-member-image'}
+								projectName={projectName}
+								userID={userID}
 							/>
 						);
 					})}

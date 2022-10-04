@@ -19,14 +19,13 @@ function MemberAdd({
 	folder,
 	defaultImg,
 	projectName,
+	userID,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
 	// console.log(el);
 	useEffect(() => {
 		setImageSrc(el.image);
 	}, [el]);
-
-	const userID = useSelector(({ user }) => user);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -152,7 +151,15 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							placeholder='ex)https://github.com/ForMyTeam'
 							name='github'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember, folder);
+								handleFormChange(
+									idx,
+									e,
+									member,
+									setMember,
+									folder,
+									projectName,
+									userID
+								);
 							}}
 							type='url'
 							multiple='multiple'

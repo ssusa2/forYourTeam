@@ -32,7 +32,7 @@ const handleFormChange = async (
 		let fileUrl = '';
 		if (event.target.type == 'file') {
 			if (event.target.value != '') {
-				const fileRef = await ref(
+				const fileRef = ref(
 					storage,
 					`${userID}/${projectName}/${folder}/${index}`
 				);
