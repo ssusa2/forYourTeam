@@ -2,12 +2,9 @@
 
 import Link from 'next/router';
 
-// import Github from '../../src/images/github.svg';
-// import Blog from '../../src/images/house-solid.svg';
-// import Image from 'next/image';
 import Image from 'next/image';
 // import composition from '../../image/composition 1.png';
-import composition from '../../image/composition 5.png';
+import member from '../../image/member.png';
 import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
 	// console.log(members);
@@ -28,12 +25,14 @@ function Members({ members, OneMember }) {
 						/>
 					) : (
 						<Image
+							width={700}
+							height={500}
 							className={
 								OneMember == 1
 									? ' w-full xl:w-1/2'
 									: 'object-cover w-full max-h-72	'
 							}
-							src={composition}
+							src={member}
 						/>
 					)}
 

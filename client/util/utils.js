@@ -9,6 +9,7 @@ export const replaceBrTag = (str) => {
 	return { __html: str };
 };
 
+// 라인 수 제한
 export const checkLines = (e, line) => {
 	let str = e.target.value;
 	let str_arr = str.split('\n');
@@ -21,3 +22,5 @@ export const checkLines = (e, line) => {
 		e.target.value = lastChar;
 	}
 };
+
+// 폼 입력

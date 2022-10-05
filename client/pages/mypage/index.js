@@ -9,13 +9,16 @@ import ProjectList from '../project/ProjectList';
 function Mypage() {
 	const userInfo = useSelector(({ user }) => user.uid);
 	const [projects, setProjects] = useState([]);
+	const [shallowProjects, setShallowProjects] = useState([]);
 	const router = useRouter();
+	// isShallowSave
 
 	useEffect(() => {
-		const fetchUsers = async () => {
+		const getProject = async () => {
 			const project = query(
 				collectionGroup(db, 'project'),
-				where('uid', '==', `${userInfo}`)
+				where('uid', '==', `${userInfo}`),
+				where('isShallowSave', '==', false)
 			);
 
 			const querySnapshot = await getDocs(project);
@@ -30,10 +33,31 @@ function Mypage() {
 			});
 		};
 
-		fetchUsers();
+		const getShallowProject = async () => {
+			const project = query(
+				collectionGroup(db, 'project'),
+				where('isShallowSave', '==', true),
+				where('uid', '==', `${userInfo}`)
+			);
+
+			const querySnapshot = await getDocs(project);
+			console.log(querySnapshot);
+			console.log('querySnapshot', querySnapshot);
+			const newData = querySnapshot.docs.map((doc) => ({
+				...doc.data(),
+			}));
+			// console.log(newData);
+			setShallowProjects(newData);
+			querySnapshot.forEach((doc) => {
+				console.log(doc.id, ' => ', doc.data());
+			});
+		};
+
+		getProject();
+		getShallowProject();
 	}, [userInfo]);
 
-	console.log('asdadasdada', projects);
+	console.log('asdadasdada', shallowProjects);
 	return (
 		<>
 			<div className='my-container mx-auto max-w-6xl '>
@@ -62,8 +86,17 @@ function Mypage() {
 						+ 프로젝트 추가하기
 					</button>
 				</div>
-				<div className='mb-8 mt-8 sm:mb-12 h-px bg-slate-300'></div>
+				<div className='mt-8  h-px bg-slate-300'></div>
 				<ProjectList projects={projects} />
+				<div className='flex mt-16'>
+					<h2 className='middle-title '>임시저장된 프로젝트</h2>{' '}
+					<span className='font-bold text-lg pt-2 '>
+						({shallowProjects.length})
+					</span>
+				</div>
+
+				<div className=' mt-8 h-px bg-slate-300'></div>
+				<ProjectList projects={shallowProjects} />
 			</div>
 		</>
 	);

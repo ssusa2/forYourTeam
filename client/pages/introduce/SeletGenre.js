@@ -45,15 +45,26 @@ function SelectGenre({ setInfo, info, genreRef }) {
 		}
 	}
 
+	let matchNumber = '';
+
+	for (let i = 0; i < genre_options.length; i++) {
+		if (genre_options[i].value == info.project_info.genre) {
+			console.log('asda', i);
+			matchNumber = i;
+			break;
+		}
+	}
+
 	return (
 		<>
 			<Select
 				value={genre_options[matchNumber]}
-				ref={(el) => (genreRef.current[2] = el)}
+
+				// ref={(el) => (genreRef.current[2] = el)}
+
 				className='mt-1'
 				placeholder='장르를 선택하세요'
 				onChange={(e) => {
-					console.log(e.value);
 					setInfo((prev) => {
 						return {
 							...prev,

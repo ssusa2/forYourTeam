@@ -8,25 +8,24 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { checkLines } from '../../util/utils';
+import handleFormChange from '../../util/handle';
 
 function MemberAdd({
 	el,
 	idx,
 	member,
 	setMember,
-	handleFormChange,
 	section,
 	folder,
 	defaultImg,
 	projectName,
+	userID,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
 	// console.log(el);
 	useEffect(() => {
 		setImageSrc(el.image);
 	}, [el]);
-
-	const userID = useSelector(({ user }) => user);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -128,7 +127,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 						<div className='b-divide'>
 							<label className='small-title essential'>소개말</label>{' '}
 							<textarea
-								maxLength={30}
+								maxLength={120}
 								rows={4}
 								onKeyUp={(e) => checkLines(e, 4)}
 								value={el.description}
@@ -152,7 +151,15 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 							placeholder='ex)https://github.com/ForMyTeam'
 							name='github'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember, folder);
+								handleFormChange(
+									idx,
+									e,
+									member,
+									setMember,
+									folder,
+									projectName,
+									userID
+								);
 							}}
 							type='url'
 							multiple='multiple'
