@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import team from '../../image/team.png';
 import project1 from '../../image/project1.png';
 import project2 from '../../image/project2.png';
 import project3 from '../../image/project3.png';
@@ -55,6 +56,7 @@ function Project({ Preview }) {
 		dispatch(setAll(projectInfo));
 	}, [projects]);
 
+	console.log(projects);
 	// const { intro } = projects?.teamInfo;
 
 	return (
@@ -74,7 +76,7 @@ function Project({ Preview }) {
 						<h2 className='big-title readW'>{info?.project_page.slogun}</h2>
 						{info?.project_page.image ? (
 							<img
-								className='mt-4  xl:mt-36  mb-8'
+								className='mt-14 mb-8 rounded-xl w-full h-96 object-cover'
 								src={info?.project_page.image}
 							/>
 						) : (
@@ -170,7 +172,7 @@ function Project({ Preview }) {
 				<div className='section4 mt-44 mb-44 '>
 					{info?.project_page.image ? (
 						<img
-							className='mt-4  xl:mt-36  mb-8 '
+							className='mt-14 mb-8 rounded-xl w-full h-96 object-cover'
 							src={info?.project_page.image}
 						/>
 					) : (
@@ -198,11 +200,27 @@ function Project({ Preview }) {
 						프로젝트를 만든 사람들이 궁금하다면?
 					</h3>
 				</div>
+				{projects?.teamInfo?.intro?.image ? (
+					<img
+						className='mt-6 mb-6 rounded-xl w-full h-96 object-cover'
+						src={projects?.teamInfo?.intro?.image}
+					/>
+				) : (
+					<div className='w-full h-96 relative	'>
+						<Image
+							src={team}
+							layout='fill'
+							objectFit='cover'
+							className='h-full drop-shadow-lg'
+						/>
+					</div>
+				)}
+
 				<div className='flex justify-end'>
 					<button
 						onClick={() => router.push(`/team/${Intro}`)}
 						type='button'
-						className='mt-8 gray-button'
+						className=' gray-button'
 					>
 						팀원 소개 보러가기
 					</button>

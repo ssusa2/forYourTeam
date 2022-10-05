@@ -4,57 +4,38 @@ import Link from 'next/router';
 
 import Image from 'next/image';
 // import composition from '../../image/composition 1.png';
-import member from '../../image/member.png';
+import male from '../../image/male.png';
+import female from '../../image/female.png';
 import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
 	// console.log(members);
-	const { github, name, image, description, role } = members;
+	const { github, name, image, description, role, gender } = members;
 
+	console.log('OneMember', OneMember);
 	return (
 		<>
-			<div>
-				<div className={OneMember == 1 ? 'xl:flex xl:relative' : ''}>
-					{image ? (
-						<img
-							src={image}
-							className={
-								OneMember == 1
-									? ' w-full xl:w-1/2'
-									: 'object-cover w-full max-h-72	'
-							}
-						/>
-					) : (
-						<Image
-							width={700}
-							height={500}
-							className={
-								OneMember == 1
-									? ' w-full xl:w-1/2'
-									: 'object-cover w-full max-h-72	'
-							}
-							src={member}
-						/>
-					)}
+			<div className={OneMember == 1 ? 'w-full xl:w-1/2' : 'w-full'}>
+				<div className='w-full h-72 relative '>
+					<Image
+						layout='fill'
+						objectFit='cover'
+						className={OneMember == 1 ? 'w-full' : 'h-full'}
+						src={image ? image : gender == 'male' ? male : female}
+					/>
+				</div>
 
-					{/* <Image src={composition} alt='Picture of the author' /> */}
-					<div className={OneMember == 1 ? 'xl:pl-10 pt-2' : 'base-m'}>
-						<p
-							className='w-full'
-							dangerouslySetInnerHTML={replaceBrTag(description)}
-						/>
-						<div
-							className={
-								OneMember
-									? 'xl:absolute  right-0 flex justify-between items-end'
-									: 'mt-3 mb-10 team-role flex justify-between items-end'
-							}
-						>
-							<div className={OneMember ? 'mr-4' : 'mb-3	'}>
-								<strong>{name}</strong>
+				<div className='base-m'>
+					<p
+						className='w-full'
+						dangerouslySetInnerHTML={replaceBrTag(description)}
+					/>
+					<div className='mt-3 mb-10 team-role flex justify-between items-end'>
+						<div className='w-full mb-3  mt-3	 flex justify-between'>
+							<div>
+								<strong className='mr-2 '>{name}</strong>
 								<span className='font-semibold text-gray-500	'> {role}</span>
 							</div>
-
-							<div className='flex items-center'>
+							<div>
 								<a href={github} target={github}>
 									<svg
 										xmlns='http://www.w3.org/2000/svg'
@@ -74,11 +55,3 @@ function Members({ members, OneMember }) {
 }
 
 export default Members;
-{
-	/* <Link href='#'>
-									<Github className='hover-icon ' />
-								</Link>
-								<Link href='#' className='ml-2'>
-									<Blog className='hover-icon ' />
-								</Link> */
-}

@@ -201,6 +201,9 @@ table {
 	.main-hover {
 		@apply hover:text-white hover:bg-green-700 transition duration-300 ease-in-out;
 	}
+	.hover {
+		@apply transition duration-300 ease-in-out;
+	}
 }
 /* .active {
 	font-weight: 700;

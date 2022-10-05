@@ -461,6 +461,7 @@ function Form({
 								팀 이름을 입력해주세요.
 							</label>
 							<input
+								maxLength={25}
 								value={teamInfo.intro.name || ''}
 								placeholder='팀 이름을 입력해주세요.'
 								onChange={(e) => {
@@ -485,6 +486,7 @@ function Form({
 							<textarea
 								value={teamInfo.intro.slogun || ''}
 								rows={2}
+								maxLength={60}
 								onKeyUp={(e) => checkLines(e, 2)}
 								placeholder='팀의 문화를 나타내는 슬로건를 입력하세요.'
 								onChange={(e) => {
@@ -509,6 +511,7 @@ function Form({
 							<textarea
 								value={teamInfo.intro.culture || ''}
 								rows={4}
+								maxLength={120}
 								onKeyUp={(e) => checkLines(e, 4)}
 								placeholder='팀의 문화를 설명하는 내용을 입력하세요.'
 								onChange={(e) => {

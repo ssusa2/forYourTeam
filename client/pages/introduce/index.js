@@ -52,6 +52,7 @@ function introduce() {
 		{
 			name: '',
 			role: '',
+			gender: '',
 			description: '',
 			github: '',
 			image: '',
@@ -267,14 +268,12 @@ function introduce() {
 			validGenre &&
 			validColor &&
 			validEmail &&
-
 			(setIsValid(true), addProjectIntro(e));
 
-			setIsValid(true);
-
+		setIsValid(true);
 	};
 
-	console.log('info', info);
+	console.log('info', teamInfo);
 
 	return (
 		<>

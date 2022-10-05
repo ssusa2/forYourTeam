@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import team from '../../image/team.png';
+import project1 from '../../image/project1.png';
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
@@ -49,9 +50,21 @@ function teamHome() {
 				<section>
 					<h2 className='big-title'>{teamInfo?.intro.name}</h2>
 					{teamInfo?.intro.image ? (
-						<img className='w-full mt-8 mb-8 ' src={teamInfo?.intro.image} />
+						<img
+							className='w-full mt-8 mb-8 h-96 object-cover '
+							src={teamInfo?.intro.image}
+						/>
 					) : (
-						teamInfo?.intro.name && <Image src={team} />
+						teamInfo?.intro.name && (
+							<div className='w-full h-96 relative	'>
+								<Image
+									src={team}
+									layout='fill'
+									objectFit='cover'
+									className='h-full drop-shadow-lg'
+								/>
+							</div>
+						)
 					)}
 
 					<h2
@@ -101,10 +114,19 @@ function teamHome() {
 					</div>
 				</section>
 				<div className='section4 mt-44 mb-44 '>
-					<img
-						className='mt-14 mb-8 rounded-xl '
-						src={info?.project_page.image}
-					/>
+					{info?.project_page.image ? (
+						<img
+							className='mt-14 mb-8 rounded-xl w-full h-96 object-cover'
+							src={info?.project_page.image}
+						/>
+					) : (
+						info?.project_page.slogun && (
+							<Image
+								className='mt-4  xl:mt-36  mb-8 w-full object-fill'
+								src={project1}
+							/>
+						)
+					)}
 					<h2 className='mt-24 text-center leading-snug text-4xl font-extrabold'>
 						{info?.project_page.slogun}
 					</h2>
