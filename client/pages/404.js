@@ -1,4 +1,5 @@
 /** @format */
+
 import Image from 'next/image';
 import ErrorImg from '../image/404.png';
 

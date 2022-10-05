@@ -267,7 +267,11 @@ function introduce() {
 			validGenre &&
 			validColor &&
 			validEmail &&
+
 			(setIsValid(true), addProjectIntro(e));
+
+			setIsValid(true);
+
 	};
 
 	console.log('info', info);
