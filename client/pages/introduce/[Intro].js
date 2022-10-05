@@ -334,7 +334,7 @@ function introduce() {
 		<>
 			<Form
 				lastTouch={lastTouch}
-				deleteProject={deleteProject}
+				// deleteProject={deleteProject}
 				userID={userID.uid}
 				projectName={projectName}
 				info={info}

@@ -1,9 +1,13 @@
 /** @format */
+
+import Link from 'next/router';
+
 import Image from 'next/image';
 // import composition from '../../image/composition 1.png';
-import composition from '../../image/composition 5.png';
+import member from '../../image/member.png';
 import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
+	// console.log(members);
 	const { github, name, image, description, role } = members;
 
 	return (
@@ -21,13 +25,14 @@ function Members({ members, OneMember }) {
 						/>
 					) : (
 						<Image
-							// width={800}
+							width={700}
+							height={500}
 							className={
 								OneMember == 1
 									? ' w-full xl:w-1/2'
 									: 'object-cover w-full max-h-72	'
 							}
-							src={composition}
+							src={member}
 						/>
 					)}
 

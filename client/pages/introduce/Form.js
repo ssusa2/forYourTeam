@@ -21,7 +21,7 @@ import TestModal from '../../components/Modal/TestModal';
 function Form({
 	//업데이트 시, 필요
 	lastTouch,
-	deleteProject,
+	// deleteProject,
 	userID,
 	projectName,
 	//
@@ -47,7 +47,50 @@ function Form({
 	setIsShallowSave,
 	checkLines,
 }) {
-	console.log('teamInfo', member);
+	console.log(storageRef);
+	// 프로젝트 삭제
+	const deleteProject = async (path) => {
+		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
+			alert('삭제가 완료되었습니다.');
+			const projectRef = doc(db, 'project', `${projectName}`);
+			await deleteDoc(projectRef);
+			deleteStorageFolder(path);
+			router.push('/project');
+		} else {
+			('');
+		}
+	};
+
+	// 이미지 저장소 안에 있는 폴더 정보도 삭제
+	const deleteStorageFolder = (path) => {
+		console.log('path', path);
+		const fileRef = ref(db, 'project', path);
+		console.log(fileRef);
+		listAll(fileRef)
+			.then((res) => {
+				res.items.forEach((itemRef) => {
+					deleteFile(fileRef.fullPath, itemRef.name);
+				});
+				res.prefixes.forEach((folderRef) => {
+					deleteStorageFolder(`gs://${folderRef.bucket}/${folderRef.fullPath}`);
+				});
+			})
+			.catch((error) => {
+				console.log('에러', error);
+			});
+	};
+
+	// 폴더 안애 있는 아이템 재귀삭제
+	const deleteFile = (pathToFile, fileName) => {
+		const itemRef = ref(storage, `${pathToFile}/${fileName}`);
+		deleteObject(itemRef)
+			.then((res) => {
+				console.log('삭제', res);
+			})
+			.catch((error) => {
+				console.log('안됨', error);
+			});
+	};
 	return (
 		<>
 			<div className='my-container relative max-w-6xl'>

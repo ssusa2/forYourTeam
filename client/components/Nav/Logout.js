@@ -81,7 +81,7 @@ function LogOut({ name, profileImg }) {
 											'block px-4 py-2 text-sm font-bold'
 										)}
 									>
-										My page
+										My Page
 									</a>
 								)}
 							</Menu.Item>
@@ -95,7 +95,7 @@ function LogOut({ name, profileImg }) {
 											'block px-4 py-2 text-sm font-bold'
 										)}
 									>
-										projects
+										Projects
 									</a>
 								)}
 							</Menu.Item>
