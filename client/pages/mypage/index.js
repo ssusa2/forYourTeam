@@ -18,31 +18,30 @@ function Mypage() {
 			const project = query(
 				collectionGroup(db, 'project'),
 				where('uid', '==', `${userInfo}`),
-				where('isShallowSave', '==', false)
+				where('shallowSaving', '==', false)
 			);
 
 			const querySnapshot = await getDocs(project);
-			console.log('querySnapshot', querySnapshot);
+			console.log('저장', querySnapshot);
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
 			}));
 			// console.log(newData);
 			setProjects(newData);
 			querySnapshot.forEach((doc) => {
-				console.log(doc.id, ' => ', doc.data());
+				// console.log(doc.id, ' => ', doc.data());
 			});
 		};
 
 		const getShallowProject = async () => {
 			const project = query(
 				collectionGroup(db, 'project'),
-				where('isShallowSave', '==', true),
+				where('shallowSaving', '==', true),
 				where('uid', '==', `${userInfo}`)
 			);
 
 			const querySnapshot = await getDocs(project);
-			console.log(querySnapshot);
-			console.log('querySnapshot', querySnapshot);
+			console.log('임시저장', querySnapshot);
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
 			}));

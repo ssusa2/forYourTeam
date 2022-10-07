@@ -52,14 +52,12 @@ function Nav({ Preview }) {
 			console.log('tq');
 			fetchUsers(Intro);
 		}
-	}, [route]);
+	}, [Intro]);
 
 	const { color, logo, logo_image } = projectColor;
 
-	useEffect(() => {
-		route == '/project/[Intro]' && dispatch(setColor(projectObj?.color));
-		dispatch(setLogo(projectObj?.logo));
-	}, []);
+	let isProjectPage = pathname == '/project/[Intro]';
+	let isTeamPage = pathname == '/team/[Intro]';
 
 	useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
@@ -94,9 +92,6 @@ function Nav({ Preview }) {
 	};
 
 	const teamNumber = Intro;
-
-	let isProjectPage = pathname == '/project/[Intro]';
-	let isTeamPage = pathname == '/team/[Intro]';
 
 	return (
 		<>

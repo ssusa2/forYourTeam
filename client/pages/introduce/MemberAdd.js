@@ -9,6 +9,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { checkLines } from '../../util/utils';
 import handleFormChange from '../../util/handle';
+import Image from 'next/image';
+import female from '../../image/female.png';
+import male from '../../image/male.png';
 
 function MemberAdd({
 	el,
@@ -21,6 +24,9 @@ function MemberAdd({
 	projectName,
 	userID,
 }) {
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+
 	const [imageSrc, setImageSrc] = useState('');
 	// console.log(el);
 	useEffect(() => {
@@ -74,15 +80,65 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
-								handleFormChange(idx, e, member, setMember, folder);
+								saving ||
+									(shallowSaving &&
+										handleFormChange(
+											idx,
+											e,
+											member,
+											setMember,
+											folder,
+											projectName,
+											userID
+										));
 								encodeFileToBase64(e.target.files[0]);
 							}}
 						/>
+						<div className='w-full '>
+							<label className='small-title mt-0 essential'>기본이미지</label>{' '}
+							<div className='flex'>
+								<label className='relative w-[50px] h-[50px] '>
+									<input
+										onChange={(e) => {
+											handleFormChange(idx, e, member, setMember, folder);
+											setImageSrc(male.src);
+										}}
+										type='radio'
+										name='gender'
+										value='male'
+									/>
+									<Image
+										src={male}
+										layout='fill'
+										objectFit='cover'
+										className='w-1/2 rounded-full'
+									/>
+								</label>
+
+								<label className='w-[50px] h-[50px] relative'>
+									<input
+										onChange={(e) => {
+											handleFormChange(idx, e, member, setMember, folder);
+											setImageSrc(female.src);
+										}}
+										type='radio'
+										name='gender'
+										value='female'
+									/>
+									<Image
+										src={female}
+										layout='fill'
+										objectFit='cover'
+										className='w-1/2 rounded-full'
+									/>
+								</label>
+							</div>
+						</div>
 					</div>
 
 					<div className='w-full mt-4 xl:ml-4 xl:mt-0'>
 						<div className='flex justify-between b-divide '>
-							<div className='w-1/3'>
+							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>이름</label>
 								<input
 									value={el.name}
@@ -105,7 +161,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 '
 								/>
 							</div>
-							<div className='w-1/3'>
+							<div className='w-1/2'>
 								<label className='small-title mt-0 essential'>직책</label>{' '}
 								<input
 									maxLength={30}
@@ -124,52 +180,6 @@ invalid:border-pink-500 invalid:text-pink-600
 focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 '
 								/>
-							</div>
-							<div className='w-1/3'>
-								<label className='small-title mt-0 essential'>성별</label>{' '}
-								<label>
-									<input
-										type='radio'
-										name='gender'
-										value='male'
-										onChange={(e) => {
-											handleFormChange(idx, e, member, setMember, folder);
-										}}
-									/>
-									남성
-								</label>
-								<label>
-									<input
-										type='radio'
-										name='gender'
-										value='female'
-										onChange={(e) => {
-											handleFormChange(idx, e, member, setMember, folder);
-										}}
-										className=' default:ring-2 checked:bg-blue-500 appearance-none'
-									/>
-									여성
-								</label>
-								<span className='font-normal text-slate-500	 '>
-									ForMyTeam은 팀원 이미지 사진이 없어도 성별에 따른 기본
-									이미지를 제공합니다.
-								</span>
-								{/* <input
-									value={el.gender}
-									placeholder='성별'
-									name='role'
-									onChange={(e) => {
-										handleFormChange(idx, e, member, setMember, folder);
-									}}
-									type='checkbox'
-									multiple='multiple'
-									className=' mt-1 block w-5/6 px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-invalid:border-pink-500 invalid:text-pink-600
-focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-'
-								/> */}
 							</div>
 						</div>
 						<div className='b-divide'>

@@ -1,30 +1,24 @@
 /** @format */
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import team from '../../image/team.png';
 import project1 from '../../image/project1.png';
 import project2 from '../../image/project2.png';
 import project3 from '../../image/project3.png';
-import Slide from './slide';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import { useSelector, useDispatch, createSelector } from 'react-redux';
 import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
-import Core from './Core';
-import { map } from '@firebase/util';
 
 function Project({ Preview }) {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { Intro } = router.query;
-	// console.log('[Intro]', Preview);
 	const [projects, setProjects] = useState({});
 	const [projectInfo, setProjectInfo] = useState();
 
-	const projectColor = useSelector(({ projectInfo }) => projectInfo);
 	let { info } = projects;
 
 	if (Preview) {
@@ -56,13 +50,8 @@ function Project({ Preview }) {
 		dispatch(setAll(projectInfo));
 	}, [projects]);
 
-	console.log(projects);
-	// const { intro } = projects?.teamInfo;
-
 	return (
 		<>
-			{/* <h1>Post: {id}</h1>
-			<h1>Comment: {comment}</h1> */}
 			<div
 				className={
 					router.route == '/introduce'

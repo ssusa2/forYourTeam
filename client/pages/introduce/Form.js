@@ -5,8 +5,12 @@ import MemberAdd from './MemberAdd';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
+import Image from 'next/image';
+import female from '../../image/female.png';
+import male from '../../image/male.png';
 import { db, storage, storageRef } from '../firebase';
 import SelectGenre from './SeletGenre';
+import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import {
 	setDoc,
 	deleteDoc,
@@ -15,6 +19,7 @@ import {
 	ref,
 	deleteObject,
 } from 'firebase/firestore';
+import { useSelector, useDispatch } from 'react-redux';
 
 import TestModal from '../../components/Modal/TestModal';
 
@@ -44,10 +49,11 @@ function Form({
 	handleClick,
 	isValid,
 	addProjectIntro,
-	setIsShallowSave,
 	checkLines,
 }) {
-	console.log(storageRef);
+	const dispatch = useDispatch();
+	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+
 	// 프로젝트 삭제
 	const deleteProject = async (path) => {
 		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
@@ -63,9 +69,7 @@ function Form({
 
 	// 이미지 저장소 안에 있는 폴더 정보도 삭제
 	const deleteStorageFolder = (path) => {
-		console.log('path', path);
 		const fileRef = ref(db, 'project', path);
-		console.log(fileRef);
 		listAll(fileRef)
 			.then((res) => {
 				res.items.forEach((itemRef) => {
@@ -572,7 +576,7 @@ function Form({
 						<button
 							onClick={() => {
 								addProjectIntro();
-								setIsShallowSave(true);
+								dispatch(setShallowSaving(true));
 							}}
 							type='button'
 							className=' w-full my-6  rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700  sm:w-auto sm:text-base	'

@@ -6,6 +6,8 @@ import { HYDRATE } from 'next-redux-wrapper';
 import counter from './counter';
 import user from './user';
 import projectInfo from './projectInfo';
+import Saving from './Saving';
+import previewTest from './previewTest';
 
 const reducer = (state, action) => {
 	if (action.type === HYDRATE) {
@@ -18,6 +20,8 @@ const reducer = (state, action) => {
 		counter,
 		user,
 		projectInfo,
+		Saving,
+		previewTest,
 		// 여기에 추가
 	})(state, action);
 };

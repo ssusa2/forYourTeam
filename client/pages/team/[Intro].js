@@ -9,6 +9,8 @@ import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import Members from './Members';
+import { useDispatch } from 'react-redux';
+import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -19,13 +21,14 @@ import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
 function teamHome() {
+	const dispatch = useDispatch();
 	const router = useRouter();
 	const { Intro } = router.query;
 
 	const [teams, setTeams] = useState({});
 
 	useEffect(() => {
-		const fetchUsers = async (Intro) => {
+		const fetchProject = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
 			// const data = projectSnap.data();
@@ -37,8 +40,12 @@ function teamHome() {
 			}
 			// };
 		};
-		fetchUsers(Intro);
+		fetchProject(Intro);
 	}, [Intro]);
+
+	useEffect(() => {
+		dispatch(setAll(teams.info?.project_info));
+	}, [teams]);
 
 	const { info, teamInfo } = teams;
 

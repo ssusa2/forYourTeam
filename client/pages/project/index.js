@@ -45,7 +45,7 @@ function Projects() {
 		const genreQuery = query(
 			collectionGroup(db, 'project'),
 			where('genre', '==', value),
-			where('isShallowSave', '==', false)
+			where('shallowSaving', '==', false)
 		);
 		console.log('genreQuery', genreQuery);
 		const querySnapshot = await getDocs(genreQuery);
@@ -70,7 +70,7 @@ function Projects() {
 	const fetchProject = async () => {
 		const project = query(
 			collectionGroup(db, 'project'),
-			where('isShallowSave', '==', false)
+			where('shallowSaving', '==', false)
 		);
 		const querySnapshot = await getDocs(project);
 		console.log('querySnapshot', querySnapshot);

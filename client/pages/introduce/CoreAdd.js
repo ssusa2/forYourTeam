@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { checkLines } from '../../util/utils';
 import handleFormChange from '../../util/handle';
+import { useSelector, useDispatch } from 'react-redux';
 
 function CoreAdd({
 	el,
@@ -14,6 +15,8 @@ function CoreAdd({
 	userID,
 }) {
 	const [imageSrc, setImageSrc] = useState('');
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 
 	useEffect(() => {
 		setImageSrc(el.image);
@@ -120,15 +123,17 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 						onChange={(e) => {
 							encodeFileToBase64(e.target.files[0]);
-							handleFormChange(
-								idx,
-								e,
-								core,
-								setCore,
-								folder,
-								projectName,
-								userID
-							);
+							saving ||
+								(shallowSaving &&
+									handleFormChange(
+										idx,
+										e,
+										core,
+										setCore,
+										folder,
+										projectName,
+										userID
+									));
 						}}
 					/>
 				</div>

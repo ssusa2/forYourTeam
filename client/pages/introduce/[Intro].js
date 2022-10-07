@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAll } from '../../src/store/modules/projectInfo';
+import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 
 function introduce() {
 	const router = useRouter();
@@ -28,6 +29,8 @@ function introduce() {
 	const [fileUrl, setFileUrl] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
 	const [isShallowSave, setIsShallowSave] = useState(false);
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -122,7 +125,10 @@ function introduce() {
 			};
 		});
 
-		if (e?.target.name == '저장') setIsSaving(true);
+		if (e?.target.name == '저장') {
+			dispatch(setSaving(true));
+			dispatch(setShallowSaving(false));
+		}
 	};
 
 	let projectName = info?.project_info?.name;
@@ -130,6 +136,7 @@ function introduce() {
 	useEffect(() => {
 		// 생성 시
 		async function fetchData() {
+			console.log('1');
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
 					uid: userID.uid,
@@ -137,10 +144,11 @@ function introduce() {
 					info,
 					teamInfo,
 					genre: info.project_info.genre,
-					isShallowSave,
+					shallowSaving,
 				});
-				setIsSaving(false);
-				if (isShallowSave) {
+				dispatch(setSaving(false));
+
+				if (shallowSaving) {
 					alert('임시저장 완료!');
 				} else {
 					alert('저장완료!');
@@ -150,10 +158,10 @@ function introduce() {
 				console.log(err);
 			}
 		}
-		if (isSaving || isShallowSave) {
+		if (saving || shallowSaving) {
 			fetchData();
 		}
-	}, [isSaving, isShallowSave]);
+	}, [saving, shallowSaving]);
 
 	const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
 	const validEmail = info.project_info.email.match(regexp);
@@ -245,24 +253,25 @@ function introduce() {
 			validGenre &&
 			validColor &&
 			validEmail &&
-			addProjectIntro(e);
+			(setIsValid(true), addProjectIntro(e));
 	};
 
 	// 여기서 부터는 업데이트에서만 있는 기능
 
 	// 업데이트
 	const [lastUpdate, setLastUpdate] = useState();
+
 	useEffect(() => {
 		const getProject = async (Intro) => {
 			const projectRef = doc(db, 'project', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
-
 			if (projectSnap.exists()) {
 				setInfo(projectSnap.data().info);
 				setTeamInfo(projectSnap.data().teamInfo);
 				setLastUpdate(projectSnap.data().joined);
 				setCore(projectSnap.data().info.project_page.core);
 				setMember(projectSnap.data().teamInfo.member);
+				dispatch(setShallowSaving(projectSnap.data().shallowSaving));
 				// console.log(projectSnap.data().teamInfo.member);
 			} else {
 				console.log('No such document!');
@@ -272,6 +281,8 @@ function introduce() {
 	}, [Intro]);
 
 	let lastTouch = moment(lastUpdate?.toDate()).format('llll');
+	console.log('shallowSaving', shallowSaving);
+	console.log('saving', saving);
 
 	// 프로젝트 삭제
 	const deleteProject = async (path) => {
@@ -328,7 +339,6 @@ function introduce() {
 	useEffect(() => {
 		previewSetInfo();
 	}, [previewOpen]);
-	console.log('info', core);
 
 	return (
 		<>
@@ -357,7 +367,6 @@ function introduce() {
 				previewOpen={previewOpen}
 				setPreviewOpen={setPreviewOpen}
 				checkLines={checkLines}
-				setIsShallowSave={setIsShallowSave}
 			/>
 		</>
 	);

@@ -8,6 +8,7 @@ import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { setAll } from '../../src/store/modules/projectInfo';
+import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import Form from './Form';
 
 function introduce() {
@@ -18,7 +19,8 @@ function introduce() {
 	const [fileUrl, setFileUrl] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
 	const [previewOpen, setPreviewOpen] = useState(false);
-	const [isShallowSave, setIsShallowSave] = useState(false);
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 
 	const [info, setInfo] = useState({
 		project_info: {
@@ -135,6 +137,7 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') setIsSaving(true);
+		dispatch(setSaving(isSaving));
 	};
 
 	let projectName = info?.project_info?.name;
@@ -149,10 +152,10 @@ function introduce() {
 					info,
 					teamInfo,
 					genre: info.project_info.genre,
-					isShallowSave,
+					shallowSaving,
 				});
-				setIsSaving(false);
-				if (isShallowSave) {
+				dispatch(setSaving(false));
+				if (shallowSaving) {
 					alert('임시저장 완료!');
 				} else {
 					alert('저장완료!');
@@ -163,10 +166,10 @@ function introduce() {
 				console.log(err);
 			}
 		}
-		if (isSaving || isShallowSave) {
+		if (saving || shallowSaving) {
 			fetchData();
 		}
-	}, [isSaving, isShallowSave]);
+	}, [saving, shallowSaving]);
 
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
@@ -191,7 +194,7 @@ function introduce() {
 			if (typeof window !== 'undefined') {
 				alert('프로젝트 이름을 입력해주세요.');
 			}
-			// alert('프로젝트 이름을 입력해주세요.');
+
 			inutRef.current?.[0]?.focus();
 			setInfo((prev) => {
 				return {
@@ -269,11 +272,7 @@ function introduce() {
 			validColor &&
 			validEmail &&
 			(setIsValid(true), addProjectIntro(e));
-
-		setIsValid(true);
 	};
-
-	console.log('info', teamInfo);
 
 	return (
 		<>
@@ -297,7 +296,6 @@ function introduce() {
 				addProjectIntro={addProjectIntro}
 				previewOpen={previewOpen}
 				setPreviewOpen={setPreviewOpen}
-				setIsShallowSave={setIsShallowSave}
 				checkLines={checkLines}
 			/>
 		</>

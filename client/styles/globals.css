@@ -274,3 +274,21 @@ table {
 	font-size: 1.25rem;
 	font-weight: 600;
 }
+
+[type='radio'] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* IMAGE STYLES */
+[type='radio'] + img {
+	cursor: pointer;
+}
+
+/* CHECKED STYLES */
+[type='radio']:checked + img {
+	outline: 4px solid #f00;
+	border: 2px solid #f00;
+}

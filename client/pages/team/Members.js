@@ -11,7 +11,6 @@ function Members({ members, OneMember }) {
 	// console.log(members);
 	const { github, name, image, description, role, gender } = members;
 
-	console.log('OneMember', OneMember);
 	return (
 		<>
 			<div className={OneMember == 1 ? 'w-full xl:w-1/2' : 'w-full'}>

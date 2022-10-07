@@ -15,9 +15,7 @@ const projectInfo = createSlice({
 			// console.log('setLogo', actions);
 			state.logo = actions.payload;
 		},
-		getState: (state) => {
-			// console.log('getState', state);
-		},
+
 		setAll: (state, actions) => {
 			return actions.payload;
 			// state = { ...state, ...actions.payload };
@@ -25,5 +23,5 @@ const projectInfo = createSlice({
 	},
 });
 
-export const { setColor, setLogo, getState, setAll } = projectInfo.actions; // 액션 생성함수
+export const { setColor, setLogo, setAll } = projectInfo.actions; // 액션 생성함수
 export default projectInfo.reducer; // 리듀서

@@ -39,7 +39,6 @@ function SelectGenre({ setInfo, info, genreRef }) {
 
 	for (let i = 0; i < genre_options.length; i++) {
 		if (genre_options[i].value == info.project_info.genre) {
-			console.log('asda', i);
 			matchNumber = i;
 			break;
 		}
