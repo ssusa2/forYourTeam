@@ -25,8 +25,10 @@ import {
 	serverTimestamp,
 } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
+import { handleToggle } from '../../src/util/accordion';
 
 import TestModal from '../../components/Modal/TestModal';
+import { Arrow } from '../../components/Icon/Icon';
 
 function Form({
 	//업데이트 시, 필요
@@ -205,6 +207,10 @@ function Form({
 				console.log('안됨', error);
 			});
 	};
+	const [showProjectInfo, setShowProjectInfo] = useState(true);
+	const [showProjectPage, setShowProjectPage] = useState(true);
+
+	const [showTeam, setShowTeam] = useState(true);
 
 	return (
 		<>
@@ -258,283 +264,308 @@ function Form({
 					<p className='font-semibold text-slate-700 text-sm'>
 						마지막 수정날짜: {lastTouch}
 					</p>
-					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
-						<div className='b-divide'>
-							<label className='small-title mt-0 essential'>
-								프로젝트의 이름을 입력해주세요.
-							</label>
-							<span className='font-normal text-slate-500	 '>
-								url과 프로젝트를 소개하는 페이지에 사용됩니다. ex)
-								/project/프로젝트 이름
-							</span>
-							<input
-								value={info.project_info.name || ''}
-								// ref={(el) => console.log(el)}
-								// ref={(el) => inutRef?.current[0] = el}
-								// ref={(el) => inutRef?.current = el}
-								// ref={inutRef}
-								ref={(elem) => (inutRef.current[0] = elem)}
-								// ref={(el) => inutRef.current?.[0]?.focus()}
-								maxLength={30}
-								placeholder='프로젝트의 이름을 입력해주세요.'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_info: {
-												...info.project_info,
-												name: e.target.value,
-											},
-										};
-									});
-								}}
-								type='favicon'
-								className=' base-form  border-2'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title essential'>
-								프로젝트의 로고 혹은 이미지를 첨부해주세요.(택 1 )
-							</label>
-							<div className='block xl:flex xl:justify-between'>
-								<div className='w-full block xl:w-2/6'>
-									<p className='mt-3'>로고</p>
+					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 relative '>
+						<button
+							onClick={(e) => {
+								handleToggle(e, showProjectInfo, setShowProjectInfo);
+							}}
+							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+						>
+							<Arrow showProjectInfo={showProjectInfo} />
+						</button>
+						{showProjectInfo && (
+							<>
+								<div className='b-divide'>
+									<label className='small-title mt-0 essential'>
+										프로젝트의 이름을 입력해주세요.
+									</label>
+									<span className='font-normal text-slate-500	 '>
+										url과 프로젝트를 소개하는 페이지에 사용됩니다. ex)
+										/project/프로젝트 이름
+									</span>
 									<input
-										value={info.project_info.logo || ''}
-										ref={(elem) => (inutRef.current[1] = elem)}
-										// ref={(el) => (inutRef?.current[1] = el)}
-										placeholder='로고'
+										value={info.project_info.name || ''}
+										// ref={(el) => console.log(el)}
+										// ref={(el) => inutRef?.current[0] = el}
+										// ref={(el) => inutRef?.current = el}
+										// ref={inutRef}
+										ref={(elem) => (inutRef.current[0] = elem)}
+										// ref={(el) => inutRef.current?.[0]?.focus()}
+										maxLength={30}
+										placeholder='프로젝트의 이름을 입력해주세요.'
 										onChange={(e) => {
 											setInfo((prev) => {
 												return {
 													...prev,
 													project_info: {
 														...info.project_info,
-														logo: e.target.value,
+														name: e.target.value,
 													},
 												};
 											});
 										}}
-										type='text'
-										className=' base-form '
+										type='favicon'
+										className=' base-form  border-2'
 									/>
 								</div>
-								<div className='block xl:w-1/2'>
-									<p className='mt-3'>이미지</p>
-									<ImageHolder
-										defaultImg={info.project_info.logo_image}
-										projectName={info?.project_info.name}
-										state={info}
-										setState={setInfo}
-										name={'logo_image'}
-										object={'project_info'}
-										section={'project-logo-image'}
+								<div className='b-divide'>
+									<label className='small-title essential'>
+										프로젝트의 로고 혹은 이미지를 첨부해주세요.(택 1 )
+									</label>
+									<div className='block xl:flex xl:justify-between'>
+										<div className='w-full block xl:w-2/6'>
+											<p className='mt-3'>로고</p>
+											<input
+												value={info.project_info.logo || ''}
+												ref={(elem) => (inutRef.current[1] = elem)}
+												// ref={(el) => (inutRef?.current[1] = el)}
+												placeholder='로고'
+												onChange={(e) => {
+													setInfo((prev) => {
+														return {
+															...prev,
+															project_info: {
+																...info.project_info,
+																logo: e.target.value,
+															},
+														};
+													});
+												}}
+												type='text'
+												className=' base-form '
+											/>
+										</div>
+										<div className='block xl:w-1/2'>
+											<p className='mt-3'>이미지</p>
+											<ImageHolder
+												defaultImg={info.project_info.logo_image}
+												projectName={info?.project_info.name}
+												state={info}
+												setState={setInfo}
+												name={'logo_image'}
+												object={'project_info'}
+												section={'project-logo-image'}
+											/>
+										</div>
+									</div>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title  essential'>
+										프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
+									</label>
+									<div className='block xl:w-1/2'>
+										<p>파비콘</p>
+										<ImageHolder
+											defaultImg={info.project_info.favicon}
+											projectName={info?.project_info.name}
+											state={info}
+											setState={setInfo}
+											name={'favicon'}
+											object={'project_info'}
+											section={'project-favicon'}
+										/>
+									</div>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title'>
+										프로젝트 웹 사이트의 주소를 입력해주세요.
+									</label>
+									<span className='font-normal text-slate-500	 '>
+										프로젝트 웹 사이트 url를 입력하면 ForMyTeam 페이지에
+										여러분의 사이트로 이동하는 버튼이 생성됩니다.
+									</span>
+									<input
+										value={info.project_info.url || ''}
+										placeholder='프로젝트 웹 사이트의 주소를 입력해주세요.'
+										onChange={(e) => {
+											setInfo((prev) => {
+												return {
+													...prev,
+													project_info: {
+														...info.project_info,
+														url: e.target.value,
+													},
+												};
+											});
+										}}
+										type='favicon'
+										className=' base-form'
 									/>
 								</div>
-							</div>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title  essential'>
-								프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
-							</label>
-							<div className='block xl:w-1/2'>
-								<p>파비콘</p>
-								<ImageHolder
-									defaultImg={info.project_info.favicon}
-									projectName={info?.project_info.name}
-									state={info}
-									setState={setInfo}
-									name={'favicon'}
-									object={'project_info'}
-									section={'project-favicon'}
-								/>
-							</div>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title'>
-								프로젝트 웹 사이트의 주소를 입력해주세요.
-							</label>
-							<span className='font-normal text-slate-500	 '>
-								프로젝트 웹 사이트 url를 입력하면 ForMyTeam 페이지에 여러분의
-								사이트로 이동하는 버튼이 생성됩니다.
-							</span>
-							<input
-								value={info.project_info.url || ''}
-								placeholder='프로젝트 웹 사이트의 주소를 입력해주세요.'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_info: {
-												...info.project_info,
-												url: e.target.value,
-											},
-										};
-									});
-								}}
-								type='favicon'
-								className=' base-form'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title  essential'>
-								프로젝트의 장르를 선택하세요.
-							</label>
-							<SelectGenre
-								genreRef={inutRef}
-								setInfo={setInfo}
-								info={info}
-								className=' base-form'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title  essential'>
-								프로젝트의 메인색상을 선택하세요.(#)
-							</label>
-							<div className='flex'>
+								<div className='b-divide'>
+									<label className='small-title  essential'>
+										프로젝트의 장르를 선택하세요.
+									</label>
+									<SelectGenre
+										genreRef={inutRef}
+										setInfo={setInfo}
+										info={info}
+										className=' base-form'
+									/>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title  essential'>
+										프로젝트의 메인색상을 선택하세요.(#)
+									</label>
+									<div className='flex'>
+										<input
+											className='h-[40px]'
+											type='color'
+											value={info?.project_info.color}
+											// className=' base-form'
+											onChange={(e) => {
+												setInfo((prev) => {
+													return {
+														...prev,
+														project_info: {
+															...info.project_info,
+															color: e.target.value,
+														},
+													};
+												});
+											}}
+										/>
+										<input
+											value={info?.project_info.color}
+											ref={(elem) => (inutRef.current[3] = elem)}
+											className='base-form'
+											// ref={(el) => (inutRef?.current[3] = el)}
+											placeholder={
+												info?.project_info.color
+													? `선택한 색상: ${info.project_info.color}`
+													: '왼쪽에 색상 칩을 클릭해 색상을 선택하세요.'
+											}
+										/>
+									</div>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title  essential'>
+										프로젝트의 대표 E-mail를 입력해주세요.
+									</label>
+									<input
+										value={info.project_info.email || ''}
+										ref={(elem) => (inutRef.current[4] = elem)}
+										placeholder='프로젝트의 대표 E-mail를 입력해주세요.'
+										onChange={(e) => {
+											setInfo((prev) => {
+												return {
+													...prev,
+													project_info: {
+														...info.project_info,
+														email: e.target.value,
+													},
+												};
+											});
+										}}
+										type='email'
+										className=' base-form'
+									/>
+								</div>
+								<label className='small-title font-medium'>
+									프로젝트 팀 레퍼지토리 주소를 입력해주세요.
+								</label>
 								<input
-									className='h-[40px]'
-									type='color'
-									value={info?.project_info.color}
-									// className=' base-form'
+									value={info.project_info.team_github || ''}
+									placeholder='ex)https://github.com/ForMyTeam'
 									onChange={(e) => {
 										setInfo((prev) => {
 											return {
 												...prev,
 												project_info: {
 													...info.project_info,
-													color: e.target.value,
+													team_github: e.target.value,
 												},
 											};
 										});
 									}}
+									type='text'
+									multiple='multiple'
+									className=' base-form'
 								/>
-								<input
-									value={info?.project_info.color}
-									ref={(elem) => (inutRef.current[3] = elem)}
-									className='base-form'
-									// ref={(el) => (inutRef?.current[3] = el)}
-									placeholder={
-										info?.project_info.color
-											? `선택한 색상: ${info.project_info.color}`
-											: '왼쪽에 색상 칩을 클릭해 색상을 선택하세요.'
-									}
-								/>
-							</div>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title  essential'>
-								프로젝트의 대표 E-mail를 입력해주세요.
-							</label>
-							<input
-								value={info.project_info.email || ''}
-								ref={(elem) => (inutRef.current[4] = elem)}
-								placeholder='프로젝트의 대표 E-mail를 입력해주세요.'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_info: {
-												...info.project_info,
-												email: e.target.value,
-											},
-										};
-									});
-								}}
-								type='email'
-								className=' base-form'
-							/>
-						</div>
-						<label className='small-title font-medium'>
-							프로젝트 팀 레퍼지토리 주소를 입력해주세요.
-						</label>
-						<input
-							value={info.project_info.team_github || ''}
-							placeholder='ex)https://github.com/ForMyTeam'
-							onChange={(e) => {
-								setInfo((prev) => {
-									return {
-										...prev,
-										project_info: {
-											...info.project_info,
-											team_github: e.target.value,
-										},
-									};
-								});
-							}}
-							type='text'
-							multiple='multiple'
-							className=' base-form'
-						/>
+							</>
+						)}
 					</section>
 					{/*  */}
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Project 소개 페이지</h3>
 					<p>여러분의 프로젝트를 소개하는 페이지입니다.</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
-						<div className='b-divide'>
-							<label className='small-title mt-0 font-medium'>
-								프로젝트의 슬로건을 1~2줄로 입력하세요.
-							</label>
-							<textarea
-								value={info.project_page.slogun || ''}
-								maxLength={30}
-								rows={2}
-								onKeyUp={(e) => checkLines(e, 2)}
-								placeholder='프로젝트의 슬로건을 1~2줄로 입력하세요.'
-								onChange={(e) => {
-									setInfo((prev) => {
-										return {
-											...prev,
-											project_page: {
-												...info.project_page,
-												slogun: e.target.value,
-											},
-										};
-									});
-								}}
-								type='text'
-								className=' base-form'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title font-medium'>
-								프로젝트를 대표하는 사진을 업로드해주세요.
-							</label>
-							<ImageHolder
-								defaultImg={info.project_page.image}
-								projectName={info?.project_info.name}
-								state={info}
-								setState={setInfo}
-								name={'image'}
-								object={'project_page'}
-								section={'project-main-image'}
-							/>
-						</div>
-						<label className='small-title font-medium'>
-							프로젝트를 소개하는 글을 2~4줄 입력해주세요.
-						</label>
-						<textarea
-							value={info.project_page.description || ''}
-							rows={4}
-							onKeyUp={(e) => checkLines(e, 4)}
-							placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
-							onChange={(e) => {
-								setInfo((prev) => {
-									return {
-										...prev,
-										project_page: {
-											...info.project_page,
-											description: e.target.value,
-										},
-									};
-								});
+						<button
+							onClick={(e) => {
+								handleToggle(e, showProjectPage, setShowProjectPage);
 							}}
-							type='text'
-							multiple='multiple'
-							className=' base-form'
-						/>
+							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+						>
+							<Arrow showProjectPage={showProjectPage} />
+						</button>
+						{showProjectPage && (
+							<>
+								<div className='b-divide'>
+									<label className='small-title mt-0 font-medium'>
+										프로젝트의 슬로건을 1~2줄로 입력하세요.
+									</label>
+									<textarea
+										value={info.project_page.slogun || ''}
+										maxLength={30}
+										rows={2}
+										onKeyUp={(e) => checkLines(e, 2)}
+										placeholder='프로젝트의 슬로건을 1~2줄로 입력하세요.'
+										onChange={(e) => {
+											setInfo((prev) => {
+												return {
+													...prev,
+													project_page: {
+														...info.project_page,
+														slogun: e.target.value,
+													},
+												};
+											});
+										}}
+										type='text'
+										className=' base-form'
+									/>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title font-medium'>
+										프로젝트를 대표하는 사진을 업로드해주세요.
+									</label>
+									<ImageHolder
+										defaultImg={info.project_page.image}
+										projectName={info?.project_info.name}
+										state={info}
+										setState={setInfo}
+										name={'image'}
+										object={'project_page'}
+										section={'project-main-image'}
+									/>
+								</div>
+								<label className='small-title font-medium'>
+									프로젝트를 소개하는 글을 2~4줄 입력해주세요.
+								</label>
+								<textarea
+									value={info.project_page.description || ''}
+									rows={4}
+									onKeyUp={(e) => checkLines(e, 4)}
+									placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
+									onChange={(e) => {
+										setInfo((prev) => {
+											return {
+												...prev,
+												project_page: {
+													...info.project_page,
+													description: e.target.value,
+												},
+											};
+										});
+									}}
+									type='text'
+									multiple='multiple'
+									className=' base-form'
+								/>
+							</>
+						)}
 					</section>
+
 					{core?.map((el, idx) => {
 						return (
 							<>
@@ -554,100 +585,114 @@ function Form({
 							</>
 						);
 					})}
+
 					<div className='flex justify-end'>
 						<button onClick={addCore} className='main-button'>
 							기능 추가하기 +
 						</button>
 					</div>
+
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
 					<h3 className='middle-title'>Team 소개 페이지</h3>
 					<p>프로젝트의 팀 문화와 팀원들을 소개하세요.</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
-						<div className='b-divide'>
-							<label className='small-title mt-0 font-medium'>
-								팀 이름을 입력해주세요.
-							</label>
-							<input
-								maxLength={25}
-								value={teamInfo.intro.name || ''}
-								placeholder='팀 이름을 입력해주세요.'
-								onChange={(e) => {
-									setTeamInfo((prev) => {
-										return {
-											...prev,
-											intro: {
-												...teamInfo.intro,
-												name: e.target.value,
-											},
-										};
-									});
-								}}
-								type='text'
-								className=' base-form'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title mt-0 font-medium'>
-								팀의 문화를 나타내는 슬로건를 입력하세요.
-							</label>
-							<textarea
-								value={teamInfo.intro.slogun || ''}
-								rows={2}
-								maxLength={60}
-								onKeyUp={(e) => checkLines(e, 2)}
-								placeholder='팀의 문화를 나타내는 슬로건를 입력하세요.'
-								onChange={(e) => {
-									setTeamInfo((prev) => {
-										return {
-											...prev,
-											intro: {
-												...teamInfo.intro,
-												slogun: e.target.value,
-											},
-										};
-									});
-								}}
-								type='text'
-								className=' base-form'
-							/>
-						</div>
-						<div className='b-divide'>
-							<label className='small-title font-medium'>
-								팀의 문화를 설명하는 내용을 입력하세요.
-							</label>
-							<textarea
-								value={teamInfo.intro.culture || ''}
-								rows={4}
-								maxLength={120}
-								onKeyUp={(e) => checkLines(e, 4)}
-								placeholder='팀의 문화를 설명하는 내용을 입력하세요.'
-								onChange={(e) => {
-									setTeamInfo((prev) => {
-										return {
-											...prev,
-											intro: {
-												...teamInfo.intro,
-												culture: e.target.value,
-											},
-										};
-									});
-								}}
-								type='text'
-								className=' base-form'
-							/>
-						</div>
-						<label className='small-title font-medium'>
-							팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
-						</label>
-						<ImageHolder
-							defaultImg={teamInfo.intro.image}
-							projectName={info?.project_info.name}
-							state={teamInfo}
-							setState={setTeamInfo}
-							name={'image'}
-							object={'intro'}
-							section={'team-image'}
-						/>
+						<button
+							onClick={(e) => {
+								handleToggle(e, showTeam, setShowTeam);
+							}}
+							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+						>
+							<Arrow showCore={showTeam} />
+						</button>
+						{showTeam && (
+							<>
+								<div className='b-divide'>
+									<label className='small-title mt-0 font-medium'>
+										팀 이름을 입력해주세요.
+									</label>
+									<input
+										maxLength={25}
+										value={teamInfo.intro.name || ''}
+										placeholder='팀 이름을 입력해주세요.'
+										onChange={(e) => {
+											setTeamInfo((prev) => {
+												return {
+													...prev,
+													intro: {
+														...teamInfo.intro,
+														name: e.target.value,
+													},
+												};
+											});
+										}}
+										type='text'
+										className=' base-form'
+									/>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title mt-0 font-medium'>
+										팀의 문화를 나타내는 슬로건를 입력하세요.
+									</label>
+									<textarea
+										value={teamInfo.intro.slogun || ''}
+										rows={2}
+										maxLength={60}
+										onKeyUp={(e) => checkLines(e, 2)}
+										placeholder='팀의 문화를 나타내는 슬로건를 입력하세요.'
+										onChange={(e) => {
+											setTeamInfo((prev) => {
+												return {
+													...prev,
+													intro: {
+														...teamInfo.intro,
+														slogun: e.target.value,
+													},
+												};
+											});
+										}}
+										type='text'
+										className=' base-form'
+									/>
+								</div>
+								<div className='b-divide'>
+									<label className='small-title font-medium'>
+										팀의 문화를 설명하는 내용을 입력하세요.
+									</label>
+									<textarea
+										value={teamInfo.intro.culture || ''}
+										rows={4}
+										maxLength={120}
+										onKeyUp={(e) => checkLines(e, 4)}
+										placeholder='팀의 문화를 설명하는 내용을 입력하세요.'
+										onChange={(e) => {
+											setTeamInfo((prev) => {
+												return {
+													...prev,
+													intro: {
+														...teamInfo.intro,
+														culture: e.target.value,
+													},
+												};
+											});
+										}}
+										type='text'
+										className=' base-form'
+									/>
+								</div>
+								<label className='small-title font-medium'>
+									팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
+								</label>
+								<ImageHolder
+									defaultImg={teamInfo.intro.image}
+									projectName={info?.project_info.name}
+									state={teamInfo}
+									setState={setTeamInfo}
+									name={'image'}
+									object={'intro'}
+									section={'team-image'}
+								/>
+							</>
+						)}
 					</section>
 					{/*  */}
 					<h3 className='small-title '>팀원 소개</h3>
