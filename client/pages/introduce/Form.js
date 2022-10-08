@@ -351,9 +351,13 @@ function Form({
 							</div>
 						</div>
 						<div className='b-divide'>
-							<label className='small-title essential'>
+							<label className='small-title'>
 								프로젝트 웹 사이트의 주소를 입력해주세요.
 							</label>
+							<span className='font-normal text-slate-500	 '>
+								프로젝트 웹 사이트 url를 입력하면 ForMyTeam 페이지에 여러분의
+								사이트로 이동하는 버튼이 생성됩니다.
+							</span>
 							<input
 								value={info.project_info.url || ''}
 								placeholder='프로젝트 웹 사이트의 주소를 입력해주세요.'
@@ -693,11 +697,7 @@ function Form({
 						</button>
 						{router.route == '/introduce/[Intro]' && (
 							<button
-								onClick={() => {
-									console.log('click');
-									deleteProject(`${userID}/${projectName}`);
-									// deleteProject(`${userID}/${projectName}`);
-								}}
+								onClick={() => deleteProject(`${userID}/${projectName}`)}
 								type='button'
 								className='w-full rounded-lg my-6 border border-red-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-red-700 transition duration-300 ease-in-out hover:text-white text-red-700 sm:ml-3 sm:w-auto sm:text-base	'
 							>

@@ -6,6 +6,7 @@ import team from '../../image/team.png';
 import project1 from '../../image/project1.png';
 import project2 from '../../image/project2.png';
 import project3 from '../../image/project3.png';
+import homeTeam from '../../image/homeTeam.png';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
 import { collection, getDoc, doc } from 'firebase/firestore';
@@ -172,20 +173,25 @@ function Project({ Preview }) {
 					<h2 className='mt-24 text-center leading-snug text-4xl font-extrabold'>
 						{info?.project_page.slogun}
 					</h2>
-					<div className='flex justify-center'>
-						<a
-							href={`${info?.project_info.url}`}
-							target={`${info?.project_info.url}`}
-						>
-							<button type='button' className='mt-10 gray-button'>
-								프로젝트 보러가기
-							</button>
-						</a>
-					</div>
+					{info?.project_info.url && (
+						<div className='flex justify-center'>
+							<a
+								href={`${info?.project_info.url}`}
+								target={`${info?.project_info.url}`}
+							>
+								<button
+									type='button'
+									className='w-full  mt-10 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
+								>
+									프로젝트 보러가기
+								</button>
+							</a>
+						</div>
+					)}
 				</div>
 				{/* section4 */}
 				<div className='flex justify-end'>
-					<h3 className='middle-title text-end	'>
+					<h3 className='middle-title text-end mb-6	'>
 						프로젝트를 만든 사람들이 궁금하다면?
 					</h3>
 				</div>
@@ -197,7 +203,7 @@ function Project({ Preview }) {
 				) : (
 					<div className='w-full h-96 relative	'>
 						<Image
-							src={team}
+							src={homeTeam}
 							layout='fill'
 							objectFit='cover'
 							className='h-full drop-shadow-lg'
@@ -209,7 +215,7 @@ function Project({ Preview }) {
 					<button
 						onClick={() => router.push(`/team/${Intro}`)}
 						type='button'
-						className=' gray-button'
+						className='w-full  mt-14 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
 					>
 						팀원 소개 보러가기
 					</button>

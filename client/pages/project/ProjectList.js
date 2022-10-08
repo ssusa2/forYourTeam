@@ -2,15 +2,13 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import { Edit } from '../../components/Icon/Icon';
+import { useSelector } from 'react-redux';
+import { Edit, Lock } from '../../components/Icon/Icon';
 
 function ProjectList({ projects }) {
 	const userInfo = useSelector(({ user }) => user.uid);
 	const router = useRouter();
 
-	console.log(projects);
 	return (
 		<>
 			<div className='bg-white'>
@@ -18,8 +16,7 @@ function ProjectList({ projects }) {
 					<h2 className='sr-only'>Products</h2>
 					<div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
 						{projects.map((project) => {
-							const { uid, id, info, teamInfo } = project;
-							// console.log(project_info);
+							const { uid, id, info, teamInfo, shallowSaving } = project;
 							return (
 								<div key={id} uid={uid} className='group relative'>
 									{userInfo == uid && (
@@ -31,6 +28,11 @@ function ProjectList({ projects }) {
 										>
 											<Edit />
 										</button>
+									)}
+									{userInfo == uid && shallowSaving && (
+										<div className='absolute font-semibold p-1 left-2 top-2 cursor-pointer text-green-700 rounded-full z-20'>
+											<Lock />
+										</div>
 									)}
 									<Link
 										href='/project/[intro]'

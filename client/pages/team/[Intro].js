@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import team from '../../image/team.png';
+import homeTeam from '../../image/homeTeam.png';
 import project1 from '../../image/project1.png';
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
@@ -65,7 +66,7 @@ function teamHome() {
 						teamInfo?.intro.name && (
 							<div className='w-full h-96 relative	'>
 								<Image
-									src={team}
+									src={homeTeam}
 									layout='fill'
 									objectFit='cover'
 									className='h-full drop-shadow-lg'

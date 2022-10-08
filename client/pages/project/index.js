@@ -1,6 +1,7 @@
 /** @format */
 // import Main from '../Home/Main';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import SortGenre from './SortGenre';
@@ -14,15 +15,32 @@ import {
 	getDoc,
 	query,
 	where,
+	orderBy,
+	limit,
+	startAfter,
 } from 'firebase/firestore';
+import { usePagination } from '../../hooks/usePagination';
 
+// const usePagination = dynamic(() => import('../../hooks/usePagination'), {
+// 	ssr: false,
+// });
 function Projects() {
 	const [projects, setProjects] = useState([]);
 	const [hasProjects, setHasProjects] = useState(false);
 	const [btnActive, setBtnActive] = useState('');
 	const userInfo = useSelector(({ user }) => user);
+	const [target, setTarget] = useState(null);
+	const Number = 2;
+	const [GenreValue, setGenreValue] = useState(null);
+	const { data, loading, loadingMore, noMore } = usePagination(
+		'project',
+		Number,
+		target,
+		GenreValue
+	);
+	console.table(data);
+	console.log(null);
 
-	console.log('userInfo', userInfo);
 	const router = useRouter();
 
 	const [genre, setGenre] = useState([]);
@@ -41,21 +59,21 @@ function Projects() {
 		fetchGenre();
 	}, []);
 
-	const queryGerne = async (value) => {
-		const genreQuery = query(
-			collectionGroup(db, 'project'),
-			where('genre', '==', value),
-			where('shallowSaving', '==', false)
-		);
-		console.log('genreQuery', genreQuery);
-		const querySnapshot = await getDocs(genreQuery);
-		querySnapshot.empty ? setHasProjects(true) : setHasProjects(false);
+	// const queryGerne = async (value) => {
+	// 	console.log(value);
+	// 	const genreQuery = query(
+	// 		collectionGroup(db, 'project'),
+	// 		where('genre', '==', value),
+	// 		where('shallowSaving', '==', false)
+	// 	);
+	// 	const querySnapshot = await getDocs(genreQuery);
+	// 	querySnapshot.empty ? setHasProjects(true) : setHasProjects(false);
 
-		const newData = querySnapshot.docs.map((doc) => ({
-			...doc.data(),
-		}));
-		setProjects(newData);
-	};
+	// 	const newData = querySnapshot.docs.map((doc) => ({
+	// 		...doc.data(),
+	// 	}));
+	// 	setProjects(newData);
+	// };
 
 	let genre_options = [];
 	let a = Object.entries(genre);
@@ -77,9 +95,11 @@ function Projects() {
 		const newData = querySnapshot.docs.map((doc) => ({
 			...doc.data(),
 		}));
+		console.log(newData);
 		setHasProjects(false);
 		setBtnActive('');
-		setProjects(newData);
+		setGenreValue(null);
+		// setProjects(newData);
 	};
 
 	useEffect(() => {
@@ -120,7 +140,7 @@ function Projects() {
 			<div className='flex justify-between'>
 				<p className='small-title mt-0'>보고싶은 장르를 선택하세요.</p>
 				<button
-					onClick={fetchProject}
+					onClick={() => fetchProject()}
 					className='border-2 rounded-full px-1 py-1 border-green-700 main-hover hover:rotate-180'
 				>
 					<svg
@@ -142,8 +162,9 @@ function Projects() {
 			<div className='overflow-x-scroll w-full flex mt-3 scrollbar-hide'>
 				<SortGenre
 					genre={genre_options}
-					queryGerne={queryGerne}
+					// queryGerne={queryGerne}
 					btnActive={btnActive}
+					setGenreValue={setGenreValue}
 					setBtnActive={setBtnActive}
 				/>
 			</div>
@@ -170,8 +191,11 @@ function Projects() {
 					</div>
 				</>
 			) : (
-				<ProjectList projects={projects} />
+				<ProjectList projects={data} />
+				// <ProjectList className='mb-16' projects={data} />
 			)}
+			<div ref={setTarget} />
+			{noMore && <h2>더이상 불러올 프로젝트가 없어요</h2>}
 		</div>
 	);
 }

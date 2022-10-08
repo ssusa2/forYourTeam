@@ -205,18 +205,6 @@ table {
 		@apply transition duration-300 ease-in-out;
 	}
 }
-/* .active {
-	font-weight: 700;
-	text-align: center;
-}
-
-.active::after {
-	content: '';
-	width: 100%;
-	display: block;
-	border-bottom: 4px solid;
-	margin: 0 0 0 0.5px;
-} */
 
 .team-role > * {
 	margin-right: 4px;

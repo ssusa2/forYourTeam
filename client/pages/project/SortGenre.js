@@ -1,7 +1,13 @@
 /** @format */
 import { useState } from 'react';
 
-function SortGenre({ genre, queryGerne, btnActive, setBtnActive }) {
+function SortGenre({
+	genre,
+	// queryGerne,
+	btnActive,
+	setBtnActive,
+	setGenreValue,
+}) {
 	const toggleActive = (e) => {
 		setBtnActive(e.target.value);
 	};
@@ -18,7 +24,8 @@ function SortGenre({ genre, queryGerne, btnActive, setBtnActive }) {
 						value={value}
 						onClick={(e) => {
 							toggleActive(e);
-							queryGerne(e.target.value);
+							// queryGerne(e.target.value);
+							setGenreValue(e.target.value);
 						}}
 						className={
 							value == btnActive

@@ -11,7 +11,7 @@ import { db } from '../../pages/firebase';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
 
-function Nav({ Preview }) {
+function Nav({ Preview, setPreviewProject, previewProject }) {
 	const router = useRouter();
 	const { route } = router;
 	const { pathname } = router;
@@ -63,20 +63,15 @@ function Nav({ Preview }) {
 		FirebaseAuth.onAuthStateChanged((user) => {
 			if (user) {
 				setIsLoggedIn(true);
-				// router.push('/home');
 				dispatch(setUserName(user.displayName));
 				dispatch(setUserId(user.uid));
 				setUserObj({
 					displayName: user.displayName,
 					uid: user.uid,
 					updateProfile: (args) => user.updateProfile(args),
-					// router.push('/home');
 				});
-				// router.push('/home');
 			} else {
 				setIsLoggedIn(false);
-
-				// router.push('/login');
 			}
 			setInit(true);
 		});
@@ -107,9 +102,23 @@ function Nav({ Preview }) {
 							</Link>
 							{/* Right Menu */}
 							<div className='flex items-center'>
-								<RightMenu color={color}>Project</RightMenu>
+								<RightMenu
+									onClick={() => setPreviewProject(true)}
+									color={
+										previewProject ? Preview?.info?.project_info.color : 'black'
+									}
+								>
+									Project
+								</RightMenu>
 
-								<RightMenu color={color}>Team</RightMenu>
+								<RightMenu
+									onClick={() => setPreviewProject(false)}
+									color={
+										previewProject ? 'black' : Preview?.info?.project_info.color
+									}
+								>
+									Team
+								</RightMenu>
 							</div>
 						</div>
 					</div>
@@ -162,6 +171,7 @@ function Nav({ Preview }) {
 								) : (
 									''
 								)}
+								{/*  */}
 								{/* 지금은 항상 로그인 되어있으면! 근데 프로젝트 페이지 내부에서는 안보이게 */}
 								{isProjectPage == isTeamPage ? (
 									isLoggedIn ? (
