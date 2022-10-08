@@ -49,7 +49,7 @@ function SelectGenre({ setInfo, info, genreRef }) {
 			<Select
 				value={genre_options[matchNumber]}
 				// ref={(el) => (genreRef.current[2] = el)}
-
+				ref={(elem) => (genreRef.current[2] = elem)}
 				className='mt-1'
 				placeholder='장르를 선택하세요'
 				onChange={(e) => {

@@ -80,17 +80,15 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 							onChange={(e) => {
-								saving ||
-									(shallowSaving &&
-										handleFormChange(
-											idx,
-											e,
-											member,
-											setMember,
-											folder,
-											projectName,
-											userID
-										));
+								handleFormChange(
+									idx,
+									e,
+									member,
+									setMember,
+									folder,
+									projectName,
+									userID
+								);
 								encodeFileToBase64(e.target.files[0]);
 							}}
 						/>

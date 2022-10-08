@@ -136,8 +136,9 @@ function introduce() {
 			};
 		});
 
-		if (e?.target.name == '저장') setIsSaving(true);
-		dispatch(setSaving(isSaving));
+		if (e?.target.name == '저장') dispatch(setSaving(true));
+		// setIsSaving(true);
+		// dispatch(setSaving(true));
 	};
 
 	let projectName = info?.project_info?.name;
@@ -180,106 +181,11 @@ function introduce() {
 		previewSetInfo(event);
 	}, [previewOpen]);
 
-	const inutRef = useRef([]);
-	const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
-	const validEmail = info.project_info.email.match(regexp);
-	const validColor = info.project_info.color;
-	const validGenre = info.project_info.genre;
-	const validName = info.project_info.name;
-	const validLogo = info.project_info.logo;
-
-	const [isValid, setIsValid] = useState(false);
-	const handleClick = (e) => {
-		if (!validName) {
-			if (typeof window !== 'undefined') {
-				alert('프로젝트 이름을 입력해주세요.');
-			}
-
-			inutRef.current?.[0]?.focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						name: '',
-					},
-				};
-			});
-		} else if (!validLogo) {
-			if (typeof window !== 'undefined') {
-				alert('프로젝트 로고를 입력해주세요.');
-			}
-			inutRef.current?.[1]?.focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						logo: '',
-					},
-				};
-			});
-		} else if (!validGenre) {
-			if (typeof window !== 'undefined') {
-				alert('프로젝트 장르를 입력해주세요.');
-			}
-			inutRef.current?.[2]?.focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						genre: '',
-					},
-				};
-			});
-		} else if (!validColor) {
-			if (typeof window !== 'undefined') {
-				alert('프로젝트 색상을 선택해주세요.');
-			}
-			inutRef.current?.[3].focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						color: '',
-					},
-				};
-			});
-		} else if (!validEmail) {
-			if (info.project_info.email == '') {
-				if (typeof window !== 'undefined') {
-					alert('E-mail은 필수 입력값입니다.');
-				}
-			} else if (typeof window !== 'undefined') {
-				alert('유효하지 않은 email 입니다.');
-			}
-			inutRef.current?.[4]?.focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						email: '',
-					},
-				};
-			});
-		}
-		validName &&
-			validLogo &&
-			validGenre &&
-			validColor &&
-			validEmail &&
-			(setIsValid(true), addProjectIntro(e));
-	};
-
 	return (
 		<>
 			<Form
 				info={info}
 				setInfo={setInfo}
-				inutRef={inutRef}
 				core={core}
 				setCore={setCore}
 				addCore={addCore}
@@ -291,8 +197,6 @@ function introduce() {
 				fileUrl={fileUrl}
 				setFileUrl={setFileUrl}
 				handleFormChange={handleFormChange}
-				handleClick={handleClick}
-				isValid={isValid}
 				addProjectIntro={addProjectIntro}
 				previewOpen={previewOpen}
 				setPreviewOpen={setPreviewOpen}

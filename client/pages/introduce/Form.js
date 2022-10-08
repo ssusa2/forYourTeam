@@ -5,19 +5,24 @@ import MemberAdd from './MemberAdd';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
 import ImageHolder from './ImageHolder';
-import Image from 'next/image';
-import female from '../../image/female.png';
-import male from '../../image/male.png';
-import { db, storage, storageRef } from '../firebase';
+import { useRouter } from 'next/router';
+import { db, storage } from '../firebase';
 import SelectGenre from './SeletGenre';
 import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import {
+	ref,
+	uploadBytes,
+	listAll,
+	getDownloadURL,
+	deleteObject,
+} from 'firebase/storage';
+
+import {
 	setDoc,
 	deleteDoc,
+	getDoc,
 	doc,
-	listAll,
-	ref,
-	deleteObject,
+	serverTimestamp,
 } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -29,12 +34,10 @@ function Form({
 	// deleteProject,
 	userID,
 	projectName,
-	//
 	setPreviewOpen,
 	previewOpen,
 	info,
 	setInfo,
-	inutRef,
 	core,
 	setCore,
 	handleFormChange,
@@ -46,14 +49,120 @@ function Form({
 	addMember,
 	fileUrl,
 	setFileUrl,
-	handleClick,
-	isValid,
 	addProjectIntro,
 	checkLines,
 }) {
-	const dispatch = useDispatch();
-	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+	const router = useRouter();
+	const inutRef = useRef([]);
+	const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
+	const validEmail = info.project_info.email.match(regexp);
+	const validColor = info.project_info.color;
+	const validGenre = info.project_info.genre;
+	const validName = info.project_info.name;
+	const validLogo = info.project_info.logo;
 
+	const handleClick = (e) => {
+		if (!validName) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 이름을 입력해주세요.');
+			}
+
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						name: '',
+					},
+				};
+			});
+			inutRef.current?.[0]?.focus();
+		} else if (!validLogo) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 로고를 입력해주세요.');
+			}
+			inutRef.current?.[1]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						logo: '',
+					},
+				};
+			});
+		} else if (!validGenre) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 장르를 입력해주세요.');
+			}
+			inutRef.current?.[2]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						genre: '',
+					},
+				};
+			});
+		} else if (!validColor) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 색상을 선택해주세요.');
+			}
+			inutRef.current?.[3].focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						color: '',
+					},
+				};
+			});
+		} else if (!validEmail) {
+			if (info.project_info.email == '') {
+				if (typeof window !== 'undefined') {
+					alert('E-mail은 필수 입력값입니다.');
+				}
+			} else if (typeof window !== 'undefined') {
+				alert('유효하지 않은 email 입니다.');
+			}
+			inutRef.current?.[4]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						email: '',
+					},
+				};
+			});
+		} else if (!validColor) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 색상을 선택해주세요.');
+			}
+			inutRef.current?.[3].focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_info: {
+						...info.project_info,
+						color: '',
+					},
+				};
+			});
+		}
+		validName &&
+			validLogo &&
+			validGenre &&
+			validColor &&
+			validEmail &&
+			addProjectIntro(e);
+	};
+
+	const dispatch = useDispatch();
+
+	// console.log(projectRef);
 	// 프로젝트 삭제
 	const deleteProject = async (path) => {
 		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
@@ -69,7 +178,7 @@ function Form({
 
 	// 이미지 저장소 안에 있는 폴더 정보도 삭제
 	const deleteStorageFolder = (path) => {
-		const fileRef = ref(db, 'project', path);
+		const fileRef = ref(storage, path);
 		listAll(fileRef)
 			.then((res) => {
 				res.items.forEach((itemRef) => {
@@ -84,6 +193,7 @@ function Form({
 			});
 	};
 
+	console.log(`${userID}/${projectName}`);
 	// 폴더 안애 있는 아이템 재귀삭제
 	const deleteFile = (pathToFile, fileName) => {
 		const itemRef = ref(storage, `${pathToFile}/${fileName}`);
@@ -95,6 +205,7 @@ function Form({
 				console.log('안됨', error);
 			});
 	};
+
 	return (
 		<>
 			<div className='my-container relative max-w-6xl'>
@@ -158,7 +269,12 @@ function Form({
 							</span>
 							<input
 								value={info.project_info.name || ''}
-								// ref={(el) => (inutRef?.current[0] = el)}
+								// ref={(el) => console.log(el)}
+								// ref={(el) => inutRef?.current[0] = el}
+								// ref={(el) => inutRef?.current = el}
+								// ref={inutRef}
+								ref={(elem) => (inutRef.current[0] = elem)}
+								// ref={(el) => inutRef.current?.[0]?.focus()}
 								maxLength={30}
 								placeholder='프로젝트의 이름을 입력해주세요.'
 								onChange={(e) => {
@@ -185,6 +301,7 @@ function Form({
 									<p className='mt-3'>로고</p>
 									<input
 										value={info.project_info.logo || ''}
+										ref={(elem) => (inutRef.current[1] = elem)}
 										// ref={(el) => (inutRef?.current[1] = el)}
 										placeholder='로고'
 										onChange={(e) => {
@@ -290,6 +407,7 @@ function Form({
 								/>
 								<input
 									value={info?.project_info.color}
+									ref={(elem) => (inutRef.current[3] = elem)}
 									className='base-form'
 									// ref={(el) => (inutRef?.current[3] = el)}
 									placeholder={
@@ -298,26 +416,7 @@ function Form({
 											: '왼쪽에 색상 칩을 클릭해 색상을 선택하세요.'
 									}
 								/>
-
-								{/* <ChromePicker
-									defaultView={'hex'}
-									style={{ width: '100%' }}
-									color={info.project_info.color}
-									onChange={(color) => handleColorChange(color.hex)}
-								/> */}
 							</div>
-							{/* <input
-								value={color}
-								onChange={(e) => handleColorChange(e.target.value)}
-							/> */}
-							{/* <input
-								placeholder='project-color'
-								value={info.project_info.color}
-								onChange={(e) => handleColorChange}
-								type='text'
-
-								className=' base-form'
-							/> */}
 						</div>
 						<div className='b-divide'>
 							<label className='small-title  essential'>
@@ -325,7 +424,7 @@ function Form({
 							</label>
 							<input
 								value={info.project_info.email || ''}
-								// ref={(el) => (inutRef?.current[4] = el)}
+								ref={(elem) => (inutRef.current[4] = elem)}
 								placeholder='프로젝트의 대표 E-mail를 입력해주세요.'
 								onChange={(e) => {
 									setInfo((prev) => {
@@ -592,11 +691,12 @@ function Form({
 						>
 							미리보기
 						</button>
-						{deleteProject && (
+						{router.route == '/introduce/[Intro]' && (
 							<button
 								onClick={() => {
 									console.log('click');
 									deleteProject(`${userID}/${projectName}`);
+									// deleteProject(`${userID}/${projectName}`);
 								}}
 								type='button'
 								className='w-full rounded-lg my-6 border border-red-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-red-700 transition duration-300 ease-in-out hover:text-white text-red-700 sm:ml-3 sm:w-auto sm:text-base	'
@@ -620,5 +720,4 @@ function Form({
 		</>
 	);
 }
-
 export default Form;

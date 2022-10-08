@@ -1,22 +1,7 @@
 /** @format */
 
-import {
-	collection,
-	addDoc,
-	doc,
-	setDoc,
-	snapshotEqual,
-} from 'firebase/firestore/lite';
 import { db, storage, storageRef } from '../pages/firebase';
-import { v4 as uuidv4 } from 'uuid';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-	ref,
-	uploadBytes,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const handleFormChange = async (
 	index,

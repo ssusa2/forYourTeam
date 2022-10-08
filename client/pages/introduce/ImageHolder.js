@@ -122,7 +122,7 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 					onChange={(e) => {
 						encodeFileToBase64(e.target.files[0]);
-						(saving || shallowSaving) && ConvertUrl(e.target.files[0]);
+						ConvertUrl(e.target.files[0]);
 					}}
 				/>
 			</div>

@@ -123,17 +123,15 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 						onChange={(e) => {
 							encodeFileToBase64(e.target.files[0]);
-							saving ||
-								(shallowSaving &&
-									handleFormChange(
-										idx,
-										e,
-										core,
-										setCore,
-										folder,
-										projectName,
-										userID
-									));
+							handleFormChange(
+								idx,
+								e,
+								core,
+								setCore,
+								folder,
+								projectName,
+								userID
+							);
 						}}
 					/>
 				</div>
