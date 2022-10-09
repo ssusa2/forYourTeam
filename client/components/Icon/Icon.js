@@ -50,7 +50,7 @@ export const Lock = () => {
 	);
 };
 
-export const Arrow = ({ showProjectInfo }) => {
+export const UnLock = () => {
 	return (
 		<svg
 			xmlns='http://www.w3.org/2000/svg'
@@ -58,14 +58,50 @@ export const Arrow = ({ showProjectInfo }) => {
 			viewBox='0 0 24 24'
 			strokeWidth={2}
 			stroke='currentColor'
-			className={`${
-				showProjectInfo ? 'rotate-180' : ''
-			} h-4 w-4 transition-transform`}
+			className='w-4 h-4'
+		>
+			<path
+				strokeLinecap='round'
+				strokeLinejoin='round'
+				d='M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z'
+			/>
+		</svg>
+	);
+};
+
+export const Arrow = ({ showInfo }) => {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			fill='none'
+			viewBox='0 0 24 24'
+			strokeWidth={2}
+			stroke='currentColor'
+			className={`${showInfo ? 'rotate-180' : ''} h-4 w-4 transition-transform`}
 		>
 			<path
 				strokeLinecap='round'
 				strokeLinejoin='round'
 				d='M19.5 8.25l-7.5 7.5-7.5-7.5'
+			/>
+		</svg>
+	);
+};
+
+export const PageTemplateArrow = () => {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			fill='none'
+			viewBox='0 0 24 24'
+			strokeWidth={1.5}
+			stroke='currentColor'
+			className='w-7 h-7 stroke-slate-500 hover:stroke-green-700'
+		>
+			<path
+				strokeLinecap='round'
+				strokeLinejoin='round'
+				d='M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25'
 			/>
 		</svg>
 	);

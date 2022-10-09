@@ -30,7 +30,7 @@ function Projects() {
 	const [btnActive, setBtnActive] = useState('');
 	const userInfo = useSelector(({ user }) => user);
 	const [target, setTarget] = useState(null);
-	const Number = 2;
+	const Number = 12;
 	const [GenreValue, setGenreValue] = useState(null);
 	const { data, loading, loadingMore, noMore } = usePagination(
 		'project',

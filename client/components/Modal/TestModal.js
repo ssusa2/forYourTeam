@@ -21,6 +21,8 @@ export default function TestModal({ setPreviewOpen }) {
 
 	const cancelButtonRef = useRef(null);
 
+	console.log('Preview', Preview);
+
 	return (
 		<Transition.Root show={open} as={Fragment}>
 			<Dialog

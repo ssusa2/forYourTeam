@@ -21,7 +21,7 @@ import 'swiper/css/navigation';
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
-function teamHome() {
+function teamHome({ Preview }) {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const { Intro } = router.query;
@@ -48,13 +48,22 @@ function teamHome() {
 		dispatch(setAll(teams.info?.project_info));
 	}, [teams]);
 
-	const { info, teamInfo } = teams;
+	let { info, teamInfo } = teams;
 
+	if (Preview) {
+		teamInfo = Preview.teamInfo;
+	}
 	const OneMember = teamInfo?.member.length;
 
 	return (
 		<>
-			<div className='my-container max-w-6xl'>
+			<div
+				className={
+					router.route == '/introduce'
+						? 'mt-16 px-14 pt-40 xl:pt-60 mx-auto'
+						: 'my-container max-w-6xl'
+				}
+			>
 				<section>
 					<h2 className='big-title'>{teamInfo?.intro.name}</h2>
 					{teamInfo?.intro.image ? (
@@ -84,43 +93,45 @@ function teamHome() {
 						dangerouslySetInnerHTML={replaceBrTag(teamInfo?.intro.culture)}
 					/>
 				</section>
-				<section className='mt-40'>
-					<span className='small-title mb-1'>우리 팀을 소개합니다.</span>
-					<div className='  flex justify-between '>
-						{teamInfo?.member.length == 1 ? (
-							// 한 명일때
-							<Members OneMember={OneMember} members={teamInfo?.member[0]} />
-						) : (
-							// 여러 명일때
-							<Swiper
-								slidesPerView={1}
-								spaceBetween={30}
-								breakpoints={{
-									640: {
-										slidesPerView: 1,
-									},
-									768: {
-										slidesPerView: 1,
-									},
-									1024: {
-										slidesPerView: 2,
-									},
-								}}
-								pagination={{
-									clickable: true,
-								}}
-								modules={[Autoplay, Pagination]}
-								className='mySwiper'
-							>
-								{teamInfo?.member.map((el) => (
-									<SwiperSlide className='mb-32'>
-										<Members members={el} OneMember={OneMember} />
-									</SwiperSlide>
-								))}
-							</Swiper>
-						)}
-					</div>
-				</section>
+				{teamInfo?.member[0].name && (
+					<section className='mt-40'>
+						<span className='small-title mb-1'>우리 팀을 소개합니다.</span>
+						<div className='  flex justify-between '>
+							{teamInfo?.member.length == 1 ? (
+								// 한 명일때
+								<Members OneMember={OneMember} members={teamInfo?.member[0]} />
+							) : (
+								// 여러 명일때
+								<Swiper
+									slidesPerView={1}
+									spaceBetween={30}
+									breakpoints={{
+										640: {
+											slidesPerView: 1,
+										},
+										768: {
+											slidesPerView: 1,
+										},
+										1024: {
+											slidesPerView: 2,
+										},
+									}}
+									pagination={{
+										clickable: true,
+									}}
+									modules={[Autoplay, Pagination]}
+									className='mySwiper'
+								>
+									{teamInfo?.member.map((el) => (
+										<SwiperSlide className='mb-32'>
+											<Members members={el} OneMember={OneMember} />
+										</SwiperSlide>
+									))}
+								</Swiper>
+							)}
+						</div>
+					</section>
+				)}
 				<div className='section4 mt-44 mb-44 '>
 					{info?.project_page.image ? (
 						<img

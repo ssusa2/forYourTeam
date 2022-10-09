@@ -37,30 +37,41 @@ function MemberAdd({
 	}, [el]);
 
 	const encodeFileToBase64 = (fileBlob) => {
-		const reader = new FileReader();
+		if (fileBlob.size > 3000000) {
+			alert('파일 크기가 너무 큽니다.');
+			return;
+		} else {
+			const reader = new FileReader();
+			reader.readAsDataURL(fileBlob);
 
-		reader.readAsDataURL(fileBlob);
-
-		return new Promise((resolve) => {
-			reader.onload = () => {
-				setImageSrc(reader.result);
-				resolve();
-			};
-		});
+			return new Promise((resolve) => {
+				reader.onload = () => {
+					setImageSrc(reader.result);
+					resolve();
+				};
+			});
+		}
 	};
 
 	return (
 		<>
-			<label className='small-title essential'>팀원 ({idx + 1})</label>
-			<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100  '>
-				<button
-					onClick={(e) => {
-						handleToggle(e, showMember, setShowMember);
-					}}
-					className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
-				>
-					<Arrow showMember={showMember} />
-				</button>
+			<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 relative  '>
+				<div className=' flex justify-between'>
+					{!showMember && (
+						<label className='small-title mt-0 font-medium'>
+							팀원 ({idx + 1}){' '}
+						</label>
+					)}
+					<button
+						onClick={(e) => {
+							handleToggle(e, showMember, setShowMember);
+						}}
+						className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+					>
+						<Arrow showInfo={showMember} />
+					</button>
+				</div>
+
 				{showMember && (
 					<>
 						<div className='block xl:flex'>
@@ -83,6 +94,9 @@ function MemberAdd({
 												<p className='text-slate-500 group-hover:text-white text-sm'>
 													{section}
 												</p>
+												<span className='font-norma text-sm text-slate-500	 '>
+													(3MB 이하)
+												</span>
 											</>
 										)}
 									</div>
@@ -97,16 +111,16 @@ file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 									onChange={(e) => {
-										handleFormChange(
-											idx,
-											e,
-											member,
-											setMember,
-											folder,
-											projectName,
-											userID
-										);
-										encodeFileToBase64(e.target.files[0]);
+										encodeFileToBase64(e.target.files[0]) &&
+											handleFormChange(
+												idx,
+												e,
+												member,
+												setMember,
+												folder,
+												projectName,
+												userID
+											);
 									}}
 								/>
 								<div className='w-full '>
@@ -114,7 +128,7 @@ hover:file:bg-violet-100'
 										기본이미지
 									</label>{' '}
 									<div className='flex'>
-										<label className='relative w-[50px] h-[50px] '>
+										<label className='relative w-[100px] h-[100px] mr-3 cursor-pointer '>
 											<input
 												onChange={(e) => {
 													handleFormChange(idx, e, member, setMember, folder);
@@ -132,7 +146,7 @@ hover:file:bg-violet-100'
 											/>
 										</label>
 
-										<label className='w-[50px] h-[50px] relative'>
+										<label className='w-[100px] h-[100px] relative cursor-pointer'>
 											<input
 												onChange={(e) => {
 													handleFormChange(idx, e, member, setMember, folder);
@@ -156,7 +170,9 @@ hover:file:bg-violet-100'
 							<div className='w-full mt-4 xl:ml-4 xl:mt-0'>
 								<div className='flex justify-between b-divide '>
 									<div className='w-1/2'>
-										<label className='small-title mt-0 essential'>이름</label>
+										<label className='small-title mt-0 essential'>
+											이름({idx + 1})
+										</label>
 										<input
 											value={el.name}
 											placeholder='이름'
@@ -179,7 +195,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 										/>
 									</div>
 									<div className='w-1/2'>
-										<label className='small-title mt-0 essential'>직책</label>{' '}
+										<label className='small-title mt-0 essential'>
+											직책({idx + 1})
+										</label>{' '}
 										<input
 											maxLength={30}
 											value={el.role}
@@ -200,7 +218,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 									</div>
 								</div>
 								<div className='b-divide'>
-									<label className='small-title essential'>소개말</label>{' '}
+									<label className='small-title essential'>
+										소개말({idx + 1})
+									</label>{' '}
 									<textarea
 										maxLength={160}
 										rows={4}
@@ -220,7 +240,9 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 '
 									/>
 								</div>
-								<label className='small-title essential'>Github</label>{' '}
+								<label className='small-title essential'>
+									Github({idx + 1})
+								</label>{' '}
 								<input
 									value={el.github}
 									placeholder='ex)https://github.com/ForMyTeam'

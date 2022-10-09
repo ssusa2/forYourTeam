@@ -8,6 +8,7 @@ import user from './user';
 import projectInfo from './projectInfo';
 import Saving from './Saving';
 import previewTest from './previewTest';
+import Lock from './Lock';
 
 const reducer = (state, action) => {
 	if (action.type === HYDRATE) {
@@ -22,6 +23,7 @@ const reducer = (state, action) => {
 		projectInfo,
 		Saving,
 		previewTest,
+		Lock,
 		// 여기에 추가
 	})(state, action);
 };

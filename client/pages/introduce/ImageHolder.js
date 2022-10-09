@@ -40,25 +40,27 @@ function ImageHolder({
 	}, [defaultImg]);
 
 	const encodeFileToBase64 = async (fileBlob) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(fileBlob);
+		if (fileBlob.size > 3000000) {
+			alert('파일 크기가 너무 큽니다.');
+			return;
+		} else {
+			const reader = new FileReader();
+			reader.readAsDataURL(fileBlob);
 
-		return new Promise((resolve) => {
-			reader.onload = () => {
-				setImageSrc(reader.result);
-				resolve();
-			};
-		});
+			return new Promise((resolve) => {
+				reader.onload = () => {
+					setImageSrc(reader.result);
+					resolve();
+				};
+			});
+			ConvertUrl(fileBlob);
+		}
 	};
 
 	const ConvertUrl = async (fileBlob) => {
 		const metadata = {
 			contentType: 'image/jpeg',
 		};
-		if (fileBlob.size > 2097152) {
-			alert('파일 크기가 너무 큽니다.');
-		}
-
 		if (fileBlob != '') {
 			try {
 				const fileRef = ref(
@@ -75,6 +77,7 @@ function ImageHolder({
 				console.log(err);
 			}
 		}
+
 		setState((prev) => {
 			return {
 				...prev,
@@ -111,7 +114,6 @@ function ImageHolder({
 					</div>
 				}
 				<input
-					// value={de}
 					type='file'
 					accept='image/*'
 					className='block text-sm text-slate-500
@@ -122,7 +124,6 @@ file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
 					onChange={(e) => {
 						encodeFileToBase64(e.target.files[0]);
-						ConvertUrl(e.target.files[0]);
 					}}
 				/>
 			</div>

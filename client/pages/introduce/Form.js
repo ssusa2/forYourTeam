@@ -16,7 +16,7 @@ import {
 	getDownloadURL,
 	deleteObject,
 } from 'firebase/storage';
-
+import Toggle from './LockToggle';
 import {
 	setDoc,
 	deleteDoc,
@@ -28,11 +28,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { handleToggle } from '../../src/util/accordion';
 
 import TestModal from '../../components/Modal/TestModal';
-import { Arrow } from '../../components/Icon/Icon';
+import {
+	Arrow,
+	PageTemplateArrow,
+	Lock,
+	UnLock,
+} from '../../components/Icon/Icon';
 
 function Form({
 	//업데이트 시, 필요
 	lastTouch,
+	setEnabled,
+	enabled,
 	// deleteProject,
 	userID,
 	projectName,
@@ -55,6 +62,7 @@ function Form({
 	checkLines,
 }) {
 	const router = useRouter();
+	const dispatch = useDispatch();
 	const inutRef = useRef([]);
 	const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
 	const validEmail = info.project_info.email.match(regexp);
@@ -62,6 +70,7 @@ function Form({
 	const validGenre = info.project_info.genre;
 	const validName = info.project_info.name;
 	const validLogo = info.project_info.logo;
+	const validTeamName = teamInfo.intro.name;
 
 	const handleClick = (e) => {
 		if (!validName) {
@@ -153,16 +162,30 @@ function Form({
 					},
 				};
 			});
+		} else if (!validTeamName) {
+			if (typeof window !== 'undefined') {
+				alert('프로젝트 팀 이름을 입력해주세요.');
+			}
+			inutRef.current?.[4].focus();
+			setTeamInfo((prev) => {
+				return {
+					...prev,
+					intro: {
+						...teamInfo.intro,
+						name: '',
+					},
+				};
+			});
 		}
 		validName &&
 			validLogo &&
 			validGenre &&
 			validColor &&
 			validEmail &&
+			validTeamName &&
 			addProjectIntro(e);
+		handleCopyClipBoard(`http://localhost:3000/project/${projectName}`);
 	};
-
-	const dispatch = useDispatch();
 
 	// console.log(projectRef);
 	// 프로젝트 삭제
@@ -195,7 +218,6 @@ function Form({
 			});
 	};
 
-	console.log(`${userID}/${projectName}`);
 	// 폴더 안애 있는 아이템 재귀삭제
 	const deleteFile = (pathToFile, fileName) => {
 		const itemRef = ref(storage, `${pathToFile}/${fileName}`);
@@ -209,8 +231,22 @@ function Form({
 	};
 	const [showProjectInfo, setShowProjectInfo] = useState(true);
 	const [showProjectPage, setShowProjectPage] = useState(true);
-
 	const [showTeam, setShowTeam] = useState(true);
+
+	const handleCopyClipBoard = async (url) => {
+		// 흐음 1.
+		if (navigator.clipboard) {
+			// (IE는 사용 못하고, 크롬은 66버전 이상일때 사용 가능합니다.)
+			await navigator.clipboard
+				.writeText(url)
+				.then(() => {
+					// alert('클립보드에 복사되었습니다.');
+				})
+				.catch(() => {
+					// alert('복사를 다시 시도해주세요.');
+				});
+		}
+	};
 
 	return (
 		<>
@@ -261,18 +297,28 @@ function Form({
 						<br />
 						해당 정보는 페이지의 헤더와 푸터에서 사용됩니다.
 					</p>
-					<p className='font-semibold text-slate-700 text-sm'>
-						마지막 수정날짜: {lastTouch}
-					</p>
+					{lastTouch && (
+						<p className='font-semibold text-slate-700 text-sm'>
+							마지막 수정날짜: {lastTouch}
+						</p>
+					)}
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 relative '>
-						<button
-							onClick={(e) => {
-								handleToggle(e, showProjectInfo, setShowProjectInfo);
-							}}
-							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
-						>
-							<Arrow showProjectInfo={showProjectInfo} />
-						</button>
+						<div className=' flex justify-between'>
+							{!showProjectInfo && (
+								<label className='small-title mt-0 font-medium'>
+									프로젝트의 기본 정보를 입력해보세요.
+								</label>
+							)}
+							<button
+								onClick={(e) => {
+									handleToggle(e, showProjectInfo, setShowProjectInfo);
+								}}
+								className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+							>
+								<Arrow showInfo={showProjectInfo} />
+							</button>
+						</div>
+
 						{showProjectInfo && (
 							<>
 								<div className='b-divide'>
@@ -285,12 +331,7 @@ function Form({
 									</span>
 									<input
 										value={info.project_info.name || ''}
-										// ref={(el) => console.log(el)}
-										// ref={(el) => inutRef?.current[0] = el}
-										// ref={(el) => inutRef?.current = el}
-										// ref={inutRef}
 										ref={(elem) => (inutRef.current[0] = elem)}
-										// ref={(el) => inutRef.current?.[0]?.focus()}
 										maxLength={30}
 										placeholder='프로젝트의 이름을 입력해주세요.'
 										onChange={(e) => {
@@ -318,7 +359,6 @@ function Form({
 											<input
 												value={info.project_info.logo || ''}
 												ref={(elem) => (inutRef.current[1] = elem)}
-												// ref={(el) => (inutRef?.current[1] = el)}
 												placeholder='로고'
 												onChange={(e) => {
 													setInfo((prev) => {
@@ -336,7 +376,12 @@ function Form({
 											/>
 										</div>
 										<div className='block xl:w-1/2'>
-											<p className='mt-3'>이미지</p>
+											<div className='flex mt-3 items-center'>
+												<p>이미지 </p>
+												<span className='font-norma text-sm text-slate-500	 '>
+													(3MB 이하)
+												</span>
+											</div>
 											<ImageHolder
 												defaultImg={info.project_info.logo_image}
 												projectName={info?.project_info.name}
@@ -349,7 +394,7 @@ function Form({
 										</div>
 									</div>
 								</div>
-								<div className='b-divide'>
+								{/* <div className='b-divide'>
 									<label className='small-title  essential'>
 										프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
 									</label>
@@ -365,9 +410,9 @@ function Form({
 											section={'project-favicon'}
 										/>
 									</div>
-								</div>
+								</div> */}
 								<div className='b-divide'>
-									<label className='small-title'>
+									<label className='small-title  text-xl font-medium text-slate-800'>
 										프로젝트 웹 사이트의 주소를 입력해주세요.
 									</label>
 									<span className='font-normal text-slate-500	 '>
@@ -393,7 +438,7 @@ function Form({
 									/>
 								</div>
 								<div className='b-divide'>
-									<label className='small-title  essential'>
+									<label className='small-title essential'>
 										프로젝트의 장르를 선택하세요.
 									</label>
 									<SelectGenre
@@ -487,17 +532,40 @@ function Form({
 					</section>
 					{/*  */}
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
-					<h3 className='middle-title'>Project 소개 페이지</h3>
-					<p>여러분의 프로젝트를 소개하는 페이지입니다.</p>
+					<div className='flex items-end'>
+						<h3 className='middle-title mr-1'>Project 소개 페이지</h3>
+						<Link href='/project/project-name'>
+							<a
+								target='_blank'
+								className='px-1 pb-1 rounded-xl hover:bg-slate-100'
+							>
+								<PageTemplateArrow />
+							</a>
+						</Link>
+					</div>
+					<p>
+						여러분의 프로젝트를 소개하는 페이지입니다.
+						<br />
+						프로젝트를 대표하는 문구와 이미지, 주요 기능을 입력하여 프로젝트를
+						소개해보세요.
+					</p>
+
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
-						<button
-							onClick={(e) => {
-								handleToggle(e, showProjectPage, setShowProjectPage);
-							}}
-							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
-						>
-							<Arrow showProjectPage={showProjectPage} />
-						</button>
+						<div className=' flex justify-between'>
+							{!showProjectPage && (
+								<label className='small-title mt-0 font-medium'>
+									프로젝트를 소개하는 글을 작성해보세요.
+								</label>
+							)}
+							<button
+								onClick={(e) => {
+									handleToggle(e, showProjectPage, setShowProjectPage);
+								}}
+								className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+							>
+								<Arrow showInfo={showProjectPage} />
+							</button>
+						</div>
 						{showProjectPage && (
 							<>
 								<div className='b-divide'>
@@ -527,45 +595,52 @@ function Form({
 								</div>
 								<div className='b-divide'>
 									<label className='small-title font-medium'>
-										프로젝트를 대표하는 사진을 업로드해주세요.
+										프로젝트를 소개하는 글을 2~4줄 입력해주세요.
 									</label>
-									<ImageHolder
-										defaultImg={info.project_page.image}
-										projectName={info?.project_info.name}
-										state={info}
-										setState={setInfo}
-										name={'image'}
-										object={'project_page'}
-										section={'project-main-image'}
+									<textarea
+										value={info.project_page.description || ''}
+										rows={4}
+										onKeyUp={(e) => checkLines(e, 4)}
+										placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
+										onChange={(e) => {
+											setInfo((prev) => {
+												return {
+													...prev,
+													project_page: {
+														...info.project_page,
+														description: e.target.value,
+													},
+												};
+											});
+										}}
+										type='text'
+										multiple='multiple'
+										className=' base-form'
 									/>
 								</div>
-								<label className='small-title font-medium'>
-									프로젝트를 소개하는 글을 2~4줄 입력해주세요.
-								</label>
-								<textarea
-									value={info.project_page.description || ''}
-									rows={4}
-									onKeyUp={(e) => checkLines(e, 4)}
-									placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
-									onChange={(e) => {
-										setInfo((prev) => {
-											return {
-												...prev,
-												project_page: {
-													...info.project_page,
-													description: e.target.value,
-												},
-											};
-										});
-									}}
-									type='text'
-									multiple='multiple'
-									className=' base-form'
+
+								<div className='flex mt-3 items-center'>
+									<label className='small-title mt-0  font-medium'>
+										프로젝트를 대표하는 사진을 업로드해주세요.
+									</label>
+									<span className='font-norma text-sm text-slate-500	 '>
+										(3MB 이하)
+									</span>
+								</div>
+								<ImageHolder
+									defaultImg={info.project_page.image}
+									projectName={info?.project_info.name}
+									state={info}
+									setState={setInfo}
+									name={'image'}
+									object={'project_page'}
+									section={'project-main-image'}
 								/>
 							</>
 						)}
 					</section>
-
+					<p className='small-title mt-8'>프로젝트의 주요 기능 소개</p>
+					<p>프로젝트의 주요 기능을 소개해보세요.</p>
 					{core?.map((el, idx) => {
 						return (
 							<>
@@ -593,24 +668,48 @@ function Form({
 					</div>
 
 					<div className='my-16 sm:my-32 h-px bg-slate-300'></div>
-					<h3 className='middle-title'>Team 소개 페이지</h3>
-					<p>프로젝트의 팀 문화와 팀원들을 소개하세요.</p>
+					<div className='flex items-end'>
+						<h3 className='middle-title mr-1'>Team 소개 페이지</h3>
+						<Link href='/team/project-name'>
+							<a
+								target='_blank'
+								className='px-1 pb-1 rounded-xl hover:bg-slate-100'
+							>
+								<PageTemplateArrow />
+							</a>
+						</Link>
+					</div>
+					<p>
+						프로젝트의 팀 문화와 팀원들을 소개하는 페이지입니다.
+						<br />
+						팀을 대표하는 문구와 이미지, 팀원들의 정보를 입력하여 팀을
+						소개해보세요.
+					</p>
 					<section className='mb-4 mt-4 p-4 rounded-lg font-semibold bg-slate-100 '>
-						<button
-							onClick={(e) => {
-								handleToggle(e, showTeam, setShowTeam);
-							}}
-							className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
-						>
-							<Arrow showCore={showTeam} />
-						</button>
+						<div className=' flex justify-between'>
+							{!showTeam && (
+								<label className='small-title mt-0 font-medium'>
+									팀을 소개해보세요.
+								</label>
+							)}
+							<button
+								onClick={(e) => {
+									handleToggle(e, showTeam, setShowTeam);
+								}}
+								className='absolute right-4 cursor-pointer hover:main-hover rounded-full p-1'
+							>
+								<Arrow showInfo={showTeam} />
+							</button>
+						</div>
+
 						{showTeam && (
 							<>
 								<div className='b-divide'>
-									<label className='small-title mt-0 font-medium'>
+									<label className='small-title essential mt-0 font-medium'>
 										팀 이름을 입력해주세요.
 									</label>
 									<input
+										ref={(elem) => (inutRef.current[4] = elem)}
 										maxLength={25}
 										value={teamInfo.intro.name || ''}
 										placeholder='팀 이름을 입력해주세요.'
@@ -679,9 +778,14 @@ function Form({
 										className=' base-form'
 									/>
 								</div>
-								<label className='small-title font-medium'>
-									팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
-								</label>
+								<div className='flex items-center'>
+									<label className='small-title mt-0 font-medium'>
+										팀의 단체 사진이나 팀을 대표하는 사진을 업로드해주세요.
+									</label>
+									<span className='font-norma text-sm text-slate-500	 '>
+										(3MB 이하)
+									</span>
+								</div>
 								<ImageHolder
 									defaultImg={teamInfo.intro.image}
 									projectName={info?.project_info.name}
@@ -695,8 +799,8 @@ function Form({
 						)}
 					</section>
 					{/*  */}
-					<h3 className='small-title '>팀원 소개</h3>
-					<p>팀원를 소개해보세요.</p>
+					<h3 className='small-title mt-8 '>팀원 소개</h3>
+					<p>팀원을 소개해보세요.</p>
 					{member?.map((el, idx) => {
 						return (
 							<MemberAdd
@@ -716,18 +820,21 @@ function Form({
 						);
 					})}
 					<div className='flex justify-end '>
-						<button onClick={addMember} className='main-button'>
+						<button onClick={addMember} className='main-button '>
 							팀원 추가하기 +
 						</button>
 					</div>
-					<div className='bg-white shadow-inner w-full flex justify-end fixed z-50 right-0 bottom-0'>
+					<div className=' bg-white shadow-inner w-full flex justify-end fixed z-50 right-0 bottom-0'>
+						<div>
+							<Toggle setEnabled={setEnabled} enabled={enabled} />
+						</div>
 						<button
 							onClick={() => {
 								addProjectIntro();
 								dispatch(setShallowSaving(true));
 							}}
 							type='button'
-							className=' w-full my-6  rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700  sm:w-auto sm:text-base	'
+							className=' form-button  '
 						>
 							임시저장
 						</button>
@@ -736,7 +843,7 @@ function Form({
 								setPreviewOpen(true);
 							}}
 							type='button'
-							className=' w-full my-6 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-green-700 shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
+							className='	form-button '
 						>
 							미리보기
 						</button>
@@ -744,7 +851,7 @@ function Form({
 							<button
 								onClick={() => deleteProject(`${userID}/${projectName}`)}
 								type='button'
-								className='w-full rounded-lg my-6 border border-red-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-red-700 transition duration-300 ease-in-out hover:text-white text-red-700 sm:ml-3 sm:w-auto sm:text-base	'
+								className='form-button text-red-700 hover:bg-red-700 hover:text-white border-red-700'
 							>
 								삭제
 							</button>
@@ -755,7 +862,7 @@ function Form({
 								handleClick(e);
 							}}
 							type='button'
-							className='w-full my-6 mr-16 bg-green-700 rounded-lg border border-green-700 px-4 py-2 text-xl	font-semibold	  text-white shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 hover:bg-green-800 text-white sm:ml-3 sm:w-auto sm:text-base	'
+							className='form-button bg-green-700 text-white hover:bg-green-800  mr-16'
 						>
 							저장
 						</button>

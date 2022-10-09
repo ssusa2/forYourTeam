@@ -10,9 +10,12 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { setAll } from '../../src/store/modules/projectInfo';
 import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import Form from './Form';
+import useCopyClipBoard from '../../hooks/useCopyClipBoard';
+import Toggle from './LockToggle';
 
 function introduce() {
 	const router = useRouter();
+	const { asPath } = useRouter();
 	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const userInfo = useSelector(({ user }) => user.uid);
@@ -21,7 +24,9 @@ function introduce() {
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
-
+	const [isCopy, onCopy] = useCopyClipBoard();
+	const isLock = useSelector(({ Lock }) => Lock.Lock);
+	console.log('isLock', isLock);
 	const [info, setInfo] = useState({
 		project_info: {
 			name: '',
@@ -101,9 +106,8 @@ function introduce() {
 			title: '',
 			description: '',
 			image: '',
-			writable: true,
 		};
-		setCore([...core, { ...newCore }]);
+		setCore([...core, [newCore]]);
 	};
 
 	const addMember = (e) => {
@@ -119,6 +123,7 @@ function introduce() {
 	};
 
 	const addProjectIntro = (e) => {
+		console.log('123');
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -136,15 +141,17 @@ function introduce() {
 			};
 		});
 
-		if (e?.target.name == '저장') dispatch(setSaving(true));
-		// setIsSaving(true);
-		// dispatch(setSaving(true));
+		if (e?.target.name == '저장') {
+			dispatch(setSaving(true));
+			dispatch(setShallowSaving(false));
+		}
 	};
 
 	let projectName = info?.project_info?.name;
 
 	useEffect(() => {
 		async function fetchData() {
+			console.log('234');
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
 					uid: userInfo,
@@ -154,13 +161,15 @@ function introduce() {
 					teamInfo,
 					genre: info.project_info.genre,
 					shallowSaving,
+					isLock,
 				});
 				dispatch(setSaving(false));
 				if (shallowSaving) {
 					alert('임시저장 완료!');
 				} else {
 					alert('저장완료!');
-					router.push('/project');
+
+					// router.push('/project');
 				}
 				window.open(`/project/${projectName}`); // 새창 띄우는 건 이게 나은듯
 			} catch (err) {
@@ -181,10 +190,17 @@ function introduce() {
 		previewSetInfo(event);
 	}, [previewOpen]);
 
+	const [enabled, setEnabled] = useState(false);
+	console.log('adadasdasd', teamInfo.member);
+
 	return (
 		<>
 			<Form
+				enabled={enabled}
+				setEnabled={setEnabled}
 				info={info}
+				userID={userID.uid}
+				projectName={projectName}
 				setInfo={setInfo}
 				core={core}
 				setCore={setCore}
