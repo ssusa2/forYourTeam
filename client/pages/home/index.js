@@ -4,13 +4,18 @@ import Image from 'next/image';
 import homeProject from '../../image/homeProject.png';
 import homeTeam from '../../image/homeTeam.png';
 import { useRouter } from 'next/router';
+import Alert from '../../components/Alert';
+import { useState } from 'react';
 
 function Home() {
 	const router = useRouter();
-	console.log('router', router);
+	const [onClose, setOnClose] = useState(false);
+
 	return (
 		<>
-			<div className='my-container max-w-6xl'>
+			<div className='my-container max-w-6xl relative'>
+				<button onClick={() => setOnClose(true)}>dasda</button>
+				{onClose && <Alert setOnClose={setOnClose} />}
 				{/* Home */}
 				<Main />
 				<div className='flex justify-center'>
@@ -22,6 +27,7 @@ function Home() {
 						+ 내 프로젝트 등록하기
 					</button>
 				</div>
+
 				<div className='my-16 sm:my-32 h-px bg-slate-300	'></div>
 
 				<section className='section'>

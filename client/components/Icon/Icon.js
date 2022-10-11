@@ -106,3 +106,40 @@ export const PageTemplateArrow = () => {
 		</svg>
 	);
 };
+export const Clipboard = () => {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			fill='none'
+			viewBox='0 0 24 24'
+			strokeWidth={2}
+			stroke='currentColor'
+			className='w-6 h-6'
+		>
+			<path
+				strokeLinecap='round'
+				strokeLinejoin='round'
+				d='M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13'
+			/>
+		</svg>
+	);
+};
+
+export const CloseIcon = () => {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			fill='none'
+			viewBox='0 0 24 24'
+			strokeWidth={2}
+			stroke='currentColor'
+			className='w-6 h-6'
+		>
+			<path
+				strokeLinecap='round'
+				strokeLinejoin='round'
+				d='M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+			/>
+		</svg>
+	);
+};
