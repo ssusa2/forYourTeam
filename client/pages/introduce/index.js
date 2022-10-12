@@ -10,21 +10,17 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { setAll } from '../../src/store/modules/projectInfo';
 import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import Form from './Form';
-import useCopyClipBoard from '../../hooks/useCopyClipBoard';
-import Toggle from './LockToggle';
+import Alert from '../../components/Alert';
+import { set } from 'react-hook-form';
 
 function introduce() {
-	const router = useRouter();
-	const { asPath } = useRouter();
 	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const userInfo = useSelector(({ user }) => user.uid);
 	const [fileUrl, setFileUrl] = useState('');
-	const [isSaving, setIsSaving] = useState(false);
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
-	const [isCopy, onCopy] = useCopyClipBoard();
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
 	console.log('isLock', isLock);
 	const [info, setInfo] = useState({
@@ -123,7 +119,6 @@ function introduce() {
 	};
 
 	const addProjectIntro = (e) => {
-		console.log('123');
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -151,7 +146,6 @@ function introduce() {
 
 	useEffect(() => {
 		async function fetchData() {
-			console.log('234');
 			try {
 				const post = await setDoc(doc(db, 'project', `${projectName}`), {
 					uid: userInfo,
@@ -168,6 +162,7 @@ function introduce() {
 					alert('임시저장 완료!');
 				} else {
 					alert('저장완료!');
+					setOnClose(true);
 
 					// router.push('/project');
 				}
@@ -191,10 +186,12 @@ function introduce() {
 	}, [previewOpen]);
 
 	const [enabled, setEnabled] = useState(false);
-	console.log('adadasdasd', teamInfo.member);
+
+	const [onClose, setOnClose] = useState(false);
 
 	return (
 		<>
+			{onClose && <Alert setOnClose={setOnClose} />}
 			<Form
 				enabled={enabled}
 				setEnabled={setEnabled}
@@ -217,6 +214,7 @@ function introduce() {
 				previewOpen={previewOpen}
 				setPreviewOpen={setPreviewOpen}
 				checkLines={checkLines}
+				setOnClose={setOnClose}
 			/>
 		</>
 	);

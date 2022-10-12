@@ -25,7 +25,6 @@ import { usePagination } from '../../hooks/usePagination';
 // 	ssr: false,
 // });
 function Projects() {
-	const [projects, setProjects] = useState([]);
 	const [hasProjects, setHasProjects] = useState(false);
 	const [btnActive, setBtnActive] = useState('');
 	const userInfo = useSelector(({ user }) => user);
@@ -38,8 +37,6 @@ function Projects() {
 		target,
 		GenreValue
 	);
-	console.table(data);
-	console.log(null);
 
 	const router = useRouter();
 
@@ -59,22 +56,6 @@ function Projects() {
 		fetchGenre();
 	}, []);
 
-	// const queryGerne = async (value) => {
-	// 	console.log(value);
-	// 	const genreQuery = query(
-	// 		collectionGroup(db, 'project'),
-	// 		where('genre', '==', value),
-	// 		where('shallowSaving', '==', false)
-	// 	);
-	// 	const querySnapshot = await getDocs(genreQuery);
-	// 	querySnapshot.empty ? setHasProjects(true) : setHasProjects(false);
-
-	// 	const newData = querySnapshot.docs.map((doc) => ({
-	// 		...doc.data(),
-	// 	}));
-	// 	setProjects(newData);
-	// };
-
 	let genre_options = [];
 	let a = Object.entries(genre);
 
@@ -91,15 +72,12 @@ function Projects() {
 			where('shallowSaving', '==', false)
 		);
 		const querySnapshot = await getDocs(project);
-		console.log('querySnapshot', querySnapshot);
 		const newData = querySnapshot.docs.map((doc) => ({
 			...doc.data(),
 		}));
-		console.log(newData);
 		setHasProjects(false);
 		setBtnActive('');
 		setGenreValue(null);
-		// setProjects(newData);
 	};
 
 	useEffect(() => {
@@ -110,7 +88,7 @@ function Projects() {
 		<div className='my-container max-w-6xl '>
 			<div>
 				<h2 className='middle-title'>Projects</h2>
-				<div className='flex justify-between items-end'>
+				<div className='sm:block xl:flex md:flex justify-between items-end'>
 					<p className='my-3'>
 						나의 프로젝트와 다른 프로젝트를 한 공간에.
 						<br /> 여러분의 팀과 프로젝트를 소개해보세요.
@@ -130,7 +108,7 @@ function Projects() {
 								}
 							}
 						}}
-						className='px-4 h-[40px] main-hover main-color font-bold rounded-full border-green-700 border-2'
+						className='w-full sm:w-auto md:w-auto xl:w-auto px-4 h-[40px] main-hover main-color font-bold rounded-full border-green-700 border-2'
 					>
 						+ 프로젝트 추가하기
 					</button>
@@ -159,7 +137,7 @@ function Projects() {
 					</svg>
 				</button>
 			</div>
-			<div className='overflow-x-scroll w-full flex mt-3 scrollbar-hide'>
+			<div className='overflow-x-scroll scrollbar-hide flex mt-3 '>
 				<SortGenre
 					genre={genre_options}
 					// queryGerne={queryGerne}

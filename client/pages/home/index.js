@@ -4,18 +4,13 @@ import Image from 'next/image';
 import homeProject from '../../image/homeProject.png';
 import homeTeam from '../../image/homeTeam.png';
 import { useRouter } from 'next/router';
-import Alert from '../../components/Alert';
-import { useState } from 'react';
 
 function Home() {
 	const router = useRouter();
-	const [onClose, setOnClose] = useState(false);
 
 	return (
 		<>
 			<div className='my-container max-w-6xl relative'>
-				<button onClick={() => setOnClose(true)}>dasda</button>
-				{onClose && <Alert setOnClose={setOnClose} />}
 				{/* Home */}
 				<Main />
 				<div className='flex justify-center'>

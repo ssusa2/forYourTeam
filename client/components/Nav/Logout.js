@@ -81,7 +81,7 @@ function LogOut({ name, profileImg }) {
 											'block px-4 py-2 text-sm font-bold'
 										)}
 									>
-										My Page
+										MyPage
 									</a>
 								)}
 							</Menu.Item>

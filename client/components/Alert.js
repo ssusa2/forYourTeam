@@ -5,7 +5,7 @@ import { Clipboard, CloseIcon } from './Icon/Icon';
 
 function Alert({ onClose, setOnClose }) {
 	return (
-		<div className=' absolute top-40 left-[50%] xl:-ml-[250px] -ml-[125px] w-1/2 bg-green-700 text-white rounded-lg h-auto flex items-center justify-between p-1'>
+		<div className='z-40 fixed top-30 left-[50%] xl:-ml-[350px] -ml-[125px] w-1/2 bg-green-700 text-white rounded-lg h-auto flex items-center justify-between p-1'>
 			<div className='p-2 border-2 border-white rounded-full'>
 				<Clipboard />
 			</div>

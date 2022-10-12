@@ -34,6 +34,7 @@ import {
 	Lock,
 	UnLock,
 } from '../../components/Icon/Icon';
+import Alert from '../../components/Alert';
 
 function Form({
 	//업데이트 시, 필요
@@ -60,6 +61,7 @@ function Form({
 	setFileUrl,
 	addProjectIntro,
 	checkLines,
+	setOnClose,
 }) {
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -240,10 +242,11 @@ function Form({
 			await navigator.clipboard
 				.writeText(url)
 				.then(() => {
-					// alert('클립보드에 복사되었습니다.');
+					setOnClose(true);
+					console.log('복사성공');
 				})
 				.catch(() => {
-					// alert('복사를 다시 시도해주세요.');
+					console.log('복사실패');
 				});
 		}
 	};
@@ -329,25 +332,51 @@ function Form({
 										url과 프로젝트를 소개하는 페이지에 사용됩니다. ex)
 										/project/프로젝트 이름
 									</span>
-									<input
-										value={info.project_info.name || ''}
-										ref={(elem) => (inutRef.current[0] = elem)}
-										maxLength={30}
-										placeholder='프로젝트의 이름을 입력해주세요.'
-										onChange={(e) => {
-											setInfo((prev) => {
-												return {
-													...prev,
-													project_info: {
-														...info.project_info,
-														name: e.target.value,
-													},
-												};
-											});
-										}}
-										type='favicon'
-										className=' base-form  border-2'
-									/>
+									{router.route == '/introduce/[Intro]' ? (
+										<input
+											disabled
+											value={info.project_info.name || ''}
+											ref={(elem) => (inutRef.current[0] = elem)}
+											maxLength={30}
+											placeholder='프로젝트의 이름을 입력해주세요.'
+											onChange={(e) => {
+												setInfo((prev) => {
+													return {
+														...prev,
+														project_info: {
+															...info.project_info,
+															name: e.target.value,
+														},
+													};
+												});
+											}}
+											type='favicon'
+											className=' base-form  border-2'
+										/>
+									) : (
+										<input
+											value={info.project_info.name || ''}
+											ref={(elem) => (inutRef.current[0] = elem)}
+											maxLength={30}
+											placeholder='프로젝트의 이름을 입력해주세요.'
+											onChange={(e) => {
+												setInfo((prev) => {
+													return {
+														...prev,
+														project_info: {
+															...info.project_info,
+															name: e.target.value,
+														},
+													};
+												});
+											}}
+											type='favicon'
+											className=' base-form  border-2'
+										/>
+									)}
+									<span className='font-normal text-red-500	 '>
+										한 번 작성한 프로젝트 이름을 수정이 불가능합니다.
+									</span>
 								</div>
 								<div className='b-divide'>
 									<label className='small-title essential'>
