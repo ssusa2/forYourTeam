@@ -22,17 +22,14 @@ function SortGenre({
 			{genre.map((item, idx) => {
 				const { value } = item;
 				return (
-					<div className=' flex item-center'
-					value={value}
-					onClick={(e) => {
-						toggleActive(e);
-						setGenreValue(e.target.value);
-					}}
-					>
+					<div className=' flex item-center'>
 						<button
 							key={item.id}
 							value={value}
-						
+							onClick={(e) => {
+								toggleActive(e);
+								setGenreValue(e.target.value);
+							}}
 							className={
 								value == btnActive
 									? 'mb-2 mr-2 py-1 px-3 main-color w-max flex  rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
@@ -53,4 +50,3 @@ function SortGenre({
 }
 
 export default SortGenre;
-
