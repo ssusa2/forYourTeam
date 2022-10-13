@@ -6,7 +6,7 @@ import { throttle, debounce } from 'lodash';
 function ScrollToTop() {
 	const [scroll, setScroll] = useState(true);
 
-	const DEFAULT_Y = 60;
+	const DEFAULT_Y = 300;
 
 	const updateScroll = useMemo(
 		() =>

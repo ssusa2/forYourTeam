@@ -30,8 +30,6 @@ function ImageHolder({
 	defaultImg,
 }) {
 	const userID = useSelector(({ user }) => user);
-	const saving = useSelector(({ Saving }) => Saving.Saving);
-	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const [imageSrc, setImageSrc] = useState();
 	const [fileUrl, setFileUrl] = useState('');
 
@@ -93,10 +91,7 @@ function ImageHolder({
 		<>
 			<div className='mt-1 flex group block mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-green-500 hover:ring-green-500'>
 				{
-					<div
-						className='w-4/5
-					'
-					>
+					<div className='w-4/5'>
 						{imageSrc ? (
 							<img className='preview' src={imageSrc} alt='preview-img' />
 						) : (
@@ -122,9 +117,11 @@ file:rounded-full file:border-0
 file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
-					onChange={(e) => {
-						encodeFileToBase64(e.target.files[0]);
-					}}
+					onChange={(e) =>
+						projectName
+							? encodeFileToBase64(e.target.files[0])
+							: alert('프로젝트 이름을 먼저 입력해주세요.')
+					}
 				/>
 			</div>
 		</>

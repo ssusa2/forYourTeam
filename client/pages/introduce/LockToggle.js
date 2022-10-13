@@ -17,7 +17,7 @@ export default function Toggle() {
 				<span className='mr-3 text-sm font-medium text-gray-900'>
 					{enabled ? <Lock /> : <UnLock />}
 				</span>
-				<label class='inline-flex relative items-center mr-5 cursor-pointer'>
+				<label className='inline-flex relative items-center mr-5 cursor-pointer'>
 					<input
 						type='checkbox'
 						className='sr-only peer'

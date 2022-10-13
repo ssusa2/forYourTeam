@@ -31,7 +31,6 @@ export const usePagination = (
 
 	// 첫번째 페이지 요청 함수
 
-	console.log(GenreValue);
 	const getFirstPage = useCallback(async () => {
 		let queryRef = '';
 		if (GenreValue == null) {
@@ -86,7 +85,6 @@ export const usePagination = (
 					startAfter(key), // 마지막 커서 기준으로 추가 요청을 보내도록 쿼리 전송
 					limit(loadCount)
 				);
-				console.log('1');
 			} else if (GenreValue !== null) {
 				queryRef = query(
 					collectionGroup(db, collectionName),

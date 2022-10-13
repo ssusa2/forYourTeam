@@ -71,7 +71,7 @@ function CoreAdd({
 							<label className='small-title essential mt-0 '>소제목</label>
 							<input
 								value={el.subheading || ''}
-								placeholder='project-core-subtitle'
+								placeholder=' 주요 기능을 만든 팀이나 기능을 꾸며주는 문구를 입력해보세요.'
 								name='subheading'
 								onChange={(event) =>
 									handleFormChange(idx, event, core, setCore, folder)
@@ -85,7 +85,7 @@ function CoreAdd({
 							<label className='small-title essential essential'>제목</label>
 							<input
 								value={el.title || ''}
-								placeholder='project-core-title'
+								placeholder=' 주요 기능의 기능명을 입력해보세요. '
 								name='title'
 								onChange={(event) =>
 									handleFormChange(idx, event, core, setCore, folder)
@@ -101,7 +101,7 @@ function CoreAdd({
 								rows={5}
 								onKeyUp={(e) => checkLines(e, 5)}
 								value={el.description || ''}
-								placeholder='project-core-description'
+								placeholder='주요 기능을 설명하는 글을 입력해보세요. 최대 5줄까지 작성가능합니다.'
 								onChange={(event) =>
 									handleFormChange(idx, event, core, setCore, folder)
 								}

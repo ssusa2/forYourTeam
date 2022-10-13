@@ -1,6 +1,5 @@
 /** @format */
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { checkLines } from '../../util/utils';
 import { db, storage } from '../firebase';
@@ -11,7 +10,7 @@ import { setAll } from '../../src/store/modules/projectInfo';
 import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 import Form from './Form';
 import Alert from '../../components/Alert';
-import { set } from 'react-hook-form';
+import GuideModal from '../../components/Modal/GuideModal';
 
 function introduce() {
 	const dispatch = useDispatch();
@@ -22,7 +21,6 @@ function introduce() {
 	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
-	console.log('isLock', isLock);
 	const [info, setInfo] = useState({
 		project_info: {
 			name: '',
@@ -161,12 +159,14 @@ function introduce() {
 				if (shallowSaving) {
 					alert('임시저장 완료!');
 				} else {
-					alert('저장완료!');
 					setOnClose(true);
-
+					setTimeout(function () {
+						window.open(`/project/${projectName}`);
+					}, 10000);
 					// router.push('/project');
 				}
-				window.open(`/project/${projectName}`); // 새창 띄우는 건 이게 나은듯
+
+				// 새창 띄우는 건 이게 나은듯
 			} catch (err) {
 				console.log(err);
 			}
@@ -191,6 +191,7 @@ function introduce() {
 
 	return (
 		<>
+			<GuideModal />
 			{onClose && <Alert setOnClose={setOnClose} />}
 			<Form
 				enabled={enabled}

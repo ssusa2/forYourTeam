@@ -309,3 +309,7 @@ table {
 	outline: 4px solid #f00;
 	border: 2px solid #f00;
 }
+
+.div-in-p p {
+	margin-right: 0.5rem;
+}

@@ -29,10 +29,8 @@ function Project({ Preview }) {
 	const fetchProject = async (Intro) => {
 		const projectRef = doc(db, 'project', `${Intro}`);
 		const projectSnap = await getDoc(projectRef);
-		// console.log(Intro);
-		// const data = projectSnap.data();
+
 		if (projectSnap.exists()) {
-			// console.log('Document data:', projectSnap.data());
 			setProjects(projectSnap.data());
 			setProjectInfo(projectSnap.data().info.project_info);
 		} else {
@@ -40,11 +38,8 @@ function Project({ Preview }) {
 		}
 	};
 
-	const previewMode = () => {};
-
 	useEffect(() => {
 		router.route == '/project/[Intro]' && fetchProject(Intro);
-		router.route == '/introduce' && previewMode();
 	}, [Intro]);
 
 	useEffect(() => {
@@ -72,7 +67,7 @@ function Project({ Preview }) {
 						) : (
 							info?.project_page.slogun && (
 								<Image
-									className='mt-4  xl:mt-36  mb-8 w-full object-fill'
+									className='mt-3  mb-8 w-full object-fill'
 									src={project1}
 								/>
 							)
@@ -94,9 +89,9 @@ function Project({ Preview }) {
 								<div className=' section2 mt-44 '>
 									<div className=' xl:flex justify-between left'>
 										<div className='w-full	'>
-											<span className='small-title'> {el.title}</span>
-											<h3 className='middle-title'>{el.subheading}</h3>
-											<p className=' mt-3 mb-3 sm:pr-0  text-xl xl:pr-20'>
+											<span className='small-title'> {el.subheading}</span>
+											<h3 className='middle-title'>{el.title}</h3>
+											<p className=' mt-3 mb-3 sm:pr-0  text-lg xl:pr-10'>
 												{el.description}
 											</p>
 										</div>

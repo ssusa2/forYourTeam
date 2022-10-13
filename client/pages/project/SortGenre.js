@@ -15,16 +15,15 @@ function SortGenre({
 
 	let regex = / /gi;
 
-	console.log('icon', genre?.id?.[1]);
-
 	return (
 		<>
 			{genre.map((item, idx) => {
 				const { value } = item;
 				return (
-					<div className=' flex item-center'>
+					<div className=' flex item-center' key={item.id[0]}>
 						<button
-							key={item.id}
+							type='button'
+							key={item.id[0]}
 							value={value}
 							onClick={(e) => {
 								toggleActive(e);

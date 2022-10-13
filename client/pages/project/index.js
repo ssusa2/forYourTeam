@@ -1,29 +1,15 @@
 /** @format */
-// import Main from '../Home/Main';
+
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import SortGenre from './SortGenre';
 import { db } from '../firebase';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	collection,
-	collectionGroup,
-	getDocs,
-	doc,
-	getDoc,
-	query,
-	where,
-	orderBy,
-	limit,
-	startAfter,
-} from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { usePagination } from '../../hooks/usePagination';
+import { set } from 'react-hook-form';
 
-// const usePagination = dynamic(() => import('../../hooks/usePagination'), {
-// 	ssr: false,
-// });
 function Projects() {
 	const [hasProjects, setHasProjects] = useState(false);
 	const [btnActive, setBtnActive] = useState('');
@@ -38,10 +24,17 @@ function Projects() {
 		GenreValue
 	);
 
+	console.log(data);
+	useEffect(() => {
+		setHasProjects(false);
+		data.length == 0 && setHasProjects(true);
+	}, [data]);
+
 	const router = useRouter();
 
 	const [genre, setGenre] = useState([]);
 
+	// 장르 받아오는 거
 	const fetchGenre = async (Intro) => {
 		const genreRef = doc(db, 'genre', 'appStore');
 		const genreSnap = await getDoc(genreRef);
@@ -66,23 +59,6 @@ function Projects() {
 		op.label = a[i][0];
 		genre_options.push(op);
 	}
-	const fetchProject = async () => {
-		const project = query(
-			collectionGroup(db, 'project'),
-			where('shallowSaving', '==', false)
-		);
-		const querySnapshot = await getDocs(project);
-		const newData = querySnapshot.docs.map((doc) => ({
-			...doc.data(),
-		}));
-		setHasProjects(false);
-		setBtnActive('');
-		setGenreValue(null);
-	};
-
-	useEffect(() => {
-		fetchProject();
-	}, []);
 
 	return (
 		<div className='my-container max-w-6xl '>
@@ -118,7 +94,7 @@ function Projects() {
 			<div className='flex justify-between'>
 				<p className='small-title mt-0'>보고싶은 장르를 선택하세요.</p>
 				<button
-					onClick={() => fetchProject()}
+					onClick={() => setGenreValue(null)}
 					className='border-2 rounded-full px-1 py-1 border-green-700 main-hover hover:rotate-180'
 				>
 					<svg
@@ -140,7 +116,6 @@ function Projects() {
 			<div className='overflow-x-scroll scrollbar-hide flex mt-3 '>
 				<SortGenre
 					genre={genre_options}
-					// queryGerne={queryGerne}
 					btnActive={btnActive}
 					setGenreValue={setGenreValue}
 					setBtnActive={setBtnActive}
