@@ -7,12 +7,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { First, Second, Thrid } from './ModalContent';
+import { First, Project, Core, Member, Teams } from './ModalContent';
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
 export default function GuideModal() {
-	let arr = [<First />, <Second />, <Thrid />];
+	let arr = [<First />, <Project />, <Core />, <Teams />, <Member />];
 
 	const [open, setOpen] = useState(true);
 
@@ -71,7 +71,9 @@ export default function GuideModal() {
 									className='mySwiper '
 								>
 									{arr.map((el) => (
-										<SwiperSlide className='-mb-3 w-full'>{el}</SwiperSlide>
+										<>
+											<SwiperSlide className='mb-5 w-full'>{el}</SwiperSlide>
+										</>
 									))}
 								</Swiper>
 							</Dialog.Panel>

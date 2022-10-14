@@ -2,16 +2,15 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import team from '../../image/team.png';
 import project1 from '../../image/project1.png';
 import project2 from '../../image/project2.png';
 import project3 from '../../image/project3.png';
 import homeTeam from '../../image/homeTeam.png';
 import { db } from '../firebase';
 import { replaceBrTag } from '../../util/utils';
-import { collection, getDoc, doc } from 'firebase/firestore';
-import { useSelector, useDispatch, createSelector } from 'react-redux';
-import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
+import { getDoc, doc } from 'firebase/firestore';
+import { useDispatch } from 'react-redux';
+import { setAll } from '../../src/store/modules/projectInfo';
 
 function Project({ Preview }) {
 	const router = useRouter();
@@ -91,9 +90,10 @@ function Project({ Preview }) {
 										<div className='w-full	'>
 											<span className='small-title'> {el.subheading}</span>
 											<h3 className='middle-title'>{el.title}</h3>
-											<p className=' mt-3 mb-3 sm:pr-0  text-lg xl:pr-10'>
-												{el.description}
-											</p>
+											<p
+												className=' mt-3 mb-3 sm:pr-0  text-lg xl:pr-10'
+												dangerouslySetInnerHTML={replaceBrTag(el.description)}
+											/>
 										</div>
 										{el.image ? (
 											<img
@@ -129,21 +129,21 @@ function Project({ Preview }) {
 												src={el.image}
 											/>
 										) : (
-											<Image
-												className='object-cover  w-full xl:w-3/5'
-												src={project3}
-											/>
+											el.title && (
+												<Image
+													className='object-cover  w-full xl:w-3/5'
+													src={project3}
+												/>
+											)
 										)}
 										<div className='w-full'>
 											<div className='text-end'>
-												<span className='small-title'> {el.title}</span>
-												<h3 className='middle-title'>
-													{el.subheading}
-													{/* <br /> 따뜻한 동네를 만들어요. */}
-												</h3>
-												<p className='mt-3 mb-3 sm:pl-0  text-xl xl:pl-20 '>
-													{el.description}
-												</p>
+												<span className='small-title'> {el.subheading}</span>
+												<h3 className='middle-title'>{el.title}</h3>
+												<p
+													className='mt-3 mb-3 sm:pl-0  text-lg xl:pl-10'
+													dangerouslySetInnerHTML={replaceBrTag(el.description)}
+												/>
 											</div>
 										</div>
 									</div>
