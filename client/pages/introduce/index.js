@@ -178,7 +178,7 @@ function introduce() {
 
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
-		dispatch(setAll({ info, teamInfo }));
+		// dispatch(setAll({ info, teamInfo }));
 	};
 
 	useEffect(() => {

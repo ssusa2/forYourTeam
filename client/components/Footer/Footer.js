@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Github } from '../Icon/Icon';
 
-function Footer({ Preview }) {
+function Footer({ PreviewInfo }) {
 	const { route } = useRouter();
 	const projectColor = useSelector(({ projectInfo }) => projectInfo);
 	const { pathname } = useRouter();
-	const { color, logo } = projectColor;
+	const { info, teamInfo } = projectColor;
 
 	let projectMenu = '';
 	if (route == '/project/[Intro]') {
@@ -35,17 +35,19 @@ function Footer({ Preview }) {
 				<div className='mt-52 px-14 pt-10  footer-border  w-full'>
 					<div className='flex justify-between	max-w-6xl mx-auto'>
 						{!projectMenu ? (
-							Preview?.info?.project_info.color ? (
-								<Logo color={Preview?.info?.project_info.color}>
-									{Preview?.info?.project_info.logo}
+							PreviewInfo?.project_info.color ? (
+								<Logo color={PreviewInfo?.project_info.color}>
+									{PreviewInfo?.project_info.logo}
 								</Logo>
 							) : (
 								<Logo>ForMyTeam</Logo>
 							)
 						) : (
-							<Logo color={color}>{logo}</Logo>
+							<Logo color={info?.project_info?.color}>
+								{info?.project_info?.logo}
+							</Logo>
 						)}
-						{!projectColor?.team_github ? (
+						{!info?.project_info?.team_github ? (
 							isProjectPage == isTeamPage && (
 								<a
 									target='https://github.com/ssusa2'
@@ -56,8 +58,8 @@ function Footer({ Preview }) {
 							)
 						) : (
 							<a
-								target={`${projectColor?.team_github}`}
-								href={`${projectColor?.team_github}`}
+								target={`${info?.project_info?.team_github}`}
+								href={`${info?.project_info?.team_github}`}
 							>
 								<Github />
 							</a>

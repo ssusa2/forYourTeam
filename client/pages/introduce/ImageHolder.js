@@ -10,15 +10,9 @@ import {
 } from 'firebase/firestore/lite';
 import { db, storage, storageRef } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import {
-	ref,
-	uploadBytes,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function ImageHolder({
 	state,
@@ -44,21 +38,18 @@ function ImageHolder({
 		} else {
 			const reader = new FileReader();
 			reader.readAsDataURL(fileBlob);
-
+			ConvertUrl(fileBlob);
 			return new Promise((resolve) => {
 				reader.onload = () => {
 					setImageSrc(reader.result);
 					resolve();
 				};
 			});
-			ConvertUrl(fileBlob);
+			// ConvertUrl(fileBlob);
 		}
 	};
 
 	const ConvertUrl = async (fileBlob) => {
-		const metadata = {
-			contentType: 'image/jpeg',
-		};
 		if (fileBlob != '') {
 			try {
 				const fileRef = ref(
@@ -67,7 +58,7 @@ function ImageHolder({
 				);
 				const uploadTask = await uploadBytes(fileRef, fileBlob).then(
 					(snapshot) => {
-						console.log('updata');
+						console.log('update');
 					}
 				);
 				fileUrl = await getDownloadURL(fileRef);

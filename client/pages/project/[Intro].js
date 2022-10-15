@@ -11,8 +11,9 @@ import { replaceBrTag } from '../../util/utils';
 import { getDoc, doc } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setAll } from '../../src/store/modules/projectInfo';
+import HeadMeta from '../../components/Head/HeadMeta';
 
-function Project({ Preview }) {
+function Project({ PreviewInfo }) {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { Intro } = router.query;
@@ -21,8 +22,8 @@ function Project({ Preview }) {
 
 	let { info } = projects;
 
-	if (Preview) {
-		info = Preview.info;
+	if (PreviewInfo) {
+		info = PreviewInfo;
 	}
 
 	const fetchProject = async (Intro) => {
@@ -42,11 +43,19 @@ function Project({ Preview }) {
 	}, [Intro]);
 
 	useEffect(() => {
-		dispatch(setAll(projectInfo));
+		dispatch(setAll(projects));
 	}, [projects]);
 
 	return (
 		<>
+			{/* <HeadMeta
+				title={projectInfo?.name}
+				description={projects.info?.project_page.description}
+				url={projectInfo?.url}
+				image={projectInfo?.logo_image}
+				favicon={projectInfo?.favicon}
+				author={projects?.teamInfo?.intro?.name}
+			/> */}
 			<div
 				className={
 					router.route == '/introduce'

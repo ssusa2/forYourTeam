@@ -246,7 +246,6 @@ function introduce() {
 	}, [previewOpen]);
 
 	console.log(info);
-	console.log(teamInfo.member);
 
 	return (
 		<>

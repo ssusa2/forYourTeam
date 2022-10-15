@@ -189,7 +189,6 @@ function Form({
 		handleCopyClipBoard(`http://localhost:3000/project/${projectName}`);
 	};
 
-	// console.log(projectRef);
 	// 프로젝트 삭제
 	const deleteProject = async (path) => {
 		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
@@ -254,7 +253,14 @@ function Form({
 	return (
 		<>
 			<div className='my-container relative max-w-6xl'>
-				{previewOpen && <TestModal setPreviewOpen={setPreviewOpen} />}
+				{previewOpen && (
+					<TestModal
+						previewCore={[core]}
+						setPreviewOpen={setPreviewOpen}
+						info={info}
+						teamInfo={teamInfo}
+					/>
+				)}
 				<h2 className='middle-title'>여러분의 프로젝트 정보를 입력해주세요.</h2>
 				<div className='block lg:flex lg:justify-between'>
 					<div>
@@ -423,7 +429,7 @@ function Form({
 										</div>
 									</div>
 								</div>
-								{/* <div className='b-divide'>
+								<div className='b-divide'>
 									<label className='small-title  essential'>
 										프로젝트 사이트의 파비콘를 첨부해주세요.(16px x 16px)
 									</label>
@@ -439,7 +445,7 @@ function Form({
 											section={'project-favicon'}
 										/>
 									</div>
-								</div> */}
+								</div>
 								<div className='b-divide'>
 									<label className='small-title  text-xl font-medium text-slate-800'>
 										프로젝트 웹 사이트의 주소를 입력해주세요.

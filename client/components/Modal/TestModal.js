@@ -10,18 +10,26 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-export default function TestModal({ setPreviewOpen }) {
-	const Preview = useSelector(({ projectInfo }) => projectInfo);
+export default function TestModal({
+	setPreviewOpen,
+	info,
+	teamInfo,
+	previewCore,
+}) {
+	console.log(info, teamInfo);
+	// const Preview = useSelector(({ projectInfo }) => projectInfo);
 
-	useEffect(() => {
-		// console.log('PreviewModal', Preview);
-	}, [Preview]);
+	// useEffect(() => {
+	// 	// console.log('PreviewModal', Preview);
+	// }, [Preview]);
 	const [open, setOpen] = useState(true);
+
+	// true는 프로젝트 false는 팀
 	const [previewProject, setPreviewProject] = useState(true);
 
 	const cancelButtonRef = useRef(null);
 
-	console.log('Preview', Preview);
+	// console.log('Preview', Preview);
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
@@ -56,16 +64,17 @@ export default function TestModal({ setPreviewOpen }) {
 						>
 							<Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all h-[70vh] overflow-y-scroll sm:my-8 sm:w-full sm:max-w-lg top-[10%] translate-y-[10%]'>
 								<Nav
-									Preview={Preview}
+									// Preview={Preview}
+									PreviewInfo={info}
 									previewProject={previewProject}
 									setPreviewProject={setPreviewProject}
 								/>
 								{previewProject ? (
-									<Project Preview={Preview} />
+									<Project PreviewInfo={info} />
 								) : (
-									<Team Preview={Preview} />
+									<Team PreviewTeamInfo={teamInfo} />
 								)}
-								<Footer Preview={Preview} />
+								<Footer PreviewInfo={info} />
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>

@@ -21,7 +21,7 @@ import 'swiper/css/navigation';
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
-function teamHome({ Preview }) {
+function teamHome({ PreviewTeamInfo }) {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const { Intro } = router.query;
@@ -45,13 +45,13 @@ function teamHome({ Preview }) {
 	}, [Intro]);
 
 	useEffect(() => {
-		dispatch(setAll(teams.info?.project_info));
+		dispatch(setAll(teams));
 	}, [teams]);
 
 	let { info, teamInfo } = teams;
 
-	if (Preview) {
-		teamInfo = Preview.teamInfo;
+	if (PreviewTeamInfo) {
+		teamInfo = PreviewTeamInfo;
 	}
 	const OneMember = teamInfo?.member.length;
 

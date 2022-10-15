@@ -10,8 +10,9 @@ import { FirebaseAuth } from '../../pages/firebase';
 import { db } from '../../pages/firebase';
 import { collection, getDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
+import HeadMeta from '../Head/HeadMeta';
 
-function Nav({ Preview, setPreviewProject, previewProject }) {
+function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 	const router = useRouter();
 	const { route } = router;
 	const { pathname } = router;
@@ -22,7 +23,7 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 	const [userObj, setUserObj] = useState(null);
 	const [projectObj, setProjectObj] = useState();
 	const dispatch = useDispatch();
-	const projectColor = useSelector(({ projectInfo }) => projectInfo);
+	const project = useSelector(({ projectInfo }) => projectInfo);
 
 	let projectMenu = '';
 	if (route == '/project/[Intro]') {
@@ -33,28 +34,23 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 		projectMenu = false;
 	}
 
-	useEffect(() => {
-		const fetchUsers = async (Intro) => {
-			const projectRef = doc(db, 'project', `${Intro}`);
-			const projectSnap = await getDoc(projectRef);
-			// console.log(Intro);
-			// const data = projectSnap.data();
-			if (projectSnap.exists()) {
-				// console.log('Document data:', projectSnap.data());
-				setProjectObj(projectSnap.data().info.project_info);
-				// console.log(projectSnap.data().info.project_info);
-			} else {
-				console.log('No such document!');
-			}
-			// };
-		};
-		if (route === '/project/[Intro]') {
-			console.log('tq');
-			fetchUsers(Intro);
-		}
-	}, [Intro]);
+	// useEffect(() => {
+	// 	const fetchUsers = async (Intro) => {
+	// 		const projectRef = doc(db, 'project', `${Intro}`);
+	// 		const projectSnap = await getDoc(projectRef);
 
-	const { color, logo, logo_image } = projectColor;
+	// 		if (projectSnap.exists()) {
+	// 			setProjectObj(projectSnap.data().info.project_info);
+	// 		} else {
+	// 			console.log('No such document!');
+	// 		}
+	// 	};
+	// 	if (route === '/project/[Intro]') {
+	// 		fetchUsers(Intro);
+	// 	}
+	// }, [Intro]);
+
+	const { info, teamInfo } = project;
 
 	let isProjectPage = pathname == '/project/[Intro]';
 	let isTeamPage = pathname == '/team/[Intro]';
@@ -88,16 +84,27 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 
 	const teamNumber = Intro;
 
+	console.log(Preview?.info?.project_info.name);
+
 	return (
 		<>
-			{Preview?.info?.project_info ? (
-				//  Preview mode
+			<HeadMeta
+				title={info?.project_info?.name}
+				description={info?.project_page.description}
+				url={info?.project_info.url}
+				image={info?.project_info.logo_image}
+				favicon={info?.project_info.favicon}
+				author={teamInfo?.intro?.name}
+			/>
+
+			{/* Preview mode START */}
+			{PreviewInfo?.project_info.name !== undefined ? (
 				<div className='relative z-50 '>
 					<div className=' w-full shadow  px-16 py-6 bg-white text-black fixed top-0 left-0 '>
 						<div className='flex justify-between items-center	'>
 							<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-								<Logo color={Preview.info.project_info.color}>
-									{Preview.info.project_info.logo}
+								<Logo color={PreviewInfo?.project_info.color}>
+									{PreviewInfo?.project_info?.logo}
 								</Logo>
 							</Link>
 							{/* Right Menu */}
@@ -105,7 +112,7 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 								<RightMenu
 									onClick={() => setPreviewProject(true)}
 									color={
-										previewProject ? Preview?.info?.project_info.color : 'black'
+										previewProject ? PreviewInfo?.project_info.color : 'black'
 									}
 								>
 									Project
@@ -114,7 +121,7 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 								<RightMenu
 									onClick={() => setPreviewProject(false)}
 									color={
-										previewProject ? 'black' : Preview?.info?.project_info.color
+										previewProject ? 'black' : PreviewInfo?.project_info.color
 									}
 								>
 									Team
@@ -124,6 +131,7 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 					</div>
 				</div>
 			) : (
+				//  Preview mode END
 				// Nav mode
 				<div className='relative z-50 '>
 					<div className='w-full  shadow  px-16 py-6 bg-white text-black fixed top-0 left-0'>
@@ -137,7 +145,9 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 							) : (
 								<>
 									<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
-										<Logo color={color}>{logo}</Logo>
+										<Logo color={info?.project_info.color}>
+											{info?.project_info.logo}
+										</Logo>
 									</Link>
 								</>
 							)}
@@ -154,14 +164,19 @@ function Nav({ Preview, setPreviewProject, previewProject }) {
 									<>
 										<Link href={`/project/${teamNumber}`}>
 											{route == '/project/[Intro]' ? (
-												<RightMenu color={color}>Project</RightMenu>
+												<RightMenu color={info?.project_info.color}>
+													Project
+												</RightMenu>
 											) : (
 												<RightMenu>Project</RightMenu>
 											)}
 										</Link>
+										{/* Team 소개 페이지에 들어왔을때 */}
 										<Link href={`/team/${teamNumber}`}>
 											{route == '/team/[Intro]' ? (
-												<RightMenu color={color}>Team</RightMenu>
+												<RightMenu color={info?.project_info.color}>
+													Team
+												</RightMenu>
 											) : (
 												// <RightMenu color={color}>Team</RightMenu>
 												<RightMenu>Team</RightMenu>
@@ -213,12 +228,4 @@ const RightMenu = styled.h2`
 	text-align: center;
 	cursor: pointer;
 	color: ${({ color }) => color};
-	/* text-decoration: ${({ color }) => color} underline; */
-`;
-
-const NonActive = styled.h2`
-	margin-right: 1.5rem;
-	font-weight: 700;
-	text-align: center;
-	cursor: pointer;
 `;
