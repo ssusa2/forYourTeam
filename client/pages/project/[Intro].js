@@ -26,6 +26,8 @@ function Project({ PreviewInfo }) {
 		info = PreviewInfo;
 	}
 
+	console.log(info);
+
 	const fetchProject = async (Intro) => {
 		const projectRef = doc(db, 'project', `${Intro}`);
 		const projectSnap = await getDoc(projectRef);

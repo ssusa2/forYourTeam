@@ -14,6 +14,7 @@ export default function TestModal({
 	setPreviewOpen,
 	info,
 	teamInfo,
+	previewMember,
 	previewCore,
 }) {
 	console.log(info, teamInfo);
@@ -72,7 +73,10 @@ export default function TestModal({
 								{previewProject ? (
 									<Project PreviewInfo={info} />
 								) : (
-									<Team PreviewTeamInfo={teamInfo} />
+									<Team
+										PreviewTeamInfo={teamInfo}
+										// previewMember={previewMember}
+									/>
 								)}
 								<Footer PreviewInfo={info} />
 							</Dialog.Panel>

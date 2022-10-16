@@ -255,7 +255,6 @@ function Form({
 			<div className='my-container relative max-w-6xl'>
 				{previewOpen && (
 					<TestModal
-						previewCore={[core]}
 						setPreviewOpen={setPreviewOpen}
 						info={info}
 						teamInfo={teamInfo}

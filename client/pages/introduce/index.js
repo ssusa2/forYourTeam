@@ -101,7 +101,7 @@ function introduce() {
 			description: '',
 			image: '',
 		};
-		setCore([...core, [newCore]]);
+		setCore([...core, newCore]);
 	};
 
 	const addMember = (e) => {
@@ -162,7 +162,7 @@ function introduce() {
 					setOnClose(true);
 					setTimeout(function () {
 						window.open(`/project/${projectName}`);
-					}, 10000);
+					}, 3000);
 					// router.push('/project');
 				}
 
@@ -182,12 +182,14 @@ function introduce() {
 	};
 
 	useEffect(() => {
-		previewSetInfo(event);
+		previewSetInfo();
 	}, [previewOpen]);
 
 	const [enabled, setEnabled] = useState(false);
 
 	const [onClose, setOnClose] = useState(false);
+
+	console.log(info);
 
 	return (
 		<>
