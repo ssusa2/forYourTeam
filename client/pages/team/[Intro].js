@@ -2,7 +2,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import team from '../../image/team.png';
 import homeTeam from '../../image/homeTeam.png';
 import project1 from '../../image/project1.png';
 import { useState, useEffect } from 'react';
@@ -39,7 +38,6 @@ function teamHome({ PreviewTeamInfo }) {
 			} else {
 				console.log('No such document!');
 			}
-			// };
 		};
 		fetchProject(Intro);
 	}, [Intro]);

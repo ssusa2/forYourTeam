@@ -1,5 +1,4 @@
 /** @format */
-
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -16,15 +15,12 @@ function ProjectList({ projects }) {
 					<h2 className='sr-only'>Products</h2>
 					<div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
 						{projects.map((project) => {
-							const { uid, id, info, teamInfo, shallowSaving, isLock } =
-								project;
+							const { uid, info, teamInfo, isLock, projectId } = project;
 							return (
-								<div key={id} uid={uid} className='group relative'>
+								<div key={projectId} uid={uid} className='group relative'>
 									{userInfo == uid && (
 										<button
-											onClick={() =>
-												router.push(`/introduce/${info?.project_info.name}`)
-											}
+											onClick={() => router.push(`/introduce/${projectId}`)}
 											className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-20'
 										>
 											<Edit />
@@ -35,11 +31,8 @@ function ProjectList({ projects }) {
 											<Lock />
 										</div>
 									)}
-									<Link
-										href='/project/[intro]'
-										as={`/project/${info?.project_info.name}`}
-									>
-										<a target={`/project/${info?.project_info.name}`}>
+									<Link href='/project/[intro]' as={`/project/${projectId}`}>
+										<a target={`/project/${projectId}`}>
 											<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
 												{info?.project_info.logo_image ? (
 													<img

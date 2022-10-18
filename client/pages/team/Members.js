@@ -1,14 +1,10 @@
 /** @format */
-
-import Link from 'next/router';
-
 import Image from 'next/image';
-// import composition from '../../image/composition 1.png';
 import male from '../../image/male.png';
 import female from '../../image/female.png';
 import { replaceBrTag } from '../../util/utils';
+
 function Members({ members, OneMember }) {
-	// console.log(members);
 	const { github, name, image, description, role, gender } = members;
 
 	return (

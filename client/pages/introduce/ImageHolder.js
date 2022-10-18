@@ -1,18 +1,11 @@
 /** @format */
 
 import React, { useEffect, useState } from 'react';
-import {
-	collection,
-	addDoc,
-	doc,
-	setDoc,
-	snapshotEqual,
-} from 'firebase/firestore/lite';
-import { db, storage, storageRef } from '../firebase';
+import { storage } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { setShallowSaving } from '../../src/store/modules/Saving';
 
 function ImageHolder({
 	state,
@@ -20,16 +13,25 @@ function ImageHolder({
 	name,
 	object,
 	section,
-	projectName,
+	projectId,
 	defaultImg,
 }) {
+	const dispatch = useDispatch();
 	const userID = useSelector(({ user }) => user);
 	const [imageSrc, setImageSrc] = useState();
-	const [fileUrl, setFileUrl] = useState('');
+	const [fileUrl, setFileUrl] = useState(null);
 
 	useEffect(() => {
 		setImageSrc(defaultImg);
 	}, [defaultImg]);
+
+	// useEffect(() => {
+	// 	console.log(fileUrl == true);
+	// 	fileUrl && dispatch(setShallowSaving(true));
+	// 	console.log('fileUrl', fileUrl);
+
+	// 	// !fileUrl &&
+	// }, [fileUrl]);
 
 	const encodeFileToBase64 = async (fileBlob) => {
 		if (fileBlob.size > 3000000) {
@@ -52,21 +54,21 @@ function ImageHolder({
 	const ConvertUrl = async (fileBlob) => {
 		if (fileBlob != '') {
 			try {
-				const fileRef = ref(
-					storage,
-					`${userID.uid}/${projectName}/${uuidv4()}`
-				);
+				const fileRef = ref(storage, `${userID.uid}/${projectId}/${uuidv4()}`);
 				const uploadTask = await uploadBytes(fileRef, fileBlob).then(
 					(snapshot) => {
 						console.log('update');
 					}
 				);
-				fileUrl = await getDownloadURL(fileRef);
+				const url = await getDownloadURL(fileRef);
+				setFileUrl(url);
 			} catch (err) {
 				console.log(err);
 			}
 		}
-
+	};
+	// fileUrl이 바뀌면 값이 반영되게 하도록
+	useEffect(() => {
 		setState((prev) => {
 			return {
 				...prev,
@@ -76,7 +78,11 @@ function ImageHolder({
 				},
 			};
 		});
-	};
+		// dispatch(setShallowSaving(true));
+		console.log('바ㅜ뀜');
+	}, [fileUrl]);
+
+	// console.log('fileUrl', fileUrl);
 
 	return (
 		<>
@@ -108,11 +114,7 @@ file:rounded-full file:border-0
 file:text-sm file:font-semibold
 file:bg-violet-50 file:text-green-700
 hover:file:bg-violet-100'
-					onChange={(e) =>
-						projectName
-							? encodeFileToBase64(e.target.files[0])
-							: alert('프로젝트 이름을 먼저 입력해주세요.')
-					}
+					onChange={(e) => encodeFileToBase64(e.target.files[0])}
 				/>
 			</div>
 		</>

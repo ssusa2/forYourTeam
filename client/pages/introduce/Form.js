@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import MemberAdd from './MemberAdd';
 import Link from 'next/link';
 import CoreAdd from './CoreAdd';
@@ -8,33 +8,14 @@ import ImageHolder from './ImageHolder';
 import { useRouter } from 'next/router';
 import { db, storage } from '../firebase';
 import SelectGenre from './SeletGenre';
-import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
-import {
-	ref,
-	uploadBytes,
-	listAll,
-	getDownloadURL,
-	deleteObject,
-} from 'firebase/storage';
+import { setShallowSaving } from '../../src/store/modules/Saving';
+import { ref, listAll, deleteObject } from 'firebase/storage';
 import Toggle from './LockToggle';
-import {
-	setDoc,
-	deleteDoc,
-	getDoc,
-	doc,
-	serverTimestamp,
-} from 'firebase/firestore';
-import { useSelector, useDispatch } from 'react-redux';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { useDispatch } from 'react-redux';
 import { handleToggle } from '../../src/util/accordion';
-
 import TestModal from '../../components/Modal/TestModal';
-import {
-	Arrow,
-	PageTemplateArrow,
-	Lock,
-	UnLock,
-} from '../../components/Icon/Icon';
-import Alert from '../../components/Alert';
+import { Arrow, PageTemplateArrow } from '../../components/Icon/Icon';
 
 function Form({
 	//업데이트 시, 필요
@@ -42,8 +23,10 @@ function Form({
 	setEnabled,
 	enabled,
 	// deleteProject,
+	// deleteStorageFolder,
 	userID,
 	projectName,
+	projectId,
 	setPreviewOpen,
 	previewOpen,
 	info,
@@ -150,20 +133,6 @@ function Form({
 					},
 				};
 			});
-		} else if (!validColor) {
-			if (typeof window !== 'undefined') {
-				alert('프로젝트 색상을 선택해주세요.');
-			}
-			inutRef.current?.[3].focus();
-			setInfo((prev) => {
-				return {
-					...prev,
-					project_info: {
-						...info.project_info,
-						color: '',
-					},
-				};
-			});
 		} else if (!validTeamName) {
 			if (typeof window !== 'undefined') {
 				alert('프로젝트 팀 이름을 입력해주세요.');
@@ -186,14 +155,14 @@ function Form({
 			validEmail &&
 			validTeamName &&
 			addProjectIntro(e);
-		handleCopyClipBoard(`http://localhost:3000/project/${projectName}`);
+		handleCopyClipBoard(`http://localhost:3000/project/${projectId}`);
 	};
 
 	// 프로젝트 삭제
 	const deleteProject = async (path) => {
 		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
 			alert('삭제가 완료되었습니다.');
-			const projectRef = doc(db, 'project', `${projectName}`);
+			const projectRef = doc(db, 'project', `${projectId}`);
 			await deleteDoc(projectRef);
 			deleteStorageFolder(path);
 			router.push('/project');
@@ -337,51 +306,25 @@ function Form({
 										url과 프로젝트를 소개하는 페이지에 사용됩니다. ex)
 										/project/프로젝트 이름
 									</span>
-									{router.route == '/introduce/[Intro]' ? (
-										<input
-											disabled
-											value={info.project_info.name || ''}
-											ref={(elem) => (inutRef.current[0] = elem)}
-											maxLength={30}
-											placeholder='프로젝트의 이름을 입력해주세요.'
-											onChange={(e) => {
-												setInfo((prev) => {
-													return {
-														...prev,
-														project_info: {
-															...info.project_info,
-															name: e.target.value,
-														},
-													};
-												});
-											}}
-											type='favicon'
-											className=' base-form  border-2'
-										/>
-									) : (
-										<input
-											value={info.project_info.name || ''}
-											ref={(elem) => (inutRef.current[0] = elem)}
-											maxLength={30}
-											placeholder='프로젝트의 이름을 입력해주세요.'
-											onChange={(e) => {
-												setInfo((prev) => {
-													return {
-														...prev,
-														project_info: {
-															...info.project_info,
-															name: e.target.value,
-														},
-													};
-												});
-											}}
-											type='favicon'
-											className=' base-form  border-2'
-										/>
-									)}
-									<span className='font-normal text-red-500	 '>
-										한 번 작성한 프로젝트 이름을 수정이 불가능합니다.
-									</span>
+									<input
+										value={info.project_info.name || ''}
+										ref={(elem) => (inutRef.current[0] = elem)}
+										maxLength={30}
+										placeholder='프로젝트의 이름을 입력해주세요.'
+										onChange={(e) => {
+											setInfo((prev) => {
+												return {
+													...prev,
+													project_info: {
+														...info.project_info,
+														name: e.target.value,
+													},
+												};
+											});
+										}}
+										type='favicon'
+										className=' base-form  border-2'
+									/>
 								</div>
 								<div className='b-divide'>
 									<label className='small-title essential'>
@@ -418,7 +361,7 @@ function Form({
 											</div>
 											<ImageHolder
 												defaultImg={info.project_info.logo_image}
-												projectName={info?.project_info.name}
+												projectId={projectId}
 												state={info}
 												setState={setInfo}
 												name={'logo_image'}
@@ -436,7 +379,7 @@ function Form({
 										<p>파비콘</p>
 										<ImageHolder
 											defaultImg={info.project_info.favicon}
-											projectName={info?.project_info.name}
+											projectId={projectId}
 											state={info}
 											setState={setInfo}
 											name={'favicon'}
@@ -663,7 +606,7 @@ function Form({
 								</div>
 								<ImageHolder
 									defaultImg={info.project_page.image}
-									projectName={info?.project_info.name}
+									projectId={projectId}
 									state={info}
 									setState={setInfo}
 									name={'image'}
@@ -686,7 +629,7 @@ function Form({
 									core={core}
 									setCore={setCore}
 									folder={'core'}
-									projectName={projectName}
+									projectId={projectId}
 									userID={userID}
 									handleFormChange={handleFormChange}
 									section={'project-core-image'}
@@ -822,7 +765,7 @@ function Form({
 								</div>
 								<ImageHolder
 									defaultImg={teamInfo.intro.image}
-									projectName={info?.project_info.name}
+									projectId={projectId}
 									state={teamInfo}
 									setState={setTeamInfo}
 									name={'image'}
@@ -848,7 +791,7 @@ function Form({
 								fileUrl={fileUrl}
 								setFileUrl={setFileUrl}
 								section={'team-member-image'}
-								projectName={projectName}
+								projectId={projectId}
 								userID={userID}
 							/>
 						);
@@ -865,7 +808,7 @@ function Form({
 						<button
 							onClick={() => {
 								addProjectIntro();
-								dispatch(setShallowSaving(true));
+								// dispatch(setShallowSaving(true));
 							}}
 							type='button'
 							className=' form-button  '
@@ -883,7 +826,7 @@ function Form({
 						</button>
 						{router.route == '/introduce/[Intro]' && (
 							<button
-								onClick={() => deleteProject(`${userID}/${projectName}`)}
+								onClick={() => deleteProject(`${userID}/${projectId}`)}
 								type='button'
 								className='form-button text-red-700 hover:bg-red-700 hover:text-white border-red-700'
 							>

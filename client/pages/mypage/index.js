@@ -82,7 +82,6 @@ function Mypage() {
 		getLockProject();
 	}, [userInfo.uid]);
 
-	console.log('asdadasdada', shallowProjects);
 	return (
 		<>
 			<div className='my-container mx-auto max-w-6xl '>
@@ -99,7 +98,7 @@ function Mypage() {
 					</div>
 					<button
 						onClick={() => {
-							if (!userInfo?.uid) {
+							if (userInfo?.uid) {
 								router.push('/introduce');
 							} else {
 								if (
@@ -126,15 +125,19 @@ function Mypage() {
 				</div>
 				<div className='mt-8  h-px bg-slate-300'></div>
 				<ProjectList projects={projects} />
-				<div className='flex mt-16'>
-					<h2 className='middle-title '>📝 임시저장된 프로젝트</h2>{' '}
-					<span className='font-bold text-lg pt-2 '>
-						({shallowProjects.length})
-					</span>
-				</div>
+				{shallowProjects.length > 0 && (
+					<>
+						<div className='flex mt-16'>
+							<h2 className='middle-title '>📝 임시저장된 프로젝트</h2>
+							<span className='font-bold text-lg pt-2 '>
+								{shallowProjects.length}
+							</span>
+						</div>
+						<div className=' mt-8 h-px bg-slate-300'></div>
 
-				<div className=' mt-8 h-px bg-slate-300'></div>
-				<ProjectList projects={shallowProjects} />
+						<ProjectList projects={shallowProjects} />
+					</>
+				)}
 				<div className='flex mt-16'>
 					<h2 className='middle-title '>🔒 비공개된 프로젝트</h2>{' '}
 					<span className='font-bold text-lg pt-2 '>

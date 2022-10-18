@@ -84,8 +84,6 @@ function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 
 	const teamNumber = Intro;
 
-	console.log(Preview?.info?.project_info.name);
-
 	return (
 		<>
 			<HeadMeta

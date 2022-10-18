@@ -1,8 +1,7 @@
 /** @format */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { v4 as uuidv4 } from 'uuid';
-import { db, storageRef, storage } from '../firebase';
+import { db, storage } from '../firebase';
 import moment from 'moment';
 import 'moment/locale/ko';
 import { checkLines, handleFormChange } from '../../util/utils';
@@ -18,21 +17,21 @@ import {
 	ref,
 } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAll } from '../../src/store/modules/projectInfo';
 import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 
 function introduce() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { Intro } = router.query;
-	const userID = useSelector(({ user }) => user);
-	const [fileUrl, setFileUrl] = useState('');
-	const [isSaving, setIsSaving] = useState(false);
-	const [isShallowSave, setIsShallowSave] = useState(false);
-	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
-	console.log('isLock', isLock);
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const userID = useSelector(({ user }) => user);
+
+	// 미리보기
+	const [previewOpen, setPreviewOpen] = useState(false);
+	const [fileUrl, setFileUrl] = useState('');
+	const [shallow, setShallow] = useState(false);
 	const [info, setInfo] = useState({
 		project_info: {
 			name: '',
@@ -129,31 +128,37 @@ function introduce() {
 		if (e?.target.name == '저장') {
 			dispatch(setSaving(true));
 			dispatch(setShallowSaving(false));
+			// shallow && setShallow(false);
+		} else {
+			dispatch(setShallowSaving(true));
+			dispatch(setSaving(false));
 		}
 	};
 
-	let projectName = info?.project_info?.name;
+	console.log('saving', saving, 'shallowSaving', shallowSaving);
+
+	// let shallowSaving = shallow;
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				const post = await setDoc(doc(db, 'project', `${projectName}`), {
+				const post = await setDoc(doc(db, 'project', `${Intro}`), {
 					uid: userID.uid,
 					joined: serverTimestamp(), // 현재 날짜,시간
+					projectId: Intro,
 					info,
 					teamInfo,
-					genre: info.project_info.genre,
 					shallowSaving,
 					isLock,
+					genre: info.project_info.genre,
 				});
-				dispatch(setSaving(false));
-
+				// dispatch(setSaving(false));
 				if (shallowSaving) {
-					alert('임시저장 완료!');
+					alert('임시 저장 완료!');
 				} else {
 					alert('저장완료!');
 				}
-				router.push(`/project/${projectName}`);
+				window.open(`/project/${projectId}`);
 			} catch (err) {
 				console.log(err);
 			}
@@ -178,8 +183,12 @@ function introduce() {
 				setLastUpdate(projectSnap.data().joined);
 				setCore(projectSnap.data().info.project_page.core);
 				setMember(projectSnap.data().teamInfo.member);
+				// console.log(projectSnap.data().shallowSaving);
+				// setShallow(projectSnap.data().shallowSaving);
+
+				// 여기 부분이 문제인건가 아니면 처음엔 false였다가 true로 되는 것이 문제인건가
 				dispatch(setShallowSaving(projectSnap.data().shallowSaving));
-				// console.log(projectSnap.data().teamInfo.member);
+				dispatch(setSaving(projectSnap.data().Saving));
 			} else {
 				console.log('No such document!');
 			}
@@ -189,74 +198,24 @@ function introduce() {
 
 	let lastTouch = moment(lastUpdate?.toDate()).format('llll');
 
-	// 프로젝트 삭제
-	const deleteProject = async (path) => {
-		if (window.confirm(`정말 삭제하시겠습니까?⚠️`)) {
-			alert('삭제가 완료되었습니다.');
-			const projectRef = doc(db, 'project', `${projectName}`);
-			await deleteDoc(projectRef);
-			deleteStorageFolder(path);
-			router.push('/project');
-		} else {
-			('');
-		}
-	};
-
-	// 이미지 저장소 안에 있는 폴더 정보도 삭제
-	const deleteStorageFolder = (path) => {
-		console.log('path', path);
-		const fileRef = ref(storage, path);
-		console.log(fileRef);
-		listAll(fileRef)
-			.then((res) => {
-				res.items.forEach((itemRef) => {
-					deleteFile(fileRef.fullPath, itemRef.name);
-				});
-				res.prefixes.forEach((folderRef) => {
-					deleteStorageFolder(`gs://${folderRef.bucket}/${folderRef.fullPath}`);
-				});
-			})
-			.catch((error) => {
-				console.log('에러', error);
-			});
-	};
-
-	// 폴더 안애 있는 아이템 재귀삭제
-	const deleteFile = (pathToFile, fileName) => {
-		const itemRef = ref(storage, `${pathToFile}/${fileName}`);
-		deleteObject(itemRef)
-			.then((res) => {
-				console.log('삭제', res);
-			})
-			.catch((error) => {
-				console.log('안됨', error);
-			});
-	};
-
-	// 미리보기
-	const [previewOpen, setPreviewOpen] = useState(false);
-
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
-		dispatch(setAll({ info, teamInfo }));
 	};
 
 	useEffect(() => {
 		previewSetInfo();
 	}, [previewOpen]);
 
-	console.log(info);
+	let projectId = Intro;
 
 	return (
 		<>
 			<Form
 				lastTouch={lastTouch}
-				// deleteProject={deleteProject}
 				userID={userID.uid}
-				projectName={projectName}
+				Intro={Intro}
 				info={info}
 				setInfo={setInfo}
-				// inutRef={inutRef}
 				core={core}
 				setCore={setCore}
 				addCore={addCore}
@@ -268,12 +227,11 @@ function introduce() {
 				fileUrl={fileUrl}
 				setFileUrl={setFileUrl}
 				handleFormChange={handleFormChange}
-				// handleClick={handleClick}
-				// isValid={isValid}
 				addProjectIntro={addProjectIntro}
 				previewOpen={previewOpen}
 				setPreviewOpen={setPreviewOpen}
 				checkLines={checkLines}
+				projectId={projectId}
 			/>
 		</>
 	);

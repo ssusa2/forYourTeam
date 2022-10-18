@@ -5,18 +5,19 @@ import { useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import SortGenre from './SortGenre';
 import { db } from '../firebase';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { doc, getDoc } from 'firebase/firestore';
 import { usePagination } from '../../hooks/usePagination';
-import { set } from 'react-hook-form';
 
 function Projects() {
+	const router = useRouter();
 	const [hasProjects, setHasProjects] = useState(false);
 	const [btnActive, setBtnActive] = useState('');
 	const userInfo = useSelector(({ user }) => user);
 	const [target, setTarget] = useState(null);
 	const Number = 12;
 	const [GenreValue, setGenreValue] = useState(null);
+	const [genre, setGenre] = useState([]);
 	const { data, loading, loadingMore, noMore } = usePagination(
 		'project',
 		Number,
@@ -24,15 +25,10 @@ function Projects() {
 		GenreValue
 	);
 
-	console.log(data);
 	useEffect(() => {
 		setHasProjects(false);
 		data.length == 0 && setHasProjects(true);
 	}, [data]);
-
-	const router = useRouter();
-
-	const [genre, setGenre] = useState([]);
 
 	// 장르 받아오는 거
 	const fetchGenre = async (Intro) => {

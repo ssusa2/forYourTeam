@@ -1,26 +1,35 @@
 /** @format */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { checkLines } from '../../util/utils';
 import { db, storage } from '../firebase';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { setAll } from '../../src/store/modules/projectInfo';
-import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
+import Saving, {
+	setSaving,
+	setShallowSaving,
+} from '../../src/store/modules/Saving';
 import Form from './Form';
 import Alert from '../../components/Alert';
 import GuideModal from '../../components/Modal/GuideModal';
 
 function introduce() {
 	const dispatch = useDispatch();
+
 	const userID = useSelector(({ user }) => user);
-	const userInfo = useSelector(({ user }) => user.uid);
-	const [fileUrl, setFileUrl] = useState('');
-	const [previewOpen, setPreviewOpen] = useState(false);
-	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
+	const saving = useSelector(({ Saving }) => Saving.Saving);
+	const userInfo = useSelector(({ user }) => user.uid);
+
+	const [fileUrl, setFileUrl] = useState('');
+	const [previewOpen, setPreviewOpen] = useState(false);
+
+	const [enabled, setEnabled] = useState(false);
+
+	const [onClose, setOnClose] = useState(false);
+
 	const [info, setInfo] = useState({
 		project_info: {
 			name: '',
@@ -135,37 +144,41 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') {
-			dispatch(setSaving(true));
-			dispatch(setShallowSaving(false));
+			!saving && dispatch(setSaving(true));
+			shallowSaving && dispatch(setShallowSaving(false));
 		}
 	};
 
+	console.log('saving', saving, 'shallowSaving', shallowSaving);
+
 	let projectName = info?.project_info?.name;
+
+	const projectId = uuidv4();
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				const post = await setDoc(doc(db, 'project', `${projectName}`), {
+				const post = await setDoc(doc(db, 'project', `${projectId}`), {
 					uid: userInfo,
-					id: uuidv4(),
 					joined: serverTimestamp(), // 현재 날짜,시간
+					projectId,
 					info,
 					teamInfo,
-					genre: info.project_info.genre,
 					shallowSaving,
+					saving,
 					isLock,
+					genre: info.project_info.genre,
 				});
 				dispatch(setSaving(false));
 				if (shallowSaving) {
 					alert('임시저장 완료!');
 				} else {
 					setOnClose(true);
+					// 클립보드에 복사가 되었다는 말이 나오고 3초 후에 새 창이 열리도록
 					setTimeout(function () {
-						window.open(`/project/${projectName}`);
+						window.open(`/project/${projectId}`);
 					}, 3000);
-					// router.push('/project');
 				}
-
 				// 새창 띄우는 건 이게 나은듯
 			} catch (err) {
 				console.log(err);
@@ -176,18 +189,17 @@ function introduce() {
 		}
 	}, [saving, shallowSaving]);
 
+	useEffect(() => {
+		info.project_info.logo_image && dispatch(setShallowSaving(true));
+	}, [info.project_info.logo_image]);
+
 	const previewSetInfo = (e) => {
 		addProjectIntro(e);
-		// dispatch(setAll({ info, teamInfo }));
 	};
 
 	useEffect(() => {
 		previewSetInfo();
 	}, [previewOpen]);
-
-	const [enabled, setEnabled] = useState(false);
-
-	const [onClose, setOnClose] = useState(false);
 
 	console.log(info);
 
@@ -200,6 +212,7 @@ function introduce() {
 				setEnabled={setEnabled}
 				info={info}
 				userID={userID.uid}
+				projectId={projectId}
 				projectName={projectName}
 				setInfo={setInfo}
 				core={core}

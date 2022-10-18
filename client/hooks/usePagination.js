@@ -54,9 +54,7 @@ export const usePagination = (
 
 		try {
 			setLoading(true);
-
 			const snap = await getDocs(queryRef);
-			console.log('snap', snap);
 			const docsArray = snap.docs.map((doc) => ({
 				id: doc.id,
 				...doc.data(),
