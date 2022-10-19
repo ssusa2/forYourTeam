@@ -153,7 +153,8 @@ function introduce() {
 
 	let projectName = info?.project_info?.name;
 
-	const projectId = uuidv4();
+	let projectId = uuidv4();
+	// 이게 실행되서 계속 새로운 값이 생긴다.
 
 	useEffect(() => {
 		async function fetchData() {

@@ -806,8 +806,9 @@ function Form({
 							<Toggle setEnabled={setEnabled} enabled={enabled} />
 						</div>
 						<button
-							onClick={() => {
-								addProjectIntro();
+							name='임시저장'
+							onClick={(e) => {
+								addProjectIntro(e);
 								// dispatch(setShallowSaving(true));
 							}}
 							type='button'

@@ -17,19 +17,21 @@ import {
 	ref,
 } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
+// import { setSaving, setShallowSaving } from '../../src/store/modules/Saving';
 
 function introduce() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { Intro } = router.query;
-	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+	// const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+	// const saving = useSelector(({ Saving }) => Saving.Saving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
-	const saving = useSelector(({ Saving }) => Saving.Saving);
 	const userID = useSelector(({ user }) => user);
 
 	// 미리보기
 	const [previewOpen, setPreviewOpen] = useState(false);
+	const [isSaving, setIsSaving] = useState(null);
+	const [isShallowSaving, setIsShallowSaving] = useState(null);
 	const [fileUrl, setFileUrl] = useState('');
 	const [shallow, setShallow] = useState(false);
 	const [info, setInfo] = useState({
@@ -126,47 +128,49 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') {
-			dispatch(setSaving(true));
-			dispatch(setShallowSaving(false));
+			// dispatch(setIsSaving(true));
+			// dispatch(setShallowSaving(false));
 			// shallow && setShallow(false);
+			setIsSaving(true);
+			setIsShallowSaving(false);
 		} else {
-			dispatch(setShallowSaving(true));
-			dispatch(setSaving(false));
+			setIsShallowSaving(true);
+			setIsSaving(false);
 		}
+		// dispatch(setShallowSaving(true));
+		// dispatch(setIsSaving(false));
 	};
 
-	console.log('saving', saving, 'shallowSaving', shallowSaving);
+	console.log('saving', isSaving, 'shallowSaving', isShallowSaving);
 
 	// let shallowSaving = shallow;
 
-	useEffect(() => {
-		async function fetchData() {
-			try {
-				const post = await setDoc(doc(db, 'project', `${Intro}`), {
-					uid: userID.uid,
-					joined: serverTimestamp(), // 현재 날짜,시간
-					projectId: Intro,
-					info,
-					teamInfo,
-					shallowSaving,
-					isLock,
-					genre: info.project_info.genre,
-				});
-				// dispatch(setSaving(false));
-				if (shallowSaving) {
-					alert('임시 저장 완료!');
-				} else {
-					alert('저장완료!');
+	if (isShallowSaving)
+		useEffect(() => {
+			async function fetchData() {
+				try {
+					const post = await setDoc(doc(db, 'project', `${Intro}`), {
+						uid: userID.uid,
+						joined: serverTimestamp(), // 현재 날짜,시간
+						projectId: Intro,
+						info,
+						teamInfo,
+						shallowSaving: isShallowSaving,
+						saving: isSaving,
+						isLock,
+						genre: info.project_info.genre,
+					});
+					// dispatch(setIsSaving(false));
+					window.open(`/project/${projectId}`);
+				} catch (err) {
+					console.log(err);
 				}
-				window.open(`/project/${projectId}`);
-			} catch (err) {
-				console.log(err);
 			}
-		}
-		if (saving || shallowSaving) {
-			fetchData();
-		}
-	}, [saving, shallowSaving]);
+			if (isSaving) {
+				fetchData('저장완료');
+			} else if (isShallowSaving) {
+			}
+		}, [isSaving, isShallowSaving]);
 
 	// 여기서 부터는 업데이트에서만 있는 기능
 
@@ -183,12 +187,15 @@ function introduce() {
 				setLastUpdate(projectSnap.data().joined);
 				setCore(projectSnap.data().info.project_page.core);
 				setMember(projectSnap.data().teamInfo.member);
+				setIsSaving(projectSnap.data().saving);
+				setIsShallowSaving(projectSnap.data().shallowSaving);
+
 				// console.log(projectSnap.data().shallowSaving);
 				// setShallow(projectSnap.data().shallowSaving);
 
 				// 여기 부분이 문제인건가 아니면 처음엔 false였다가 true로 되는 것이 문제인건가
-				dispatch(setShallowSaving(projectSnap.data().shallowSaving));
-				dispatch(setSaving(projectSnap.data().Saving));
+				// dispatch(setShallowSaving(projectSnap.data().shallowSaving));
+				// dispatch(setIsSaving(projectSnap.data().Saving));
 			} else {
 				console.log('No such document!');
 			}
