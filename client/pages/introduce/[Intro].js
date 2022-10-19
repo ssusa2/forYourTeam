@@ -145,32 +145,32 @@ function introduce() {
 
 	// let shallowSaving = shallow;
 
-	if (isShallowSaving)
-		useEffect(() => {
-			async function fetchData() {
-				try {
-					const post = await setDoc(doc(db, 'project', `${Intro}`), {
-						uid: userID.uid,
-						joined: serverTimestamp(), // 현재 날짜,시간
-						projectId: Intro,
-						info,
-						teamInfo,
-						shallowSaving: isShallowSaving,
-						saving: isSaving,
-						isLock,
-						genre: info.project_info.genre,
-					});
-					// dispatch(setIsSaving(false));
-					window.open(`/project/${projectId}`);
-				} catch (err) {
-					console.log(err);
-				}
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const post = await setDoc(doc(db, 'project', `${Intro}`), {
+					uid: userID.uid,
+					joined: serverTimestamp(), // 현재 날짜,시간
+					projectId: Intro,
+					info,
+					teamInfo,
+					shallowSaving: isShallowSaving,
+					saving: isSaving,
+					isLock,
+					genre: info.project_info.genre,
+				});
+				// dispatch(setIsSaving(false));
+				window.open(`/project/${projectId}`);
+			} catch (err) {
+				console.log(err);
 			}
-			if (isSaving) {
-				fetchData('저장완료');
-			} else if (isShallowSaving) {
-			}
-		}, [isSaving, isShallowSaving]);
+		}
+		if (isSaving && !isShallowSaving) {
+			fetchData('저장완료');
+		} else if (isShallowSaving && !isSaving) {
+			fetchData('임시저장완료');
+		}
+	}, [isSaving, isShallowSaving]);
 
 	// 여기서 부터는 업데이트에서만 있는 기능
 
