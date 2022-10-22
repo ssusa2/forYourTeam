@@ -18,9 +18,11 @@ function introduce() {
 	const dispatch = useDispatch();
 
 	const userID = useSelector(({ user }) => user);
-	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
+	const [isSaving, setIsSaving] = useState(null);
+	const [isShallowSaving, setIsShallowSaving] = useState(null);
+	// const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
-	const saving = useSelector(({ Saving }) => Saving.Saving);
+	// const saving = useSelector(({ Saving }) => Saving.Saving);
 	const userInfo = useSelector(({ user }) => user.uid);
 
 	const [fileUrl, setFileUrl] = useState('');
@@ -126,6 +128,7 @@ function introduce() {
 	};
 
 	const addProjectIntro = (e) => {
+		console.log('???');
 		setInfo((prev) => {
 			return {
 				...prev,
@@ -144,12 +147,18 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') {
-			!saving && dispatch(setSaving(true));
-			shallowSaving && dispatch(setShallowSaving(false));
+			console.log('저장');
+			setIsSaving(true);
+			setIsShallowSaving(false);
+		} else if (e?.target.name === '임시저장') {
+			// 임시저장
+			console.log('임시저장');
+			setIsSaving(false);
+			setIsShallowSaving(true);
 		}
 	};
 
-	console.log('saving', saving, 'shallowSaving', shallowSaving);
+	// console.log('saving', saving, 'shallowSaving', shallowSaving);
 
 	let projectName = info?.project_info?.name;
 
@@ -165,13 +174,13 @@ function introduce() {
 					projectId,
 					info,
 					teamInfo,
-					shallowSaving,
-					saving,
+					shallowSaving: isShallowSaving,
+					saving: isSaving,
 					isLock,
 					genre: info.project_info.genre,
 				});
-				dispatch(setSaving(false));
-				if (shallowSaving) {
+				// dispatch(setSaving(false));
+				if (isShallowSaving) {
 					alert('임시저장 완료!');
 				} else {
 					setOnClose(true);
@@ -185,10 +194,20 @@ function introduce() {
 				console.log(err);
 			}
 		}
-		if (saving || shallowSaving) {
-			fetchData();
+		if (isSaving && !isShallowSaving) {
+			fetchData('저장완료');
+		} else if (isShallowSaving && !isSaving) {
+			fetchData('임시저장완료');
 		}
-	}, [saving, shallowSaving]);
+	}, [isSaving, isShallowSaving]);
+
+	console.log(
+		'index.js:',
+		'isSaving',
+		isSaving,
+		'isShallowSaving',
+		isShallowSaving
+	);
 
 	useEffect(() => {
 		info.project_info.logo_image && dispatch(setShallowSaving(true));

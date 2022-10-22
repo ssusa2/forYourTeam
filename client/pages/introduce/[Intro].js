@@ -128,17 +128,14 @@ function introduce() {
 		});
 
 		if (e?.target.name == '저장') {
-			// dispatch(setIsSaving(true));
-			// dispatch(setShallowSaving(false));
-			// shallow && setShallow(false);
 			setIsSaving(true);
 			setIsShallowSaving(false);
-		} else {
-			setIsShallowSaving(true);
+		} else if (e?.target.name === '임시저장') {
+			// 임시저장
+			console.log('임시저장');
 			setIsSaving(false);
+			setIsShallowSaving(true);
 		}
-		// dispatch(setShallowSaving(true));
-		// dispatch(setIsSaving(false));
 	};
 
 	console.log('saving', isSaving, 'shallowSaving', isShallowSaving);
@@ -172,6 +169,13 @@ function introduce() {
 		}
 	}, [isSaving, isShallowSaving]);
 
+	console.log(
+		'[index].js:',
+		'isSaving',
+		isSaving,
+		'isShallowSaving',
+		isShallowSaving
+	);
 	// 여기서 부터는 업데이트에서만 있는 기능
 
 	// 업데이트
