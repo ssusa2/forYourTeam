@@ -1,12 +1,15 @@
 /** @format */
-
-/** @format */
-
-import React, { useState, useEffect } from 'react';
-import { storage } from '../firebase';
-import { v4 as uuidv4 } from 'uuid';
-import { useSelector, useDispatch } from 'react-redux';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { getAuth } from 'firebase/auth';
+import {
+	getDocs,
+	query,
+	where,
+	collectionGroup,
+	orderBy,
+} from 'firebase/firestore';
+import { db } from '../firebase';
 import { checkLines } from '../../util/utils';
 import handleFormChange from '../../util/handle';
 import Image from 'next/image';
@@ -26,15 +29,38 @@ function MemberAdd({
 	projectName,
 	userID,
 }) {
-	const saving = useSelector(({ Saving }) => Saving.Saving);
-	const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
 	const [showMember, setShowMember] = useState(true);
+	const [memberName, setMemberName] = useState(null);
+	const [hasMember, setHasMember] = useState(false);
+	const [memberInfo, setMemberInfo] = useState('');
+	const nameRef = useRef();
 
 	const [imageSrc, setImageSrc] = useState('');
-	// console.log(el);
 	useEffect(() => {
 		setImageSrc(el.image);
 	}, [el]);
+
+	useEffect(() => {
+		const getUserList = async () => {
+			const project = query(
+				collectionGroup(db, 'users'),
+				where('email', '==', `${memberName}`)
+			);
+
+			const querySnapshot = await getDocs(project);
+			const newData = querySnapshot.docs.map((doc) => ({
+				...doc.data(),
+			}));
+			setMemberInfo(newData[0]);
+			// newData.name;
+			newData[0]?.name ? setHasMember(true) : setHasMember(false);
+		};
+
+		getUserList(memberName);
+		console.log(memberInfo);
+	}, [memberName]);
+
+	console.log('nameRef', nameRef);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		if (fileBlob.size > 3000000) {
@@ -175,15 +201,14 @@ hover:file:bg-violet-100'
 											이름({idx + 1})
 										</label>
 										<input
+											ref={nameRef}
 											value={el.name}
 											placeholder='이름'
 											name='name'
 											maxLength={30}
-											// onChange={(e) => {
-											// 	setMember({ name: e.target.value });
-											// }}
 											onChange={(e) => {
 												handleFormChange(idx, e, member, setMember, folder);
+												setMemberName(e.target.value);
 											}}
 											type='text'
 											multiple='multiple'
@@ -191,9 +216,29 @@ hover:file:bg-violet-100'
 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
-focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-'
+focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
 										/>
+
+										{hasMember ? (
+											<>
+												<strong className='text-black underline'>
+													{memberInfo?.name}
+												</strong>
+												님이 맞나요?
+												<span
+													className='ml-3'
+													onClick={() =>
+														(nameRef.current.value = memberInfo?.name)
+													}
+												>
+													등록하기
+												</span>
+											</>
+										) : (
+											<span className='font-normal text-slate-500	 '>
+												이메일 주소를 입력해서 팀원을 찾아보세요.
+											</span>
+										)}
 									</div>
 									<div className='w-1/2'>
 										<label className='small-title mt-0 essential'>
@@ -213,8 +258,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
-focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-'
+focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
 										/>
 									</div>
 								</div>
@@ -237,13 +281,12 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
-focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-'
+focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
 									/>
 								</div>
 								<label className='small-title essential'>
 									Github({idx + 1})
-								</label>{' '}
+								</label>
 								<input
 									value={el.github}
 									placeholder='ex)https://github.com/ForMyTeam'
@@ -265,8 +308,7 @@ focus:invalid:border-pink-500 focus:invalid:ring-pink-500
 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
-focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-'
+focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
 								/>
 							</div>
 						</div>

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import LogOut from './Logout';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUserName, setUserId } from '../../src/store/modules/user';
+import user, { setUserName, setUserId } from '../../src/store/modules/user';
 import { setColor, setLogo } from '../../src/store/modules/projectInfo';
 import { FirebaseAuth } from '../../pages/firebase';
 import { db } from '../../pages/firebase';
@@ -34,22 +34,6 @@ function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 		projectMenu = false;
 	}
 
-	// useEffect(() => {
-	// 	const fetchUsers = async (Intro) => {
-	// 		const projectRef = doc(db, 'project', `${Intro}`);
-	// 		const projectSnap = await getDoc(projectRef);
-
-	// 		if (projectSnap.exists()) {
-	// 			setProjectObj(projectSnap.data().info.project_info);
-	// 		} else {
-	// 			console.log('No such document!');
-	// 		}
-	// 	};
-	// 	if (route === '/project/[Intro]') {
-	// 		fetchUsers(Intro);
-	// 	}
-	// }, [Intro]);
-
 	const { info, teamInfo } = project;
 
 	let isProjectPage = pathname == '/project/[Intro]';
@@ -57,6 +41,7 @@ function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 
 	useEffect(() => {
 		FirebaseAuth.onAuthStateChanged((user) => {
+			console.log(user);
 			if (user) {
 				setIsLoggedIn(true);
 				dispatch(setUserName(user.displayName));

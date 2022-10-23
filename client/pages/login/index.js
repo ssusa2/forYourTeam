@@ -1,13 +1,16 @@
 /** @format */
 import { useState } from 'react';
-import { FirebaseAuth, FirebaseInstance } from '../firebase';
+import { FirebaseAuth, db } from '../firebase';
+import { v4 as uuidv4 } from 'uuid';
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	GithubAuthProvider,
 	GoogleAuthProvider,
 	signInWithPopup,
+	updateProfile,
 } from 'firebase/auth';
+import { getDocs, query, where, collection, addDoc } from 'firebase/firestore';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
@@ -16,11 +19,12 @@ function Login() {
 	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [name, setName] = useState('');
 	const [newAccount, setNewAccount] = useState(true);
 	const [error, setError] = useState('');
 
 	const onChange = (event) => {
-		console.log(event.target.value);
+		console.log(`${event.target.name}`, event.target.value);
 		const {
 			target: { name, value },
 		} = event;
@@ -28,32 +32,49 @@ function Login() {
 			setEmail(value);
 		} else if (name === 'password') {
 			setPassword(value);
+		} else if (name === 'name') {
+			setName(value);
 		}
 	};
 
 	const onSubmit = async (event) => {
+		console.log(email, name, password);
 		event.preventDefault();
 		try {
-			let data;
 			if (newAccount) {
-				const { user } = await createUserWithEmailAndPassword(
+				let uid;
+				const res = await createUserWithEmailAndPassword(
 					FirebaseAuth,
 					email,
-					password
-				);
+					password,
+					name
+				).then((res) => {
+					updateProfile(FirebaseAuth.currentUser, {
+						displayName: name,
+					});
+
+					uid = res.user.uid;
+				});
+				await addDoc(collection(db, 'users'), {
+					name,
+					email,
+					uid: uid,
+					authProvider: 'local',
+				});
 			} else {
-				const { user } = await signInWithEmailAndPassword(
+				const res = await signInWithEmailAndPassword(
 					FirebaseAuth,
 					email,
+					name,
 					password
 				);
 			}
+
 			console.log('성공');
 			alert('환영합니다.😀');
 			router.push('/home');
 		} catch (error) {
 			console.log(error.message);
-
 			setError(error.message);
 		}
 	};
@@ -73,7 +94,18 @@ function Login() {
 			provider = new GithubAuthProvider();
 		}
 		const data = await signInWithPopup(FirebaseAuth, provider);
-		console.log(data);
+		const user = data.user;
+		const q = query(collection(db, 'users'), where('uid', '==', user.uid));
+		const docs = await getDocs(q);
+		if (docs.docs.length === 0) {
+			await addDoc(collection(db, 'users'), {
+				uid: user.uid,
+				email: user.email,
+				name: user.displayName,
+				authProvider: name,
+			});
+		}
+
 		data.user.displayName && route.push('/project');
 	};
 
@@ -95,8 +127,21 @@ function Login() {
 								<h1 className='main-color middle-title text-start'>회원가입</h1>
 							) : (
 								<h1 className='main-color middle-title text-start'>로그인</h1>
-							)}{' '}
+							)}
 							<form onSubmit={onSubmit}>
+								{newAccount && (
+									<>
+										<label className='small-title '>이름</label>
+										<input
+											className=' base-form'
+											value={name}
+											name='name'
+											type='text'
+											placeholder='name'
+											onChange={onChange}
+										/>
+									</>
+								)}
 								<label className='small-title '>아이디</label>
 								<input
 									className=' base-form'
@@ -105,7 +150,6 @@ function Login() {
 									type='text'
 									placeholder='Email'
 									onChange={onChange}
-									// required
 								/>
 								<label className='small-title '>비밀번호</label>
 								<input
@@ -115,10 +159,8 @@ function Login() {
 									placeholder='Password'
 									className=' base-form'
 									onChange={onChange}
-									// required
 								/>
 								<p className='text-red-600'>{error}</p>
-
 								<input
 									onClick={(e) => onSubmit(e)}
 									className=' rounded-lg  px-4 py-2 text-xl font-semibold shadow-sm bg-green-700 transition duration-300 ease-in-out text-white border-green-700 hover:bg-green-800  sm:text-base w-full mt-3'
@@ -151,7 +193,6 @@ function Login() {
 						<h3 className='font-extrabold  text-3xl mb-3'>
 							{newAccount ? '재방문하시나요? 🖐' : '처음 방문하시나요? 🖐'}
 						</h3>
-
 						{newAccount ? (
 							<pre className='pre'>
 								다시 만나서 반갑습니다! <br />
@@ -164,7 +205,6 @@ function Login() {
 								ForMyTeam과 함께하면 간단하게 프로젝트 소개를 할 수 있어요
 							</pre>
 						)}
-
 						<div className='mt-3 flex justify-center'>
 							<button
 								className=' w-1/2 border-2 border-green-700 mt-3 rounded-lg  px-4 py-2 text-2xl font-extrabold shadow-sm transition duration-300 ease-in-out text-green-700 hover:bg-green-700 hover:text-white sm:text-base '

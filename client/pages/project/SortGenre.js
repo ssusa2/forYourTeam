@@ -36,7 +36,7 @@ function SortGenre({
 							}
 						>
 							<span
-								className='w-[20px] h-[20px] pt-[0.1rem] mr-1 stroke-2'
+								className='w-[20px] h-[20px] pt-[0.1rem] mr-1 stroke-2 pointer-events-none	'
 								dangerouslySetInnerHTML={replaceBrTag(item?.id?.[1])}
 							/>
 							{item.value}

@@ -68,8 +68,11 @@ function introduce() {
 			description: '',
 			github: '',
 			image: '',
+			uid: '',
 		},
 	]);
+
+	console.log('member', member);
 
 	const [core, setCore] = useState([
 		{

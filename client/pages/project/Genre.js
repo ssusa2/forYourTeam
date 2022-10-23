@@ -1,8 +1,6 @@
 /** @format */
 
 function Genre({ genre, key, btnActive, idx, toggleActive }) {
-	// console.log('Genre', genre);
-	console.log(toggleActive);
 	return (
 		<button
 			key={key}

@@ -191,8 +191,8 @@ function introduce() {
 				setLastUpdate(projectSnap.data().joined);
 				setCore(projectSnap.data().info.project_page.core);
 				setMember(projectSnap.data().teamInfo.member);
-				setIsSaving(projectSnap.data().saving);
-				setIsShallowSaving(projectSnap.data().shallowSaving);
+				// setIsSaving(projectSnap.data().saving);
+				// setIsShallowSaving(projectSnap.data().shallowSaving);
 
 				// console.log(projectSnap.data().shallowSaving);
 				// setShallow(projectSnap.data().shallowSaving);
