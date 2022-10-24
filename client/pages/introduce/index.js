@@ -68,7 +68,7 @@ function introduce() {
 			description: '',
 			github: '',
 			image: '',
-			uid: '',
+			userInfo: {},
 		},
 	]);
 
@@ -85,6 +85,7 @@ function introduce() {
 
 	const handleFormChange = async (index, event, state, setState, folder) => {
 		let data = [...state];
+		console.log(event);
 		try {
 			let fileUrl = '';
 			if (event.target.type == 'file') {

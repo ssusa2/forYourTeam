@@ -1,14 +1,7 @@
 /** @format */
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { getAuth } from 'firebase/auth';
-import {
-	getDocs,
-	query,
-	where,
-	collectionGroup,
-	orderBy,
-} from 'firebase/firestore';
+import { Combobox } from '@headlessui/react';
+import { getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import { db } from '../firebase';
 import { checkLines } from '../../util/utils';
 import handleFormChange from '../../util/handle';
@@ -25,15 +18,15 @@ function MemberAdd({
 	setMember,
 	section,
 	folder,
-	defaultImg,
 	projectName,
 	userID,
 }) {
 	const [showMember, setShowMember] = useState(true);
 	const [memberName, setMemberName] = useState(null);
-	const [hasMember, setHasMember] = useState(false);
-	const [memberInfo, setMemberInfo] = useState('');
-	const nameRef = useRef();
+	const [memberInfo, setMemberInfo] = useState([]);
+	const people = memberInfo;
+
+	const [selectedPerson, setSelectedPerson] = useState();
 
 	const [imageSrc, setImageSrc] = useState('');
 	useEffect(() => {
@@ -44,23 +37,19 @@ function MemberAdd({
 		const getUserList = async () => {
 			const project = query(
 				collectionGroup(db, 'users'),
-				where('email', '==', `${memberName}`)
+				where('name', '==', `${memberName}`)
 			);
 
 			const querySnapshot = await getDocs(project);
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
 			}));
-			setMemberInfo(newData[0]);
+			setMemberInfo(newData);
 			// newData.name;
-			newData[0]?.name ? setHasMember(true) : setHasMember(false);
 		};
 
 		getUserList(memberName);
-		console.log(memberInfo);
 	}, [memberName]);
-
-	console.log('nameRef', nameRef);
 
 	const encodeFileToBase64 = (fileBlob) => {
 		if (fileBlob.size > 3000000) {
@@ -200,7 +189,59 @@ hover:file:bg-violet-100'
 										<label className='small-title mt-0 essential'>
 											이름({idx + 1})
 										</label>
-										<input
+										<Combobox>
+											<Combobox.Input
+												name='name'
+												value={selectedPerson?.name}
+												onChange={(e) => {
+													handleFormChange(idx, e, member, setMember, folder);
+													setMemberName(e.target.value);
+												}}
+												className='relative mt-1 block w-5/6	 px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+											focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+											disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+											invalid:border-pink-500 invalid:text-pink-600
+											focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
+											/>
+
+											<Combobox.Options className='absolute w-2/5 overflow-y-scroll h-[90px]'>
+												{people?.map((el) => {
+													return (
+														<>
+															<Combobox.Option
+																name='uid'
+																value={el.name}
+																onClick={(e) => {
+																	setSelectedPerson(el);
+																	setMember((prev) => {
+																		console.log(idx);
+																		return [
+																			{
+																				...prev[idx],
+																				userInfo: {
+																					name: el.name,
+																					email: el.email,
+																					uid: el.uid,
+																				},
+																			},
+																		];
+																	});
+																}}
+																className='hover:bg-green-500  mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+															focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+															disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+															invalid:border-pink-500 invalid:text-pink-600
+															focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
+																key={idx}
+															>
+																{el.name} {el.email}
+															</Combobox.Option>
+														</>
+													);
+												})}
+											</Combobox.Options>
+										</Combobox>
+										{/* <input
 											ref={nameRef}
 											value={el.name}
 											placeholder='이름'
@@ -217,29 +258,9 @@ focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
 invalid:border-pink-500 invalid:text-pink-600
 focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
-										/>
-
-										{hasMember ? (
-											<>
-												<strong className='text-black underline'>
-													{memberInfo?.name}
-												</strong>
-												님이 맞나요?
-												<span
-													className='ml-3'
-													onClick={() =>
-														(nameRef.current.value = memberInfo?.name)
-													}
-												>
-													등록하기
-												</span>
-											</>
-										) : (
-											<span className='font-normal text-slate-500	 '>
-												이메일 주소를 입력해서 팀원을 찾아보세요.
-											</span>
-										)}
+										/> */}
 									</div>
+
 									<div className='w-1/2'>
 										<label className='small-title mt-0 essential'>
 											직책({idx + 1})
