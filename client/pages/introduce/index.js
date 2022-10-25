@@ -127,6 +127,7 @@ function introduce() {
 			description: '',
 			github: '',
 			image: '',
+			userInfo: {},
 		};
 		setMember([...member, newMember]);
 	};

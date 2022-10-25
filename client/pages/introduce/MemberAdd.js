@@ -10,6 +10,7 @@ import female from '../../image/female.png';
 import male from '../../image/male.png';
 import { Arrow } from '../../components/Icon/Icon';
 import { handleToggle } from '../../src/util/accordion';
+import { userInfo } from 'os';
 
 function MemberAdd({
 	el,
@@ -209,23 +210,18 @@ hover:file:bg-violet-100'
 													return (
 														<>
 															<Combobox.Option
-																name='uid'
+																name='userInfo'
 																value={el.name}
 																onClick={(e) => {
+																	console.log(e.target);
 																	setSelectedPerson(el);
 																	setMember((prev) => {
 																		console.log(idx);
 																		return [
-																			{
-																				...prev[idx],
-																				userInfo: {
-																					name: el.name,
-																					email: el.email,
-																					uid: el.uid,
-																				},
-																			},
+																			([...member][idx]['userInfo'] = el),
 																		];
 																	});
+																	setMember([...member]);
 																}}
 																className='hover:bg-green-500  mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
 															focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
