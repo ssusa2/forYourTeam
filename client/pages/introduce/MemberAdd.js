@@ -42,6 +42,7 @@ function MemberAdd({
 			);
 
 			const querySnapshot = await getDocs(project);
+			console.log(querySnapshot);
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
 			}));

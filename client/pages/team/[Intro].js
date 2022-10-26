@@ -53,6 +53,8 @@ function teamHome({ PreviewTeamInfo }) {
 	}
 	const OneMember = teamInfo?.member.length;
 
+	console.log(teams);
+
 	return (
 		<>
 			<div
