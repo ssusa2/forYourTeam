@@ -42,14 +42,19 @@ function MemberAdd({
 			);
 
 			const querySnapshot = await getDocs(project);
-			console.log(querySnapshot);
+			// console.log('querySnapshot', querySnapshot);
+			// console.log(querySnapshot.docs[0].id);
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
+				...doc._key.path.segments,
+				// ...doc[idx]?.id,
 			}));
+			console.log(newData);
 			setMemberInfo(newData);
 			// newData.name;
 		};
 
+		console.log(memberInfo);
 		getUserList(memberName);
 	}, [memberName]);
 

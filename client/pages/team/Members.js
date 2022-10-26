@@ -7,14 +7,14 @@ import { replaceBrTag } from '../../util/utils';
 function Members({ members, OneMember }) {
 	const { github, name, image, description, role, gender } = members;
 
-	console.log(members);
+	console.log(members.userInfo[6]);
 	return (
 		<>
 			<div className={OneMember == 1 ? 'w-full xl:w-1/2' : 'w-full'}>
 				<div className='w-full h-72 relative '>
 					<a
-						href={`/user/${members.userInfo.uid}`}
-						target={`/user/${members.userInfo.uid}`}
+						href={`/user/${members.userInfo[6]}`}
+						target={`/user/${members.userInfo[6]}`}
 					>
 						<Image
 							layout='fill'
