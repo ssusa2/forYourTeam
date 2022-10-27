@@ -12,10 +12,7 @@ function Members({ members, OneMember }) {
 		<>
 			<div className={OneMember == 1 ? 'w-full xl:w-1/2' : 'w-full'}>
 				<div className='w-full h-72 relative '>
-					<a
-						href={`/user/${members.userInfo[6]}`}
-						target={`/user/${members.userInfo[6]}`}
-					>
+					<a href={`/user/${members.userInfo[6]}`} target='_blank'>
 						<Image
 							layout='fill'
 							objectFit='cover'
@@ -37,7 +34,7 @@ function Members({ members, OneMember }) {
 								<span className='font-semibold text-gray-500	'> {role}</span>
 							</div>
 							<div>
-								<a href={github} target={github}>
+								<a href={github} target='_blank'>
 									<svg
 										xmlns='http://www.w3.org/2000/svg'
 										viewBox='0 0 496 512'

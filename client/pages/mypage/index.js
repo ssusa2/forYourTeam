@@ -138,15 +138,20 @@ function Mypage() {
 						<ProjectList projects={shallowProjects} />
 					</>
 				)}
-				<div className='flex mt-16'>
-					<h2 className='middle-title '>🔒 비공개된 프로젝트</h2>{' '}
-					<span className='font-bold text-lg pt-2 '>
-						({lockProjects.length})
-					</span>
-				</div>
 
-				<div className=' mt-8 h-px bg-slate-300'></div>
-				<ProjectList projects={lockProjects} />
+				{lockProjects.length > 0 && (
+					<>
+						<div className='flex mt-16'>
+							<h2 className='middle-title '>🔒 비공개된 프로젝트</h2>{' '}
+							<span className='font-bold text-lg pt-2 '>
+								({lockProjects.length})
+							</span>
+						</div>
+
+						<div className=' mt-8 h-px bg-slate-300'></div>
+						<ProjectList projects={lockProjects} />
+					</>
+				)}
 			</div>
 		</>
 	);

@@ -57,10 +57,7 @@ function Footer({ PreviewInfo }) {
 								</a>
 							)
 						) : (
-							<a
-								target={`${info?.project_info?.team_github}`}
-								href={`${info?.project_info?.team_github}`}
-							>
+							<a target='_blank' href={`${info?.project_info?.team_github}`}>
 								<Github />
 							</a>
 						)}
