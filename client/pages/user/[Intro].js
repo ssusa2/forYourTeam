@@ -29,7 +29,7 @@ function user() {
 		const getProjects = async () => {
 			const project = query(
 				collectionGroup(db, 'project'),
-				where('6', 'array-contains', `${Intro}`),
+				where('teamInfo.member.userInfo', '==', `${Intro}`),
 				where('shallowSaving', '==', false),
 				where('isLock', '==', false)
 			);
