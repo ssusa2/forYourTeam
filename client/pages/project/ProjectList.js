@@ -1,21 +1,42 @@
 /** @format */
 import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { Edit, Lock } from '../../components/Icon/Icon';
+import { Edit, Lock, NonHeart, Heart } from '../../components/Icon/Icon';
 
 function ProjectList({ projects }) {
 	const userInfo = useSelector(({ user }) => user.uid);
 	const router = useRouter();
+	const [isError, setIsError] = useState(false);
+	const [isClick, setIsClick] = useState(false);
+
+	const handleLike = () => {
+		setIsClick(!isClick);
+	};
 
 	return (
 		<>
 			<div className='bg-white'>
 				<div className='mx-auto max-w-2xl py-8 sm:py-8  lg:max-w-7xl'>
+					{isClick ? (
+						<>
+							<button onClick={() => setIsClick(false)}>
+								<Heart />
+							</button>
+						</>
+					) : (
+						<>
+							<button onClick={() => setIsClick(true)}>
+								<NonHeart />
+							</button>
+						</>
+					)}
 					<h2 className='sr-only'>Products</h2>
 					<div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
 						{projects.map((project) => {
 							const { uid, info, teamInfo, isLock, projectId } = project;
+							console.log(info?.project_info.logo_image);
 							return (
 								<div key={projectId} uid={uid} className='group relative'>
 									{userInfo == uid && (
@@ -35,11 +56,19 @@ function ProjectList({ projects }) {
 										<a target={`/project/${projectId}`}>
 											<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
 												{info?.project_info.logo_image ? (
-													<img
-														src={info?.project_info.logo_image}
-														alt={info?.project_info.logo_image}
-														className='w-full aspect-video object-cover object-center group-hover:opacity-75'
-													/>
+													isError ? (
+														<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
+															<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
+																{info?.project_info.name}
+															</p>
+														</div>
+													) : (
+														<img
+															onError={(event) => setIsError(true)}
+															src={info?.project_info.logo_image}
+															className='w-full aspect-video object-cover object-center group-hover:opacity-75'
+														/>
+													)
 												) : (
 													<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
 														<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
@@ -59,7 +88,19 @@ function ProjectList({ projects }) {
 											{info?.project_info.genre}
 										</div>
 									</div>
-									<p>{teamInfo?.intro.name}</p>
+									<div className='flex justify-between'>
+										<p>{teamInfo?.intro.name}</p>
+										{isClick ? (
+											<Heart onClick={() => setIsClick(false)} />
+										) : (
+											<NonHeart
+												onClick={() => {
+													handleLike();
+													console.log('isClick');
+												}}
+											/>
+										)}
+									</div>
 								</div>
 							);
 						})}

@@ -2,10 +2,11 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore';
 import { getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import ProjectList from '../project/ProjectList';
 import _ from 'underscore';
+import { Github, NonHeart, Heart } from '../../components/Icon/Icon';
 
 function user() {
 	const [userInfo, setUserInfo] = useState({});
@@ -45,25 +46,27 @@ function user() {
 			}));
 			setProjects(
 				newData.filter(function (el) {
-					return el.teamInfo.member?.[0]?.userInfo?.[6];
+					return el.teamInfo.member?.[0]?.userInfo?.[6] == `${Intro}`;
 				})
 			);
 		};
 		getUser(Intro);
 		getProjects(Intro);
 	}, [Intro]);
-	// console.log(Intro);
-	// console.log(userInfo);
-	console.log(
-		projects.filter(function (el) {
-			return el.teamInfo.member?.[0]?.userInfo?.[6];
-		})
-	);
+
+	console.log(projects);
 
 	return (
 		<>
 			<div className='my-container max-w-6xl'>
-				<div className='middle-title'>{userInfo?.name}님이 참여한 프로젝트</div>
+				<div className='sm:block xl:flex md:flex justify-between items-end'>
+					<div className='middle-title'>
+						{userInfo?.name}님이 참여한 프로젝트
+					</div>
+					<a target='_blank' href={'3'}>
+						<Github />
+					</a>
+				</div>
 				<div className=' mt-8 h-px bg-slate-300'></div>
 				<ProjectList projects={projects} />
 			</div>
