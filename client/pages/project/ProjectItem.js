@@ -4,7 +4,16 @@ import Link from 'next/link';
 import { Edit, Lock, NonHeart, Heart } from '../../components/Icon/Icon';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { doc, updateDoc, increment } from 'firebase/firestore';
+import { db } from '../firebase';
+import {
+	doc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+	increment,
+	onSnapshot,
+} from 'firebase/firestore';
+import _ from 'underscore';
 
 function Project({ project }) {
 	const userInfo = useSelector(({ user }) => user.uid);
@@ -12,10 +21,38 @@ function Project({ project }) {
 	const [isError, setIsError] = useState(false);
 	const [isClick, setIsClick] = useState(false);
 	const { projectId, info, teamInfo, uid, isLock } = project;
+	const [like, SetLike] = useState();
+
+	const liked = _.includes(like?.likeId, `${uid}`);
+
+	const addLike = async () => {
+		if (liked) return;
+		setIsClick(true);
+		const likeRef = doc(db, 'project', `${projectId}`);
+		const data = await updateDoc(likeRef, {
+			like: increment(1),
+			likeId: arrayUnion(`${uid}`),
+		});
+	};
 
 	useEffect(() => {
-		const washingtonRef = doc(db, 'cities', 'DC');
-	}, []);
+		const unsub = onSnapshot(doc(db, 'project', `${projectId}`), (doc) => {
+			console.log('Current data: ', doc.data());
+			SetLike(doc.data());
+			console.log('adasdasd', like);
+		});
+	}, [isClick]);
+
+	const subtractLike = async () => {
+		setIsClick(false);
+		const likeRef = doc(db, 'project', `${projectId}`);
+		await updateDoc(likeRef, {
+			like: increment(-1),
+			likeId: arrayRemove(`${uid}`),
+		});
+	};
+
+	console.log(_.includes(like?.likeId, 'JuUlhSayWffBAIDkat0t1xMTN6D3'));
 
 	return (
 		<>
@@ -70,14 +107,14 @@ function Project({ project }) {
 				</div>
 				<div className='flex justify-between'>
 					<p>{teamInfo?.intro.name}</p>
-					{isClick ? (
-						<button onClick={() => setIsClick(false)}>
+					{_.includes(like?.likeId, `${uid}`) ? (
+						<button onClick={() => subtractLike()}>
 							<Heart />
 						</button>
 					) : (
 						<button
-							onClick={(e) => {
-								setIsClick(true);
+							onClick={() => {
+								addLike();
 							}}
 						>
 							<NonHeart />
