@@ -54,6 +54,26 @@ function Project({ project }) {
 		});
 	}, [isClick]);
 
+	let likeList;
+	const likeCount = (likeNumber) => {
+		let result;
+		if (likeNumber >= 1000) {
+			result =
+				likeNumber
+					?.toString()
+					.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+					.split(',', 1) + 'k';
+
+			return (likeList = result);
+		} else {
+			return (likeList = likeNumber);
+		}
+	};
+
+	likeCount(like?.like);
+
+	console.log(likeCount(like?.like));
+
 	return (
 		<>
 			<div key={projectId} uid={uid} className='group relative'>
@@ -108,7 +128,7 @@ function Project({ project }) {
 				<div className='flex justify-between'>
 					<p>{teamInfo?.intro.name}</p>
 					<div className='flex'>
-						{_.includes(like?.likeId, `${uid}`) ? (
+						{_.includes(like?.likeId, `${userInfo}`) ? (
 							<button onClick={() => subtractLike()}>
 								<Heart />
 							</button>
@@ -121,7 +141,7 @@ function Project({ project }) {
 								<NonHeart />
 							</button>
 						)}
-						{like?.like > 0 && <p className='ml-2'>{like?.like}</p>}
+						{like?.like > 0 && <p className='ml-2'>{likeList}</p>}
 					</div>
 				</div>
 			</div>
