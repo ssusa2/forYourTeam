@@ -31,28 +31,28 @@ function Project({ project }) {
 		const likeRef = doc(db, 'project', `${projectId}`);
 		const data = await updateDoc(likeRef, {
 			like: increment(1),
-			likeId: arrayUnion(`${uid}`),
+			likeId: arrayUnion(`${userInfo}`),
 		});
 	};
-
-	useEffect(() => {
-		const unsub = onSnapshot(doc(db, 'project', `${projectId}`), (doc) => {
-			console.log('Current data: ', doc.data());
-			SetLike(doc.data());
-			console.log('adasdasd', like);
-		});
-	}, [isClick]);
 
 	const subtractLike = async () => {
 		setIsClick(false);
 		const likeRef = doc(db, 'project', `${projectId}`);
 		await updateDoc(likeRef, {
 			like: increment(-1),
-			likeId: arrayRemove(`${uid}`),
+			likeId: arrayRemove(`${userInfo}`),
 		});
 	};
 
-	console.log(_.includes(like?.likeId, 'JuUlhSayWffBAIDkat0t1xMTN6D3'));
+	console.log('asdfasdfsdfs', _.includes(like?.likeId, `${uid}`));
+	console.log('uid', userInfo);
+
+	useEffect(() => {
+		const unsub = onSnapshot(doc(db, 'project', `${projectId}`), (doc) => {
+			console.log('Current data: ', doc.data());
+			SetLike(doc.data());
+		});
+	}, [isClick]);
 
 	return (
 		<>
@@ -107,19 +107,22 @@ function Project({ project }) {
 				</div>
 				<div className='flex justify-between'>
 					<p>{teamInfo?.intro.name}</p>
-					{_.includes(like?.likeId, `${uid}`) ? (
-						<button onClick={() => subtractLike()}>
-							<Heart />
-						</button>
-					) : (
-						<button
-							onClick={() => {
-								addLike();
-							}}
-						>
-							<NonHeart />
-						</button>
-					)}
+					<div className='flex'>
+						{_.includes(like?.likeId, `${uid}`) ? (
+							<button onClick={() => subtractLike()}>
+								<Heart />
+							</button>
+						) : (
+							<button
+								onClick={() => {
+									addLike();
+								}}
+							>
+								<NonHeart />
+							</button>
+						)}
+						{like?.like > 0 && <p className='ml-2'>{like?.like}</p>}
+					</div>
 				</div>
 			</div>
 		</>
