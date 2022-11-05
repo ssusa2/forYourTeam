@@ -26,15 +26,13 @@ function Project({ PreviewInfo }) {
 		info = PreviewInfo;
 	}
 
-	console.log(info);
-
 	const fetchProject = async (Intro) => {
 		const projectRef = doc(db, 'project', `${Intro}`);
 		const projectSnap = await getDoc(projectRef);
 
 		if (projectSnap.exists()) {
 			setProjects(projectSnap.data());
-			setProjectInfo(projectSnap.data().info.project_info);
+			// setProjectInfo(projectSnap.data().info.project_info);
 		} else {
 			console.log('No such document!');
 		}

@@ -1,19 +1,10 @@
 /** @format */
-import { useState } from 'react';
 import { replaceBrTag } from '../../util/utils';
 
-function SortGenre({
-	genre,
-	// queryGerne,
-	btnActive,
-	setBtnActive,
-	setGenreValue,
-}) {
+function SortGenre({ genre, btnActive, setBtnActive, setGenreValue }) {
 	const toggleActive = (e) => {
 		setBtnActive(e.target.value);
 	};
-
-	let regex = / /gi;
 
 	return (
 		<>
@@ -31,8 +22,8 @@ function SortGenre({
 							}}
 							className={
 								value == btnActive
-									? 'mb-2 mr-2 py-1 px-3 main-color w-max flex  rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
-									: 'mr-2 py-1 mb-2 px-3  w-max flex rounded-full border border-slate-300 font-semibold	 hover:bg-slate-100 hover:text-slate-600'
+									? ' mr-2 py-1 px-3 main-color w-max flex  rounded-full border-2 border-green-700 font-semibold	 hover:bg-slate-50 hover:text-green'
+									: 'mr-2 py-1 px-3  w-max flex rounded-full border border-slate-300 font-semibold	 hover:bg-slate-100 hover:text-slate-600'
 							}
 						>
 							<span

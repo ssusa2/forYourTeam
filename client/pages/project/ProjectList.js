@@ -1,10 +1,5 @@
 /** @format */
-// import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-// import { useSelector } from 'react-redux';
 import Project from './ProjectItem';
-import { Edit, Lock, NonHeart, Heart } from '../../components/Icon/Icon';
 
 function ProjectList({ projects }) {
 	return (

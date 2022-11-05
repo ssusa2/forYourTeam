@@ -6,7 +6,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import ProjectList from '../project/ProjectList';
 import _ from 'underscore';
-import { Github, NonHeart, Heart } from '../../components/Icon/Icon';
+import { Github } from '../../components/Icon/Icon';
 
 function user() {
 	const [userInfo, setUserInfo] = useState({});
@@ -19,10 +19,8 @@ function user() {
 		const getUser = async (Intro) => {
 			const projectRef = doc(db, 'users', `${Intro}`);
 			const projectSnap = await getDoc(projectRef);
-			console.log(projectSnap);
-			// const data = projectSnap.data();
+
 			if (projectSnap.exists()) {
-				// console.log('Document data:', projectSnap.data());
 				setUserInfo(projectSnap.data());
 			} else {
 				console.log('No such document!');
@@ -36,10 +34,6 @@ function user() {
 				where('isLock', '==', false)
 			);
 			const querySnapshot = await getDocs(project);
-			// const newData = querySnapshot.docs.forEach(function (doc, idx) {
-			// 	// console.log(doc);
-			// });
-			// console.log(querySnapshot);
 
 			const newData = querySnapshot.docs.map((doc) => ({
 				...doc.data(),
@@ -53,8 +47,6 @@ function user() {
 		getUser(Intro);
 		getProjects(Intro);
 	}, [Intro]);
-
-	console.log(projects);
 
 	return (
 		<>

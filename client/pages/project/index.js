@@ -97,13 +97,16 @@ function Projects() {
 					<Reset />
 				</button>
 			</div>
-			<div className='overflow-x-scroll scrollbar-hide flex mt-3 '>
-				<SortGenre
-					genre={genre_options}
-					btnActive={btnActive}
-					setGenreValue={setGenreValue}
-					setBtnActive={setBtnActive}
-				/>
+			<div className='relative'>
+				<div className='overflow-x-scroll scrollbar-hide flex mt-3  '>
+					<SortGenre
+						genre={genre_options}
+						btnActive={btnActive}
+						setGenreValue={setGenreValue}
+						setBtnActive={setBtnActive}
+					/>
+				</div>
+				<div className='absolute z-50	right-0 top-0 more-button '></div>
 			</div>
 			{hasProjects ? (
 				<>

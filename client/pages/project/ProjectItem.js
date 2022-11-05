@@ -14,69 +14,83 @@ import {
 	onSnapshot,
 } from 'firebase/firestore';
 import _ from 'underscore';
+import LogOut from '../../components/Nav/Logout';
 
 function Project({ project }) {
 	const userInfo = useSelector(({ user }) => user.uid);
 	const router = useRouter();
 	const [isError, setIsError] = useState(false);
 	const [isClick, setIsClick] = useState(false);
+	const [showLikeList, setShowLikeList] = useState(false);
 	const { projectId, info, teamInfo, uid, isLock } = project;
 	const [like, SetLike] = useState();
 
 	const liked = _.includes(like?.likeId, `${uid}`);
 
 	const addLike = async () => {
-		if (liked) return;
-		setIsClick(true);
-		const likeRef = doc(db, 'project', `${projectId}`);
-		const data = await updateDoc(likeRef, {
-			like: increment(1),
-			likeId: arrayUnion(`${userInfo}`),
-		});
+		if (userInfo) {
+			if (liked) return;
+			setIsClick(true);
+			const likeRef = doc(db, 'project', `${projectId}`);
+			const data = await updateDoc(likeRef, {
+				like: increment(1),
+				likeId: arrayUnion(`${userInfo}`),
+			});
+		} else {
+			if (confirm('로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?')) {
+				router.push('/login');
+			}
+		}
+		{
+			('');
+		}
 	};
 
 	const subtractLike = async () => {
-		setIsClick(false);
-		const likeRef = doc(db, 'project', `${projectId}`);
-		await updateDoc(likeRef, {
-			like: increment(-1),
-			likeId: arrayRemove(`${userInfo}`),
-		});
+		if (userInfo) {
+			setIsClick(false);
+			const likeRef = doc(db, 'project', `${projectId}`);
+			await updateDoc(likeRef, {
+				like: increment(-1),
+				likeId: arrayRemove(`${userInfo}`),
+			});
+		} else {
+			if (confirm('로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?')) {
+				router.push('/login');
+			}
+		}
+		{
+			('');
+		}
 	};
-
-	console.log('asdfasdfsdfs', _.includes(like?.likeId, `${uid}`));
-	console.log('uid', userInfo);
 
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'project', `${projectId}`), (doc) => {
-			console.log('Current data: ', doc.data());
 			SetLike(doc.data());
 		});
 	}, [isClick]);
 
 	let likeList;
-	const likeCount = (likeNumber) => {
-		let result;
-		if (likeNumber >= 1000) {
-			result =
-				likeNumber
-					?.toString()
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-					.split(',', 1) + 'k';
 
-			return (likeList = result);
-		} else {
-			return (likeList = likeNumber);
+	function nFormatter(num) {
+		if (num >= 1000000000) {
+			return (likeList =
+				(num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G');
 		}
-	};
+		if (num >= 1000000) {
+			return (likeList = (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M');
+		}
+		if (num >= 1000) {
+			return (likeList = (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K');
+		}
+		return (likeList = num);
+	}
 
-	likeCount(like?.like);
-
-	console.log(likeCount(like?.like));
+	nFormatter(like?.like);
 
 	return (
 		<>
-			<div key={projectId} uid={uid} className='group relative'>
+			<div key={projectId} uid={uid} className=' relative'>
 				{userInfo == uid && (
 					<button
 						onClick={() => router.push(`/introduce/${projectId}`)}
@@ -95,8 +109,8 @@ function Project({ project }) {
 						<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
 							{info?.project_info.logo_image ? (
 								isError ? (
-									<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
-										<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
+									<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75'>
+										<p className=' h-4 inline-block font-extrabold hover:opacity-75'>
 											{info?.project_info.name}
 										</p>
 									</div>
@@ -104,12 +118,12 @@ function Project({ project }) {
 									<img
 										onError={(event) => setIsError(true)}
 										src={info?.project_info.logo_image}
-										className='w-full aspect-video object-cover object-center group-hover:opacity-75'
+										className='w-full aspect-video object-cover object-center hover:opacity-75'
 									/>
 								)
 							) : (
-								<div className=' flex justify-center items-center w-full aspect-video object-cover object-center group-hover:opacity-75'>
-									<p className=' h-4 inline-block font-extrabold group-hover:opacity-75'>
+								<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75'>
+									<p className=' h-4 inline-block font-extrabold '>
 										{info?.project_info.name}
 									</p>
 								</div>
@@ -129,7 +143,11 @@ function Project({ project }) {
 					<p>{teamInfo?.intro.name}</p>
 					<div className='flex'>
 						{_.includes(like?.likeId, `${userInfo}`) ? (
-							<button onClick={() => subtractLike()}>
+							<button
+								onClick={() => {
+									subtractLike();
+								}}
+							>
 								<Heart />
 							</button>
 						) : (
@@ -141,10 +159,29 @@ function Project({ project }) {
 								<NonHeart />
 							</button>
 						)}
-						{like?.like > 0 && <p className='ml-2'>{likeList}</p>}
+						{like?.like > 0 && (
+							<p
+								onMouseOver={() => setShowLikeList(true)}
+								onMouseLeave={() => setShowLikeList(false)}
+								className='ml-2 relative'
+							>
+								{likeList}
+							</p>
+						)}
+						{showLikeList ? (
+							<>
+								<p className='absolute bg-slate-100 px-2 rounded-xl right-0 -bottom-5 text-green-700 font-semibold'>
+									{like?.like?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+									명이 좋아합니다.
+								</p>
+							</>
+						) : (
+							''
+						)}
 					</div>
 				</div>
 			</div>
+			{/* <LogOut /> */}
 		</>
 	);
 }
