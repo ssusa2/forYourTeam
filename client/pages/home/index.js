@@ -4,9 +4,12 @@ import Image from 'next/image';
 import homeProject from '../../image/homeProject.png';
 import homeTeam from '../../image/homeTeam.png';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 function Home() {
 	const router = useRouter();
+	const userInfo = useSelector(({ user }) => user);
+	console.log('userInfo', userInfo);
 
 	return (
 		<>
@@ -15,7 +18,20 @@ function Home() {
 				<Main />
 				<div className='flex justify-center'>
 					<button
-						onClick={() => router.push('/introduce')}
+						onClick={() => {
+							if (userInfo?.uid) {
+								router.push('/introduce');
+							} else {
+								if (
+									confirm('로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?')
+								) {
+									router.push('/login');
+								}
+								{
+									('');
+								}
+							}
+						}}
 						type='button'
 						className='w-full  mt-14 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
 					>

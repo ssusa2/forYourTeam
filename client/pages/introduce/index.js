@@ -6,6 +6,7 @@ import { db, storage } from '../firebase';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useRouter } from 'next/router';
 import Saving, {
 	setSaving,
 	setShallowSaving,
@@ -16,7 +17,7 @@ import GuideModal from '../../components/Modal/GuideModal';
 
 function introduce() {
 	const dispatch = useDispatch();
-
+	const router = useRouter();
 	const userID = useSelector(({ user }) => user);
 	const [isSaving, setIsSaving] = useState(null);
 	const [isShallowSaving, setIsShallowSaving] = useState(null);
@@ -226,7 +227,12 @@ function introduce() {
 		previewSetInfo();
 	}, [previewOpen]);
 
-	console.log(info);
+	useEffect(() => {
+		if (!userInfo) {
+			alert('로그인이 필요한 서비스 입니다.');
+			router.push('/login');
+		}
+	}, []);
 
 	return (
 		<>

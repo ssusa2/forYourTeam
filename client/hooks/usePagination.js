@@ -80,6 +80,7 @@ export const usePagination = (
 					collectionGroup(db, collectionName),
 					orderBy('joined', 'desc'),
 					where('shallowSaving', '==', false),
+					where('isLock', '==', false),
 					startAfter(key), // 마지막 커서 기준으로 추가 요청을 보내도록 쿼리 전송
 					limit(loadCount)
 				);
@@ -88,6 +89,7 @@ export const usePagination = (
 					collectionGroup(db, collectionName),
 					orderBy('joined', 'desc'),
 					where('shallowSaving', '==', false),
+					where('isLock', '==', false),
 					where('genre', '==', GenreValue),
 					startAfter(key), // 마지막 커서 기준으로 추가 요청을 보내도록 쿼리 전송
 					limit(loadCount)

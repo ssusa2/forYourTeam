@@ -170,7 +170,7 @@ function Project({ project }) {
 						)}
 						{showLikeList ? (
 							<>
-								<p className='absolute bg-slate-100 px-2 rounded-xl right-0 -bottom-5 text-green-700 font-semibold'>
+								<p className='absolute w-full text-center bg-slate-100 px-2 rounded-xl right-0 -bottom-5 text-green-700 font-semibold'>
 									{like?.like?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 									명이 좋아합니다.
 								</p>

@@ -119,7 +119,6 @@ function Projects() {
 				</>
 			) : (
 				<ProjectList projects={data} />
-				// <ProjectList className='mb-16' projects={data} />
 			)}
 			<div ref={setTarget} />
 			{noMore && <h2>더이상 불러올 프로젝트가 없어요</h2>}

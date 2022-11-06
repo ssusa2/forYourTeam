@@ -163,7 +163,7 @@ function Login() {
 								<p className='text-red-600'>{error}</p>
 								<input
 									onClick={(e) => onSubmit(e)}
-									className=' rounded-lg  px-4 py-2 text-xl font-semibold shadow-sm bg-green-700 transition duration-300 ease-in-out text-white border-green-700 hover:bg-green-800  sm:text-base w-full mt-3'
+									className=' rounded-lg cursor-pointer	px-4 py-2 text-xl font-semibold shadow-sm bg-green-700 transition duration-300 ease-in-out text-white border-green-700 hover:bg-green-800  sm:text-base w-full mt-3'
 									type='submit'
 									value={newAccount ? '계정 만들기' : '로그인 하기'}
 								/>

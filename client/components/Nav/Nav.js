@@ -127,7 +127,10 @@ function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 								</Link>
 							) : (
 								<>
-									<Link onClick={() => window.scrollTo(0, 0)} href='/project'>
+									<Link
+										onClick={() => window.scrollTo(0, 0)}
+										href={`/project/${Intro}`}
+									>
 										<Logo color={info?.project_info.color}>
 											{info?.project_info.logo}
 										</Logo>

@@ -19,6 +19,13 @@ function Mypage() {
 	const [lockProjects, setLockProjects] = useState([]);
 	const router = useRouter();
 
+	useEffect(() => {
+		if (!userInfo.uid) {
+			alert('로그인이 필요한 서비스 입니다.');
+			router.push('/login');
+		}
+	}, []);
+
 	// 공개된 프로젝트
 	useEffect(() => {
 		const getProject = async () => {
@@ -130,7 +137,7 @@ function Mypage() {
 						<div className='flex mt-16'>
 							<h2 className='middle-title '>📝 임시저장된 프로젝트</h2>
 							<span className='font-bold text-lg pt-2 '>
-								{shallowProjects.length}
+								({shallowProjects.length})
 							</span>
 						</div>
 						<div className=' mt-8 h-px bg-slate-300'></div>
