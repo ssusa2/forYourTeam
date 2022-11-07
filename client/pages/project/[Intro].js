@@ -12,6 +12,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setAll } from '../../src/store/modules/projectInfo';
 import HeadMeta from '../../components/Head/HeadMeta';
+import { CircleArrow } from '../../components/Icon/Icon';
 
 function Project({ PreviewInfo }) {
 	const router = useRouter();
@@ -32,7 +33,7 @@ function Project({ PreviewInfo }) {
 
 		if (projectSnap.exists()) {
 			setProjects(projectSnap.data());
-			// setProjectInfo(projectSnap.data().info.project_info);
+			setProjectInfo(projectSnap.data().info.project_info);
 		} else {
 			console.log('No such document!');
 		}
@@ -48,14 +49,16 @@ function Project({ PreviewInfo }) {
 
 	return (
 		<>
-			{/* <HeadMeta
+			<HeadMeta
+				// 이것만 필수로 받고 있음
 				title={projectInfo?.name}
-				description={projects.info?.project_page.description}
+				// 이 아래는 선택으로 받고 있음
 				url={projectInfo?.url}
 				image={projectInfo?.logo_image}
 				favicon={projectInfo?.favicon}
 				author={projects?.teamInfo?.intro?.name}
-			/> */}
+				description={projects.info?.project_page.description}
+			/>
 			<div
 				className={
 					router.route == '/introduce'
@@ -219,9 +222,10 @@ function Project({ PreviewInfo }) {
 					<button
 						onClick={() => router.push(`/team/${Intro}`)}
 						type='button'
-						className='w-full  mt-14 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
+						className='w-full flex  mt-14 rounded-full border border-slate-300 px-4 py-2 text-xl	font-semibold	  text-gray shadow-sm hover:bg-green-700 transition duration-300 ease-in-out hover:text-white hover:border hover:border-green-700 sm:ml-3 sm:w-auto sm:text-base	'
 					>
 						팀원 소개 보러가기
+						<CircleArrow />
 					</button>
 				</div>
 				{/* <Slide /> */}

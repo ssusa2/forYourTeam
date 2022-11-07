@@ -55,9 +55,9 @@ function user() {
 					<div className='middle-title'>
 						{userInfo?.name}님이 참여한 프로젝트
 					</div>
-					<a target='_blank' href={'3'}>
+					{/* <a target='_blank' href={'3'}>
 						<Github />
-					</a>
+					</a> */}
 				</div>
 				<div className=' mt-8 h-px bg-slate-300'></div>
 				<ProjectList projects={projects} />

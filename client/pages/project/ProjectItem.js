@@ -109,7 +109,7 @@ function Project({ project }) {
 						<div className=' aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8'>
 							{info?.project_info.logo_image ? (
 								isError ? (
-									<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75'>
+									<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75 hover:scale-125 hover'>
 										<p className=' h-4 inline-block font-extrabold hover:opacity-75'>
 											{info?.project_info.name}
 										</p>
@@ -118,11 +118,11 @@ function Project({ project }) {
 									<img
 										onError={(event) => setIsError(true)}
 										src={info?.project_info.logo_image}
-										className='w-full aspect-video object-cover object-center hover:opacity-75'
+										className='w-full aspect-video object-cover object-center hover:opacity-75 hover:scale-125 hover'
 									/>
 								)
 							) : (
-								<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75'>
+								<div className=' flex justify-center items-center w-full aspect-video object-cover object-center hover:opacity-75 hover:scale-125 hover'>
 									<p className=' h-4 inline-block font-extrabold '>
 										{info?.project_info.name}
 									</p>

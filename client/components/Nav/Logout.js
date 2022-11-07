@@ -60,20 +60,6 @@ function LogOut({ name, profileImg }) {
 								{({ active }) => (
 									<a
 										href='#'
-										onClick={LogOutClick}
-										className={classNames(
-											active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-											'block px-4 py-2 text-sm font-bold'
-										)}
-									>
-										Log-out
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href='#'
 										onClick={() => router.push('/mypage')}
 										className={classNames(
 											active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -88,13 +74,13 @@ function LogOut({ name, profileImg }) {
 								{({ active }) => (
 									<a
 										href='#'
-										onClick={() => router.push('/project')}
+										onClick={LogOutClick}
 										className={classNames(
 											active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
 											'block px-4 py-2 text-sm font-bold'
 										)}
 									>
-										Projects
+										Log-out
 									</a>
 								)}
 							</Menu.Item>

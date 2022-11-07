@@ -11,6 +11,7 @@ import { collection, getDoc, doc } from 'firebase/firestore';
 import Members from './Members';
 import { useDispatch } from 'react-redux';
 import { setColor, setLogo, setAll } from '../../src/store/modules/projectInfo';
+import HeadMeta from '../../components/Head/HeadMeta';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -53,10 +54,16 @@ function teamHome({ PreviewTeamInfo }) {
 	}
 	const OneMember = teamInfo?.member.length;
 
-	console.log(teams);
-
 	return (
 		<>
+			<HeadMeta
+				title={projectInfo?.name}
+				description={projects.info?.project_page.description}
+				url={projectInfo?.url}
+				image={projectInfo?.logo_image}
+				favicon={projectInfo?.favicon}
+				author={projects?.teamInfo?.intro?.name}
+			/>
 			<div
 				className={
 					router.route == '/introduce'
