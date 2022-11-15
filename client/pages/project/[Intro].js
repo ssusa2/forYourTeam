@@ -53,7 +53,7 @@ function Project({ PreviewInfo }) {
 				// 이것만 필수로 받고 있음
 				title={projectInfo?.name}
 				// 이 아래는 선택으로 받고 있음
-				url={projectInfo?.url}
+				// url={projectInfo?.url}
 				image={projectInfo?.logo_image}
 				favicon={projectInfo?.favicon}
 				author={projects?.teamInfo?.intro?.name}

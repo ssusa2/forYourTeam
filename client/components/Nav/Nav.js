@@ -71,14 +71,18 @@ function Nav({ Preview, setPreviewProject, previewProject, PreviewInfo }) {
 
 	return (
 		<>
-			<HeadMeta
-				title={info?.project_info?.name}
-				description={info?.project_page.description}
-				url={info?.project_info.url}
-				image={info?.project_info.logo_image}
-				favicon={info?.project_info.favicon}
-				author={teamInfo?.intro?.name}
-			/>
+			{projectMenu ? (
+				''
+			) : (
+				<HeadMeta
+					title={info?.project_info?.name}
+					description={info?.project_page.description}
+					// url={info?.project_info.url}
+					image={info?.project_info.logo_image}
+					favicon={info?.project_info.favicon}
+					author={teamInfo?.intro?.name}
+				/>
+			)}
 
 			{/* Preview mode START */}
 			{PreviewInfo?.project_info.name !== undefined ? (

@@ -61,7 +61,7 @@ function teamHome({ PreviewTeamInfo }) {
 			<HeadMeta
 				title={projectInfo?.name}
 				description={projectInfo?.project_page.description}
-				url={projectInfo?.url}
+				// url={projectInfo?.url}
 				image={projectInfo?.logo_image}
 				favicon={projectInfo?.favicon}
 				author={teams?.intro?.name}
