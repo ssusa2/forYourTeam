@@ -56,6 +56,7 @@ function Form({
 	const validName = info.project_info.name;
 	const validLogo = info.project_info.logo;
 	const validTeamName = teamInfo.intro.name;
+	const validDescription = info.project_page.description;
 
 	const handleClick = (e) => {
 		if (!validName) {
@@ -133,11 +134,27 @@ function Form({
 					},
 				};
 			});
+		} else if (!validDescription) {
+			if (info.project_page.description == '') {
+				if (typeof window !== 'undefined') {
+					alert('프로젝트 설명은 필수 입력값입니다.');
+				}
+			}
+			inutRef.current?.[5]?.focus();
+			setInfo((prev) => {
+				return {
+					...prev,
+					project_page: {
+						...info.project_page,
+						description: '',
+					},
+				};
+			});
 		} else if (!validTeamName) {
 			if (typeof window !== 'undefined') {
 				alert('프로젝트 팀 이름을 입력해주세요.');
 			}
-			inutRef.current?.[4].focus();
+			inutRef.current?.[6]?.focus();
 			setTeamInfo((prev) => {
 				return {
 					...prev,
@@ -571,11 +588,12 @@ function Form({
 									/>
 								</div>
 								<div className='b-divide'>
-									<label className='small-title font-medium'>
+									<label className='small-title font-medium essential'>
 										프로젝트를 소개하는 글을 2~4줄 입력해주세요.
 									</label>
 									<textarea
 										value={info.project_page.description || ''}
+										ref={(elem) => (inutRef.current[5] = elem)}
 										rows={4}
 										onKeyUp={(e) => checkLines(e, 4)}
 										placeholder='프로젝트를 소개하는 글을 2~4줄 입력해주세요.'
@@ -686,7 +704,7 @@ function Form({
 										팀 이름을 입력해주세요.
 									</label>
 									<input
-										ref={(elem) => (inutRef.current[4] = elem)}
+										ref={(elem) => (inutRef.current[6] = elem)}
 										maxLength={25}
 										value={teamInfo.intro.name || ''}
 										placeholder='팀 이름을 입력해주세요.'

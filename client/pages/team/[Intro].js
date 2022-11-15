@@ -27,6 +27,7 @@ function teamHome({ PreviewTeamInfo }) {
 	const { Intro } = router.query;
 
 	const [teams, setTeams] = useState({});
+	const [projectInfo, setProjectInfo] = useState();
 
 	useEffect(() => {
 		const fetchProject = async (Intro) => {
@@ -36,6 +37,7 @@ function teamHome({ PreviewTeamInfo }) {
 			if (projectSnap.exists()) {
 				// console.log('Document data:', projectSnap.data());
 				setTeams(projectSnap.data());
+				setProjectInfo(projectSnap.data().info);
 			} else {
 				console.log('No such document!');
 			}
@@ -58,11 +60,11 @@ function teamHome({ PreviewTeamInfo }) {
 		<>
 			<HeadMeta
 				title={projectInfo?.name}
-				description={projects.info?.project_page.description}
+				description={projectInfo?.project_page.description}
 				url={projectInfo?.url}
 				image={projectInfo?.logo_image}
 				favicon={projectInfo?.favicon}
-				author={projects?.teamInfo?.intro?.name}
+				author={teams?.intro?.name}
 			/>
 			<div
 				className={
