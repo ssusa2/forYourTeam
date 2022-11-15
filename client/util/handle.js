@@ -34,7 +34,7 @@ const handleFormChange = async (
 		}
 		setState(data);
 	} catch (err) {
-		console.error(err);
+		// console.error(err);
 	}
 };
 export default handleFormChange;
