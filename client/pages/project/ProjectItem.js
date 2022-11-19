@@ -94,7 +94,7 @@ function Project({ project }) {
 				{userInfo == uid && (
 					<button
 						onClick={() => router.push(`/introduce/${projectId}`)}
-						className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full main-hover z-20'
+						className='absolute font-semibold p-1 right-2 top-2 cursor-pointer text-green-700 rounded-full group item-hover z-20'
 					>
 						<Edit />
 					</button>

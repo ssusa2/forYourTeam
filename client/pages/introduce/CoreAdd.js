@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Arrow } from '../../components/Icon/Icon';
 
 function CoreAdd({
+	inutRef,
 	el,
 	idx,
 	core,
@@ -42,6 +43,8 @@ function CoreAdd({
 			});
 		}
 	};
+
+	// console.log(inutRef);
 
 	return (
 		<>
@@ -84,6 +87,7 @@ function CoreAdd({
 						<div className='b-divide'>
 							<label className='small-title essential essential'>제목</label>
 							<input
+								// ref={(elem) => (inutRef.current[7] = elem)}
 								value={el.title || ''}
 								placeholder=' 주요 기능의 기능명을 입력해보세요. '
 								name='title'

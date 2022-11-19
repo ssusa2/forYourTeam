@@ -51,7 +51,7 @@ function Home() {
 								프로젝트 기능 구현하느라 뒷 순위였던{' '}
 								<span className='main-color font-bold'>프로젝트 소개</span>,
 								<br />
-								노션으로 작성하지말고{' '}
+								Notion으로 작성하지말고
 								<span className='main-color font-bold'>
 									내 웹사이트에서 바로 소개해보세요 .
 								</span>
@@ -67,9 +67,9 @@ function Home() {
 					<div>
 						<div>
 							<p>
-								고생한 프로젝트{' '}
-								<span className='main-color font-bold'>팀원 소개</span>,
-								<br /> 리드미,노션에서 작성하지 말고{' '}
+								프로젝트 <span className='main-color font-bold'>팀원 소개</span>
+								,
+								<br /> README, Notion에서 작성하지 말고,
 								<span className='main-color font-bold'>
 									내 웹사이트에서 바로 소개해보세요 .
 								</span>

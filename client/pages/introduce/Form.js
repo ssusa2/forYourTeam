@@ -57,6 +57,9 @@ function Form({
 	const validLogo = info.project_info.logo;
 	const validTeamName = teamInfo.intro.name;
 	const validDescription = info.project_page.description;
+	const validCore = core.title;
+	const validCoreDescription = core.description;
+	const validMemberName = member.name;
 
 	const handleClick = (e) => {
 		if (!validName) {
@@ -165,6 +168,7 @@ function Form({
 				};
 			});
 		}
+
 		validName &&
 			validLogo &&
 			validGenre &&
@@ -268,7 +272,7 @@ function Form({
 							</a>
 						</Link>
 					</div>
-					<div className='text-end bg-slate-100 p-3 rounded-lg lg:mt-48 mt-3 xl:mt-0'>
+					{/* <div className='text-end bg-slate-100 p-3 rounded-lg lg:mt-48 mt-3 xl:mt-0'>
 						<strong>
 							입력창 안에 있는 회색 글씨는 소개페이지 양식에 해당하는 구역를
 							가리킵니다.
@@ -281,7 +285,7 @@ function Form({
 						<p className=''>
 							소개페이지 양식과 대조하여 알맞는 project 정보를 작성해보세요.
 						</p>
-					</div>
+					</div> */}
 				</div>
 				<form className='relative'>
 					<div className='mt-8 mb-16 h-px bg-slate-300'></div>
@@ -640,6 +644,9 @@ function Form({
 						return (
 							<>
 								<CoreAdd
+									// ref={(elem) => (inutRef.current[0] = elem)}
+									// ref={(elem) => (inutRef.current[0] = elem)}
+									// inutRef={inutRef}
 									defaultImg={info.project_page.core?.image}
 									el={el}
 									idx={idx}
