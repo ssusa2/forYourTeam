@@ -23,8 +23,6 @@ function introduce() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { Intro } = router.query;
-	// const shallowSaving = useSelector(({ Saving }) => Saving.ShallowSaving);
-	// const saving = useSelector(({ Saving }) => Saving.Saving);
 	const isLock = useSelector(({ Lock }) => Lock.Lock);
 	const userID = useSelector(({ user }) => user);
 
